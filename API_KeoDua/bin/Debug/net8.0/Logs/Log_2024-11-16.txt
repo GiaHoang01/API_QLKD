@@ -1,0 +1,72 @@
+2024-11-16 21:00:55,324 DEBUG 
+ -------Begin IsCheckAccount------- 
+ 
+2024-11-16 21:00:56,550 DEBUG 
+ -------End IsCheckAccount------- 
+ 
+2024-11-16 21:01:00,140 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 21:01:00,408 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 21:01:02,815 DEBUG 
+ -------End getEmployeeByID------- 
+ 
+2024-11-16 21:01:02,922 DEBUG 
+ -------End getEmployeeByID------- 
+ 
+2024-11-16 21:01:50,119 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 21:01:50,143 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 21:01:54,081 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 21:01:54,148 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 21:01:56,349 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 21:01:56,358 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 21:02:01,001 DEBUG 
+ -------End DeleteEmployee------- 
+ 
+2024-11-16 21:02:01,208 DEBUG 
+ -------End DeleteEmployee------- 
+ 
+2024-11-16 21:02:37,739 DEBUG 
+ -------End DeleteEmployee------- 
+ 
+2024-11-16 21:05:47,429 DEBUG 
+ -------End DeleteEmployee------- 
+ 
+2024-11-16 21:10:35,044 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 21:10:36,366 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 21:10:43,303 DEBUG 
+ -------End DeleteEmployee------- 
+ 
+2024-11-16 21:10:48,277 DEBUG 
+ -------End DeleteEmployee------- 
+ 
+2024-11-16 21:10:48,295 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 21:10:48,336 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 21:10:53,555 DEBUG 
+ -------End getEmployeeByID------- 
+ 
+2024-11-16 21:10:53,571 DEBUG 
+ -------End getEmployeeByID------- 
+ 

@@ -1,0 +1,1043 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\reponsitory\\implement\\nhanvienreponsitory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\reponsitory\\implement\\nhanvienreponsitory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\controllers\\nhanviencontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\controllers\\nhanviencontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\nhanvien.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\nhanvien.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\reponsitory\\implement\\taikhoanreponsitory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\reponsitory\\implement\\taikhoanreponsitory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\dataview\\nhanvientaikhoan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\dataview\\nhanvientaikhoan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\reponsitory\\interface\\inhanvienreponsitory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\reponsitory\\interface\\inhanvienreponsitory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\reponsitory\\interface\\itaikhoanreponsitory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\reponsitory\\interface\\itaikhoanreponsitory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\controllers\\taikhoancontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\controllers\\taikhoancontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\models\\responsemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\models\\responsemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\taikhoancontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\taikhoancontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\giohangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\giohangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\ct_phieunhapcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\ct_phieunhapcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\nhanviencontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\nhanviencontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\capquyen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\capquyen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\api_keodua.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\api_keodua.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\capquyencontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\capquyencontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\ct_hoadonbanhang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\ct_hoadonbanhang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\chitietgiohangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\chitietgiohangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\chitietgiohang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\chitietgiohang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\ct_phieunhap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\ct_phieunhap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\chitietct_khuyenmaicontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\chitietct_khuyenmaicontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\chitietct_khuyenmai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\chitietct_khuyenmai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\chuongtrinhkhuyenmaicontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\chuongtrinhkhuyenmaicontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\chuongtrinhkhuyenmai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\chuongtrinhkhuyenmai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\taikhoan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\taikhoan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\log4net.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\log4net.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\api_keodua.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\api_keodua.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\phieunhaphang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\phieunhaphang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\nhacungcap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\nhacungcap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\phieuhuydon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\phieuhuydon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\phieugiaohang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\phieugiaohang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\hoadonbanhang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\hoadonbanhang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\hinhthucthanhtoan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\hinhthucthanhtoan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\giohang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\giohang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\lichsugia.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\lichsugia.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\hanghoa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\hanghoa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\thongtingiaohang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\thongtingiaohang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\khachhang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\khachhang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\loaikhachhang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\loaikhachhang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\loaihanghoa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\loaihanghoa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\quyen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\quyen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\nhomquyen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\nhomquyen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\ct_hoadonbanhangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\ct_hoadonbanhangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\phieunhaphangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\phieunhaphangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\phieuhuydoncontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\phieuhuydoncontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\nhacungcapcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\nhacungcapcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\loaikhachhangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\loaikhachhangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\lichsugiacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\lichsugiacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\khachhangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\khachhangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\phieugiaohangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\phieugiaohangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\loaihanghoacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\loaihanghoacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\hanghoacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\hanghoacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\hinhthucthanhtoancontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\hinhthucthanhtoancontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\hoadonbanhangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\hoadonbanhangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\thongtingiaohangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\thongtingiaohangcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\nhomquyencontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\nhomquyencontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|c:\\users\\84862\\desktop\\doanchuyennganh\\api_keodua\\api_keodua\\data\\quyencontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B88DE5C-3906-4D4A-AAC0-74205B7C4F3E}|API_KeoDua\\API_KeoDua.csproj|solutionrelative:api_keodua\\data\\quyencontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Migrations\\20241005144213_DbInit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:API_KeoDua\\Migrations\\20241005144213_DbInit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e5c86464-96be-4d7c-9a8b-abcb3bbf5f92}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "NhanVienReponsitory.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Reponsitory\\Implement\\NhanVienReponsitory.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Reponsitory\\Implement\\NhanVienReponsitory.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Reponsitory\\Implement\\NhanVienReponsitory.cs*",
+              "RelativeToolTip": "API_KeoDua\\Reponsitory\\Implement\\NhanVienReponsitory.cs*",
+              "ViewState": "AgIAAJoAAAAAAAAAAAAAAK4AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-10T05:31:38.833Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NhanVienController.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Controllers\\NhanVienController.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Controllers\\NhanVienController.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Controllers\\NhanVienController.cs*",
+              "RelativeToolTip": "API_KeoDua\\Controllers\\NhanVienController.cs*",
+              "ViewState": "AgIAABEAAAAAAAAAAAAAAC4AAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-10T05:29:56.809Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "INhanVienReponsitory.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Reponsitory\\Interface\\INhanVienReponsitory.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Reponsitory\\Interface\\INhanVienReponsitory.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Reponsitory\\Interface\\INhanVienReponsitory.cs",
+              "RelativeToolTip": "API_KeoDua\\Reponsitory\\Interface\\INhanVienReponsitory.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-10T05:32:09.805Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NhanVien.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\NhanVien.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\NhanVien.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\NhanVien.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\NhanVien.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAewBsAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T07:08:00.931Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TaiKhoanReponsitory.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Reponsitory\\Implement\\TaiKhoanReponsitory.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Reponsitory\\Implement\\TaiKhoanReponsitory.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Reponsitory\\Implement\\TaiKhoanReponsitory.cs",
+              "RelativeToolTip": "API_KeoDua\\Reponsitory\\Implement\\TaiKhoanReponsitory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T13:20:59.349Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "NhanVienTaiKhoan.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\DataView\\NhanVienTaiKhoan.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\DataView\\NhanVienTaiKhoan.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\DataView\\NhanVienTaiKhoan.cs",
+              "RelativeToolTip": "API_KeoDua\\DataView\\NhanVienTaiKhoan.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-15T09:23:09.465Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ITaiKhoanReponsitory.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Reponsitory\\Interface\\ITaiKhoanReponsitory.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Reponsitory\\Interface\\ITaiKhoanReponsitory.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Reponsitory\\Interface\\ITaiKhoanReponsitory.cs",
+              "RelativeToolTip": "API_KeoDua\\Reponsitory\\Interface\\ITaiKhoanReponsitory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T13:21:36.894Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ResponseModel.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Models\\ResponseModel.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Models\\ResponseModel.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Models\\ResponseModel.cs",
+              "RelativeToolTip": "API_KeoDua\\Models\\ResponseModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T13:15:52.432Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "TaiKhoanController.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Controllers\\TaiKhoanController.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Controllers\\TaiKhoanController.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Controllers\\TaiKhoanController.cs",
+              "RelativeToolTip": "API_KeoDua\\Controllers\\TaiKhoanController.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAADsAAABIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T13:07:04.748Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "TaiKhoanContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\TaiKhoanContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\TaiKhoanContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\TaiKhoanContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\TaiKhoanContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T14:14:28.339Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "GioHangContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\GioHangContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\GioHangContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\GioHangContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\GioHangContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:48:55.969Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "CT_PhieuNhapContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\CT_PhieuNhapContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\CT_PhieuNhapContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\CT_PhieuNhapContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\CT_PhieuNhapContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T08:06:25.351Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "NhanVienContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\NhanVienContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\NhanVienContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\NhanVienContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\NhanVienContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T07:16:14.339Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "CapQuyen.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\CapQuyen.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\CapQuyen.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\CapQuyen.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\CapQuyen.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T06:54:35.933Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "API_KeoDua.csproj",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\API_KeoDua.csproj",
+              "RelativeDocumentMoniker": "API_KeoDua\\API_KeoDua.csproj",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\API_KeoDua.csproj",
+              "RelativeToolTip": "API_KeoDua\\API_KeoDua.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-10-05T11:37:53.686Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "CapQuyenContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\CapQuyenContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\CapQuyenContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\CapQuyenContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\CapQuyenContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T06:56:24.754Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "CT_HoaDonBanHang.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\CT_HoaDonBanHang.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\CT_HoaDonBanHang.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\CT_HoaDonBanHang.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\CT_HoaDonBanHang.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:22:29.85Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "ChiTietGioHangConText.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ChiTietGioHangConText.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\ChiTietGioHangConText.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ChiTietGioHangConText.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\ChiTietGioHangConText.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:52:32.011Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Program.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Program.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Program.cs",
+              "RelativeToolTip": "API_KeoDua\\Program.cs",
+              "ViewState": "AgIAAHsAAAAAAAAAAAAAAIcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T11:32:21.374Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\appsettings.json",
+              "RelativeDocumentMoniker": "API_KeoDua\\appsettings.json",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\appsettings.json",
+              "RelativeToolTip": "API_KeoDua\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-05T12:26:35.449Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "ChiTietGioHang.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ChiTietGioHang.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\ChiTietGioHang.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ChiTietGioHang.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\ChiTietGioHang.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:50:23.136Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "BaseController.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Controllers\\BaseController.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Controllers\\BaseController.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Controllers\\BaseController.cs",
+              "RelativeToolTip": "API_KeoDua\\Controllers\\BaseController.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAswBEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T14:31:01.237Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "CT_PhieuNhap.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\CT_PhieuNhap.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\CT_PhieuNhap.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\CT_PhieuNhap.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\CT_PhieuNhap.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T10:10:14.996Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "ChiTietCT_KhuyenMaiContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ChiTietCT_KhuyenMaiContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\ChiTietCT_KhuyenMaiContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ChiTietCT_KhuyenMaiContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\ChiTietCT_KhuyenMaiContext.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T08:13:14.85Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "ChiTietCT_KhuyenMai.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ChiTietCT_KhuyenMai.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\ChiTietCT_KhuyenMai.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ChiTietCT_KhuyenMai.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\ChiTietCT_KhuyenMai.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAgAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T08:10:45.61Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "ChuongTrinhKhuyenMaiContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ChuongTrinhKhuyenMaiContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\ChuongTrinhKhuyenMaiContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ChuongTrinhKhuyenMaiContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\ChuongTrinhKhuyenMaiContext.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAsAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T08:16:18.318Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "ChuongTrinhKhuyenMai.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ChuongTrinhKhuyenMai.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\ChuongTrinhKhuyenMai.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ChuongTrinhKhuyenMai.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\ChuongTrinhKhuyenMai.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T08:14:11.2Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "TaiKhoan.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\TaiKhoan.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\TaiKhoan.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\TaiKhoan.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\TaiKhoan.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABAAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T14:29:07.061Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "Logger.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Logger.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Logger.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Logger.cs",
+              "RelativeToolTip": "API_KeoDua\\Logger.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T15:22:22.69Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "log4net.config",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\log4net.config",
+              "RelativeDocumentMoniker": "API_KeoDua\\log4net.config",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\log4net.config",
+              "RelativeToolTip": "API_KeoDua\\log4net.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2024-10-05T14:59:40.748Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "API_KeoDua.http",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\API_KeoDua.http",
+              "RelativeDocumentMoniker": "API_KeoDua\\API_KeoDua.http",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\API_KeoDua.http",
+              "RelativeToolTip": "API_KeoDua\\API_KeoDua.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2024-11-09T08:43:25.579Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "PhieuNhapHang.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\PhieuNhapHang.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\PhieuNhapHang.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\PhieuNhapHang.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\PhieuNhapHang.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAIwBgAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T10:02:18.897Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "NhaCungCap.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\NhaCungCap.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\NhaCungCap.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\NhaCungCap.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\NhaCungCap.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:58:18.561Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "PhieuHuyDon.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\PhieuHuyDon.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\PhieuHuyDon.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\PhieuHuyDon.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\PhieuHuyDon.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:46:32.195Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "PhieuGiaoHang.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\PhieuGiaoHang.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\PhieuGiaoHang.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\PhieuGiaoHang.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\PhieuGiaoHang.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:17:27.566Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "HoaDonBanHang.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\HoaDonBanHang.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\HoaDonBanHang.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\HoaDonBanHang.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\HoaDonBanHang.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABwAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:06:38.362Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "HinhThucThanhToan.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\HinhThucThanhToan.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\HinhThucThanhToan.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\HinhThucThanhToan.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\HinhThucThanhToan.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:13:12.605Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "GioHang.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\GioHang.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\GioHang.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\GioHang.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\GioHang.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:39:05.513Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "LichSuGia.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\LichSuGia.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\LichSuGia.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\LichSuGia.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\LichSuGia.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:53:59.771Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "HangHoa.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\HangHoa.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\HangHoa.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\HangHoa.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\HangHoa.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:28:57.973Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "ThongTinGiaoHang.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ThongTinGiaoHang.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\ThongTinGiaoHang.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ThongTinGiaoHang.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\ThongTinGiaoHang.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T07:38:31.502Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "KhachHang.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\KhachHang.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\KhachHang.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\KhachHang.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\KhachHang.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAIwBoAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T07:24:41.67Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "LoaiKhachHang.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\LoaiKhachHang.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\LoaiKhachHang.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\LoaiKhachHang.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\LoaiKhachHang.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T07:30:06.468Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "LoaiHangHoa.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\LoaiHangHoa.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\LoaiHangHoa.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\LoaiHangHoa.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\LoaiHangHoa.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:34:08.584Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "Quyen.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\Quyen.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\Quyen.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\Quyen.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\Quyen.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T07:01:26.813Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "NhomQuyen.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\NhomQuyen.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\NhomQuyen.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\NhomQuyen.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\NhomQuyen.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T07:04:29.472Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "CT_HoaDonBanHangContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\CT_HoaDonBanHangContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\CT_HoaDonBanHangContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\CT_HoaDonBanHangContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\CT_HoaDonBanHangContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:27:21.767Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "PhieuNhapHangContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\PhieuNhapHangContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\PhieuNhapHangContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\PhieuNhapHangContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\PhieuNhapHangContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T10:07:45.112Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
+              "Title": "NhaCungCapContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\NhaCungCapContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\NhaCungCapContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\NhaCungCapContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\NhaCungCapContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T10:00:00.836Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "PhieuHuyDonConText.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\PhieuHuyDonConText.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\PhieuHuyDonConText.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\PhieuHuyDonConText.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\PhieuHuyDonConText.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:47:45.33Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 51,
+              "Title": "LichSuGiaContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\LichSuGiaContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\LichSuGiaContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\LichSuGiaContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\LichSuGiaContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:55:50.963Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 50,
+              "Title": "LoaiKhachHangContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\LoaiKhachHangContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\LoaiKhachHangContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\LoaiKhachHangContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\LoaiKhachHangContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T07:32:23.695Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 52,
+              "Title": "KhachHangContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\KhachHangContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\KhachHangContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\KhachHangContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\KhachHangContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T07:28:58.465Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 53,
+              "Title": "PhieuGiaoHangContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\PhieuGiaoHangContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\PhieuGiaoHangContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\PhieuGiaoHangContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\PhieuGiaoHangContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:20:40.07Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 54,
+              "Title": "LoaiHangHoaContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\LoaiHangHoaContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\LoaiHangHoaContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\LoaiHangHoaContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\LoaiHangHoaContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:36:49.354Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 55,
+              "Title": "HangHoaContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\HangHoaContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\HangHoaContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\HangHoaContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\HangHoaContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:33:14.36Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 56,
+              "Title": "HinhThucThanhToanContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\HinhThucThanhToanContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\HinhThucThanhToanContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\HinhThucThanhToanContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\HinhThucThanhToanContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:15:05.975Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 57,
+              "Title": "HoaDonBanHangContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\HoaDonBanHangContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\HoaDonBanHangContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\HoaDonBanHangContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\HoaDonBanHangContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:10:57.122Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 58,
+              "Title": "ThongTinGiaoHangContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ThongTinGiaoHangContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\ThongTinGiaoHangContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\ThongTinGiaoHangContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\ThongTinGiaoHangContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T09:01:03.204Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 59,
+              "Title": "NhomQuyenContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\NhomQuyenContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\NhomQuyenContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\NhomQuyenContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\NhomQuyenContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T07:06:28.39Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 60,
+              "Title": "QuyenContext.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\QuyenContext.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Data\\QuyenContext.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Data\\QuyenContext.cs",
+              "RelativeToolTip": "API_KeoDua\\Data\\QuyenContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T07:02:50.87Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 61,
+              "Title": "20241005144213_DbInit.cs",
+              "DocumentMoniker": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Migrations\\20241005144213_DbInit.cs",
+              "RelativeDocumentMoniker": "API_KeoDua\\Migrations\\20241005144213_DbInit.cs",
+              "ToolTip": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\Migrations\\20241005144213_DbInit.cs",
+              "RelativeToolTip": "API_KeoDua\\Migrations\\20241005144213_DbInit.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T14:42:13.195Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

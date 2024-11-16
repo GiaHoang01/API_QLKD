@@ -1,0 +1,6 @@
+@API_KeoDua_HostAddress = http://localhost:5047
+
+GET {{API_KeoDua_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
