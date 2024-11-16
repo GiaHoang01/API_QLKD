@@ -65,25 +65,25 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        public async Task AddEmployee(NhanVien newEmployee, TaiKhoan taiKhoan)
+        public async Task AddEmployee(NhanVienTaiKhoan nhanVienTaiKhoan)
         {
             using var transaction = await nhanVienContext.Database.BeginTransactionAsync();
             try
             {
                 var parameters = new[]
                 {
-                    new SqlParameter("@Username", taiKhoan.TenTaiKhoan),
-                    new SqlParameter("@Password", taiKhoan.MatKhau ),
-                    new SqlParameter("@Email", newEmployee.Email),
-                    new SqlParameter("@TenNhanVien",newEmployee.TenNV), 
-                    new SqlParameter("@SoDT", newEmployee.SDT),
-                    new SqlParameter("@DiaChi", newEmployee.DiaChi),     
-                    new SqlParameter("@GioiTinh", newEmployee.GioiTinh),
-                    new SqlParameter("@NgaySinh", newEmployee.NgaySinh != null ? newEmployee.NgaySinh : DBNull.Value),
+                    new SqlParameter("@Username", nhanVienTaiKhoan.TenTaiKhoan),
+                    new SqlParameter("@Password", nhanVienTaiKhoan.MatKhau ),
+                    new SqlParameter("@Email", nhanVienTaiKhoan.Email),
+                    new SqlParameter("@TenNhanVien",nhanVienTaiKhoan.TenNV), 
+                    new SqlParameter("@SoDT", nhanVienTaiKhoan.SDT),
+                    new SqlParameter("@DiaChi", nhanVienTaiKhoan.DiaChi),     
+                    new SqlParameter("@GioiTinh", nhanVienTaiKhoan.GioiTinh),
+                    new SqlParameter("@NgaySinh", nhanVienTaiKhoan.NgaySinh != null ? nhanVienTaiKhoan.NgaySinh : DBNull.Value),
                 };
 
 
-                string storedProcedure = taiKhoan.MaNhomQuyen switch
+                string storedProcedure = nhanVienTaiKhoan.MaNhomQuyen switch
                 {
                     "NQ00000001" => "EXEC AddAccountQuanLi @Username, @Password, @Email, @TenNhanVien, @SoDT, @DiaChi, @GioiTinh, @NgaySinh",
                     "NQ00000002" => "EXEC AddAccountNhanVienGiaoHang @Username, @Password, @Email, @TenNhanVien, @SoDT, @DiaChi, @GioiTinh, @NgaySinh",
