@@ -68,7 +68,7 @@ namespace API_KeoDua.Controllers
         /// <summary>
         /// Hàm thêm nhân viên và đăng kí tài khoản
         /// </summary>
-        /// <param name="dicData">{NameAccount:"string",PasswordAccount:"string"}</param>
+        /// <param name="dicData">{}</param>
         /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> AddAccountEmployee([FromBody] Dictionary<string, object> dicData)

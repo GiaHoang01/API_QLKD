@@ -4,6 +4,7 @@ namespace API_KeoDua.DataView
     public class NhanVienTaiKhoan
     {
         public string TenTaiKhoan { get; set; }
+        public string MatKhau {  get; set; }
         public string MaNhomQuyen { get; set; }
         public string TenNV { get; set; }
         public string Email { get; set; }
