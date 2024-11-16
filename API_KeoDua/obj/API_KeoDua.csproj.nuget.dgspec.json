@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\API_KeoDua.csproj": {}
+    "C:\\Users\\84862\\Desktop\\DoAnChuyenNganhGit\\API_QLKD\\API_KeoDua\\API_KeoDua.csproj": {}
   },
   "projects": {
-    "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\API_KeoDua.csproj": {
+    "C:\\Users\\84862\\Desktop\\DoAnChuyenNganhGit\\API_QLKD\\API_KeoDua\\API_KeoDua.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\API_KeoDua.csproj",
+        "projectUniqueName": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganhGit\\API_QLKD\\API_KeoDua\\API_KeoDua.csproj",
         "projectName": "API_KeoDua",
-        "projectPath": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\API_KeoDua.csproj",
+        "projectPath": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganhGit\\API_QLKD\\API_KeoDua\\API_KeoDua.csproj",
         "packagesPath": "C:\\Users\\84862\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\obj\\",
+        "outputPath": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganhGit\\API_QLKD\\API_KeoDua\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\84862\\AppData\\Roaming\\NuGet\\NuGet.Config",

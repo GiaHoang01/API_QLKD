@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xccjZgbC6B4=",
+  "dgSpecHash": "5hxvFYTVktU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganh\\API_KeoDua\\API_KeoDua\\API_KeoDua.csproj",
+  "projectFilePath": "C:\\Users\\84862\\Desktop\\DoAnChuyenNganhGit\\API_QLKD\\API_KeoDua\\API_KeoDua.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\84862\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\84862\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

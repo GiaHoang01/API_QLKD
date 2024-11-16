@@ -70,3 +70,27 @@
 2024-11-16 21:10:53,571 DEBUG 
  -------End getEmployeeByID------- 
  
+2024-11-16 23:12:40,375 DEBUG 
+ -------Begin IsCheckAccount------- 
+ 
+2024-11-16 23:12:41,815 DEBUG 
+ -------Begin IsCheckAccount------- 
+ 
+2024-11-16 23:12:41,833 DEBUG 
+ -------End IsCheckAccount------- 
+ 
+2024-11-16 23:12:41,839 DEBUG 
+ -------End IsCheckAccount------- 
+ 
+2024-11-16 23:12:44,194 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 23:12:44,385 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 23:12:49,471 DEBUG 
+ -------End getAllEmployees------- 
+ 
+2024-11-16 23:12:49,481 DEBUG 
+ -------End getAllEmployees------- 
+ 

@@ -77,24 +77,11 @@ namespace API_KeoDua.Controllers
             {
                 logger.Debug("-------End AddAccountEmployee-------");
 
-                TaiKhoan accountsNew = new TaiKhoan();
-                accountsNew.TenTaiKhoan = dicData["Username"].ToString();
-                accountsNew.MatKhau = dicData["Password"].ToString();
-                accountsNew.MaNhomQuyen = dicData["MaNhomQuyen"].ToString();
-                NhanVien nhanVien = new NhanVien();
-                nhanVien.MaNV = new Guid();
-                nhanVien.TenNV = dicData["TenNV"].ToString();
-                nhanVien.Email = dicData["Email"].ToString();
-                nhanVien.ChucVu = dicData["ChucVu"].ToString(); 
-                nhanVien.DiaChi = dicData["DiaChi"].ToString();
-                nhanVien.SDT=dicData["SDT"].ToString();
-                nhanVien.GioiTinh= dicData["GioiTinh"].ToString();
-                string ngaySinhString = dicData["NgaySinh"].ToString();
-                DateTime ngaySinh = DateTime.Parse(ngaySinhString, null, System.Globalization.DateTimeStyles.RoundtripKind);
-                nhanVien.NgaySinh = ngaySinh.Date;
+                NhanVienTaiKhoan nhanVienTaiKhoan = JsonConvert.DeserializeObject<NhanVienTaiKhoan>(dicData["NhanVienTaiKhoan"].ToString());
+             
                 ResponseModel repData = await ResponseFail();
 
-                Boolean isCheckCode = await this.taiKhoanReponsitory.IsCheckAccount(accountsNew.TenTaiKhoan, accountsNew.MatKhau);
+                Boolean isCheckCode = await this.taiKhoanReponsitory.IsCheckAccount(nhanVienTaiKhoan.TenTaiKhoan, nhanVienTaiKhoan.MatKhau);
 
                 if (isCheckCode)
                 {
@@ -102,7 +89,7 @@ namespace API_KeoDua.Controllers
                     repData.message = "Tài khoản đã tồn tại ";
                     return Ok(repData);
                 }
-                await this.nhanVienReponsitory.AddEmployee(nhanVien,accountsNew);
+                await this.nhanVienReponsitory.AddEmployee(nhanVienTaiKhoan);
                 repData = await ResponseSucceeded();
                 repData.data = new { };
                 return Ok(repData);
