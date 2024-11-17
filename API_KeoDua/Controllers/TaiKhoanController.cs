@@ -52,34 +52,29 @@ namespace API_KeoDua.Controllers
         }
 
         /// <summary>
-        /// Hàm thêm tài khoản (Đăng ký)
+        /// Hàm đăng nhập 
         /// </summary>
-        /// <param name="dicData">{NameAccount:"string",PasswordAccount:"string"}</param>
-        /// <returns></returns>
+        /// <param name="dicData">{UserName:"string",PassWord:"string"}</param>
+        /// <returns> TenDangNhap</returns>
         [HttpPost]
-        public async Task<ActionResult> AddAccount([FromBody] Dictionary<string, object> dicData)
+        public async Task<ActionResult> Login([FromBody] Dictionary<string, object> dicData)
         {
             try
             {
-                logger.Debug("-------End AddAccount-------");
+                logger.Debug("-------End Login-------");
 
-                string nameAccount = dicData["NameAccount"].ToString();
-                string passwordAccount = dicData["PasswordAccount"].ToString();
-                TaiKhoan accountsNew = new TaiKhoan();
-                accountsNew.TenTaiKhoan = nameAccount;
-                accountsNew.MatKhau = passwordAccount;
-                accountsNew.TrangThai = "Hoạt động";
-                accountsNew.MaNhomQuyen = dicData["MaNhomQuyen"].ToString();
+                string userName = dicData["UserName"].ToString();
+                string password = dicData["PassWord"].ToString();
                 ResponseModel repData = await ResponseFail();
 
-                Boolean isCheckCode = await this.taiKhoanReponsitory.IsCheckAccount(accountsNew.TenTaiKhoan, accountsNew.MatKhau);
+                string tendn= await this.taiKhoanReponsitory.login(userName,password);
 
-                if (!isCheckCode)
+                if (tendn!=null)
                 {
                     repData = await ResponseSucceeded();
                 }
 
-                repData.data = new { };
+                repData.data = new { TenDangNhap= tendn };
                 return Ok(repData);
             }
             catch (Exception ex)
@@ -89,7 +84,7 @@ namespace API_KeoDua.Controllers
             }
             finally
             {
-                logger.Debug("-------End AddAccount-------");
+                logger.Debug("-------End Login-------");
             }
         }
 

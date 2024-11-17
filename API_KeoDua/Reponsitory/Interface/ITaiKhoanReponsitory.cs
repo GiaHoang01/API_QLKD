@@ -7,5 +7,6 @@ namespace API_KeoDua.Reponsitory.Interface
         public int TotalRows { get; set; }
 
         public Task<bool> IsCheckAccount(string username, string password);
+        public Task<string> login(string user, string pass);
     }
 }

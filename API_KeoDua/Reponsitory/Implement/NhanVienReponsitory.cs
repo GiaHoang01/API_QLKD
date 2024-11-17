@@ -156,57 +156,39 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-
-        public async Task UpdateEmployee(Guid MaNV, NhanVien updatedEmployee, TaiKhoan updatedTaiKhoan)
+        public async Task UpdateEmployee(NhanVienTaiKhoan nhanVienTaiKhoan, Guid maNV)
         {
             using var transaction = await nhanVienContext.Database.BeginTransactionAsync();
             try
             {
-                // Lấy nhân viên từ database
-                var nhanVien = await nhanVienContext.tbl_NhanVien.FindAsync(MaNV);
-                if (nhanVien == null)
+                var parameters = new[]
                 {
-                    throw new KeyNotFoundException($"Không tìm thấy nhân viên với mã: {MaNV}");
-                }
+                    new SqlParameter("@MaNV", maNV),
+                    new SqlParameter("@TenNV", nhanVienTaiKhoan.TenNV),
+                    new SqlParameter("@Email", nhanVienTaiKhoan.Email),
+                    new SqlParameter("@SoDT", nhanVienTaiKhoan.SDT),
+                    new SqlParameter("@DiaChi", nhanVienTaiKhoan.DiaChi),
+                    new SqlParameter("@GioiTinh", nhanVienTaiKhoan.GioiTinh),
+                    new SqlParameter("@NgaySinh", nhanVienTaiKhoan.NgaySinh),
+                    new SqlParameter("@NgayVaoLam", nhanVienTaiKhoan.NgayVaoLam),
+                    new SqlParameter("@Username", nhanVienTaiKhoan.TenTaiKhoan),
+                    new SqlParameter("@MaNhomQuyen", nhanVienTaiKhoan.MaNhomQuyen),
+                };
 
-                // Cập nhật thông tin nhân viên
-                nhanVien.TenNV = updatedEmployee.TenNV;
-                nhanVien.Email = updatedEmployee.Email;
-                nhanVien.SDT = updatedEmployee.SDT;
-                nhanVien.DiaChi = updatedEmployee.DiaChi;
-                nhanVien.GioiTinh = updatedEmployee.GioiTinh;
-                nhanVien.NgaySinh = updatedEmployee.NgaySinh;
-                nhanVien.NgayVaoLam = updatedEmployee.NgayVaoLam;
+                // Execute the stored procedure for updating employee information
+                await nhanVienContext.Database.ExecuteSqlRawAsync("EXEC UpdateEmployee @MaNV, @TenNV, @Email, @SoDT, @DiaChi, @GioiTinh, @NgaySinh, @NgayVaoLam, @Username, @MaNhomQuyen", parameters);
 
-                // Cập nhật thông tin tài khoản (không cập nhật mật khẩu)
-                if (!string.IsNullOrEmpty(nhanVien.TenTaiKhoan))
-                {
-                    var taiKhoan = await taiKhoanContext.TaiKhoan
-                        .FirstOrDefaultAsync(tk => tk.TenTaiKhoan == nhanVien.TenTaiKhoan);
-
-                    if (taiKhoan != null)
-                    {
-                        // Chỉ cập nhật nhóm quyền
-                        taiKhoan.MaNhomQuyen = updatedTaiKhoan.MaNhomQuyen ?? taiKhoan.MaNhomQuyen;
-                        taiKhoanContext.TaiKhoan.Update(taiKhoan);
-                    }
-                }
-
-                // Lưu thông tin cập nhật vào database
-                nhanVienContext.tbl_NhanVien.Update(nhanVien);
-                await nhanVienContext.SaveChangesAsync();
-                await taiKhoanContext.SaveChangesAsync();
-
-                // Commit transaction
+                // Commit the transaction
                 await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                // Rollback nếu có lỗi
+                // Rollback if there's an error
                 await transaction.RollbackAsync();
-                throw new Exception("Lỗi xảy ra khi cập nhật nhân viên và tài khoản", ex);
+                throw new Exception("An error occurred while updating the employee and account", ex);
             }
         }
+
 
     }
 }

@@ -175,19 +175,17 @@ namespace API_KeoDua.Controllers
         /// <param name="dicData">{MaNV:"guid",NhanVien:"NhanVien",TaiKhoan:"TaiKhoan"}</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> UpdatetEmployee([FromBody] Dictionary<string, object> dicData)
+        public async Task<ActionResult> UpdateEmployee([FromBody] Dictionary<string, object> dicData)
         {
             try
             {
                 logger.Debug("-------End UpdatetEmployee-------");
+                NhanVienTaiKhoan nhanVienTaiKhoan = JsonConvert.DeserializeObject<NhanVienTaiKhoan>(dicData["NhanVienTaiKhoan"].ToString());
                 Guid maNV = Guid.Parse(dicData["MaNV"].ToString());
-                NhanVien nhanVien = JsonConvert.DeserializeObject<NhanVien>(dicData["NhanVien"].ToString());
-                TaiKhoan taiKhoan = JsonConvert.DeserializeObject<TaiKhoan>(dicData["TaiKhoan"].ToString());
-
 
                 ResponseModel repData = await ResponseFail();
 
-                await this.nhanVienReponsitory.UpdateEmployee(maNV,nhanVien,taiKhoan);
+                await this.nhanVienReponsitory.UpdateEmployee(nhanVienTaiKhoan,maNV);
                 repData = await ResponseSucceeded();
                 repData.data = new { };
                 return Ok(repData);
