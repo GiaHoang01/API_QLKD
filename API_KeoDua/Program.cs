@@ -48,7 +48,6 @@ builder.Services.AddDbContext<NhomQuyenContext>(options =>
 builder.Services.AddScoped<ITaiKhoanReponsitory, TaiKhoanReponsitory>();
 builder.Services.AddScoped<INhanVienReponsitory, NhanVienReponsitory>();
 builder.Services.AddScoped<INhomQuyenRepository, NhomQuyenRepository>();
-builder.Services.AddScoped<DbContextFactory>();
 var app = builder.Build();
 
 // Use CORS
