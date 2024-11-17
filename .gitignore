@@ -5,3 +5,9 @@ API_KeoDua/bin/Debug/net8.0/API_KeoDua.exe
 .vs/API_KeoDua/FileContentIndex/10c7866f-3b09-4388-a150-3da400a6f2f7.vsidx
 *.dll
 *.exe
+/.vs
+/.vs/API_KeoDua
+API_KeoDua/bin/Debug/net8.0/API_KeoDua.dll
+/API_KeoDua/bin/Debug
+API_KeoDua/obj/API_KeoDua.csproj.nuget.dgspec.json
+/API_KeoDua/bin/Debug
