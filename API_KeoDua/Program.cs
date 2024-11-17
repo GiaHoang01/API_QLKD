@@ -136,6 +136,7 @@ builder.Services.AddDbContext<NhaCungCapContext>(options =>
 
 builder.Services.AddScoped<ITaiKhoanReponsitory, TaiKhoanReponsitory>();
 builder.Services.AddScoped<INhanVienReponsitory, NhanVienReponsitory>();
+builder.Services.AddScoped<INhomQuyenRepository, NhomQuyenRepository>();
 var app = builder.Build();
 
 // Use CORS

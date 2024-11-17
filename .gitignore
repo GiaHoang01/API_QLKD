@@ -1,6 +1,13 @@
 
+API_KeoDua/bin/Debug/net8.0/API_KeoDua.dll
+API_KeoDua/bin/Debug/net8.0/API_KeoDua.exe
+.vs/API_KeoDua/FileContentIndex/860d3da9-e4ec-47a3-b965-9bb8f3e23459.vsidx
+.vs/API_KeoDua/FileContentIndex/10c7866f-3b09-4388-a150-3da400a6f2f7.vsidx
+*.dll
+*.exe
 /.vs
-/.vs
-/.vs/API_KeoDua/FileContentIndex
 /.vs/API_KeoDua
-.vs/API_KeoDua/DesignTimeBuild/.dtbcache.v2
+API_KeoDua/bin/Debug/net8.0/API_KeoDua.dll
+/API_KeoDua/bin/Debug
+API_KeoDua/obj/API_KeoDua.csproj.nuget.dgspec.json
+/API_KeoDua/bin/Debug
