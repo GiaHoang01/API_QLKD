@@ -1,4 +1,5 @@
 ﻿using API_KeoDua.Data;
+using API_KeoDua.Models;
 using API_KeoDua.Reponsitory.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,11 +9,13 @@ namespace API_KeoDua.Reponsitory.Implement
     {
         private readonly TaiKhoanContext _context;
         private readonly NhanVienContext _nhanVienContext;
-
-        public TaiKhoanReponsitory(TaiKhoanContext context,NhanVienContext nhanVienContext)
+        private readonly DatabaseConnectionService _dbConnectionService;
+        private readonly DbContextFactory _dbContextFactory;
+        public TaiKhoanReponsitory(TaiKhoanContext context, DbContextFactory dbContextFactory, DatabaseConnectionService dbConnectionService)
         {
             _context = context;
-            this._nhanVienContext=nhanVienContext;
+            _dbContextFactory = dbContextFactory;
+            _dbConnectionService = dbConnectionService;
         }
         public int TotalRows { get ; set ; }
 
@@ -26,38 +29,34 @@ namespace API_KeoDua.Reponsitory.Implement
         {
             try
             {
-                // Kiểm tra tài khoản có hợp lệ hay không
-                bool isAccountValid = await IsCheckAccount(user, pass);
+                // Lưu chuỗi kết nối vào session
+                string connectionString = _dbConnectionService.GetConnectionString(user, pass);
+                _dbConnectionService.SetConnectionStringInSession(connectionString);
 
-                if (!isAccountValid)
-                {
-                    return "Tài khoản hoặc mật khẩu không đúng";
-                }
+                // Tạo lại DbContext với chuỗi kết nối mới
+                var newContext = _dbContextFactory.CreateDbContext<TaiKhoanContext>(connectionString);  // Specify the type here
 
-                // Lấy thông tin tài khoản từ DbContext _context
-                var account = await _context.TaiKhoan
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(tk => tk.TenTaiKhoan == user);
-
+                // Kiểm tra tài khoản trong context mới
+                var account = await newContext.TaiKhoan.FirstOrDefaultAsync(acc => acc.TenTaiKhoan == user && acc.MatKhau == pass);
                 if (account == null)
                 {
-                    return "Không tìm thấy tài khoản";
+                    return "Tài khoản không tồn tại";
                 }
+                // Tạo lại NhânViênContext với chuỗi kết nối mới
+                var nhanVienContext = _dbContextFactory.CreateDbContext<NhanVienContext>(connectionString);
 
-                // Lấy thông tin nhân viên từ DbContext _nhanVienContext
-                var employee = await _nhanVienContext.tbl_NhanVien
-                    .AsNoTracking()
+
+                // Fetch employee info from database using NhânViênContext
+                var employee = await nhanVienContext.tbl_NhanVien
                     .FirstOrDefaultAsync(nv => nv.TenTaiKhoan == account.TenTaiKhoan);
 
-                return employee?.TenNV ?? "Tên nhân viên không tồn tại";
+                return employee?.TenNV ?? "Tên nhân viên không tồn tại"; // Return employee name if found
             }
             catch (Exception ex)
             {
-                // Xử lý lỗi và trả về thông báo lỗi
-                return $"Đã xảy ra lỗi: {ex.Message}";
+                return $"Đã xảy ra lỗi: {ex.Message}"; // Handle error if any
             }
         }
-
 
 
     }

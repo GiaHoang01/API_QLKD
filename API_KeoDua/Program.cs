@@ -1,151 +1,73 @@
 using API_KeoDua.Data;
+using API_KeoDua.Models;
 using API_KeoDua.Reponsitory.Implement;
 using API_KeoDua.Reponsitory.Interface;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Serialization;
-using log4net;
 using log4net.Config;
-
+using log4net;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddHttpContextAccessor(); // Add IHttpContextAccessor service
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+// Add session service
+builder.Services.AddDistributedMemoryCache();
 
-// Cấu hình log4net
+// Configure log4net
 var logRepository = LogManager.GetRepository(System.Reflection.Assembly.GetEntryAssembly());
 XmlConfigurator.Configure(new FileInfo("log4net.config"));
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<TaiKhoanContext>(options =>
+builder.Services.AddDbContext<TaiKhoanContext>((serviceProvider, options) =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
+    var dbConnectionService = serviceProvider.GetRequiredService<DatabaseConnectionService>();
+    string connectionString = dbConnectionService.GetConnectionStringFromSession() ?? builder.Configuration.GetConnectionString("ConnectString");
+    options.UseSqlServer(connectionString);
 });
 
-builder.Services.AddDbContext<QuyenContext>(options =>
+builder.Services.AddDbContext<QuyenContext>((serviceProvider, options) =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
+    var dbConnectionService = serviceProvider.GetRequiredService<DatabaseConnectionService>();
+    string connectionString = dbConnectionService.GetConnectionStringFromSession();
+    options.UseSqlServer(connectionString);
 });
 
-builder.Services.AddDbContext<CapQuyenContext>(options =>
+builder.Services.AddDbContext<NhanVienContext>((serviceProvider, options) =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
+    var dbConnectionService = serviceProvider.GetRequiredService<DatabaseConnectionService>();
+    string connectionString = dbConnectionService.GetConnectionStringFromSession();
+    options.UseSqlServer(connectionString);
 });
 
-builder.Services.AddDbContext<NhomQuyenContext>(options =>
+builder.Services.AddDbContext<NhomQuyenContext>((serviceProvider, options) =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
+    var dbConnectionService = serviceProvider.GetRequiredService<DatabaseConnectionService>();
+    string connectionString = dbConnectionService.GetConnectionStringFromSession();
+    options.UseSqlServer(connectionString);
 });
 
-builder.Services.AddDbContext<NhanVienContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<KhachHangContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<LoaiKhachHangContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<ThongTinGiaoHangContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<HoaDonBanHangContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<HinhThucThanhToanContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<PhieuGiaoHangContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<CT_HoaDonBanHangContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<GioHangContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<PhieuHuyDonConText>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<ChuongTrinhKhuyenMaiContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<ChiTietCT_KhuyenMaiContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<HangHoaContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<ChiTietGioHangConText>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<LichSuGiaContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<LoaiHangHoaContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<CT_PhieuNhapContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<PhieuNhapHangContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
-builder.Services.AddDbContext<NhaCungCapContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString"));
-});
-
+// Add Repositories
 builder.Services.AddScoped<ITaiKhoanReponsitory, TaiKhoanReponsitory>();
 builder.Services.AddScoped<INhanVienReponsitory, NhanVienReponsitory>();
 builder.Services.AddScoped<INhomQuyenRepository, NhomQuyenRepository>();
+builder.Services.AddScoped<DatabaseConnectionService>();
+builder.Services.AddScoped<DbContextFactory>();
 var app = builder.Build();
 
 // Use CORS
 app.UseCors("AllowOrigin");
 
- 
+// Enable session
 
-
-// Configure the HTTP request pipeline. 
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -157,9 +79,8 @@ app.UseCors(options => options.WithOrigins("http://localhost:4200", "http://loca
     .AllowAnyHeader());
 
 app.UseHttpsRedirection();
-
+app.UseSession();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
