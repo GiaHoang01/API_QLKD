@@ -12,12 +12,10 @@ namespace API_KeoDua.Controllers
     {
         private readonly TaiKhoanContext _context;
         private readonly ITaiKhoanReponsitory taiKhoanReponsitory;
-        private readonly DatabaseConnectionService _dbConnectionService;
-        public TaiKhoanController(TaiKhoanContext context, ITaiKhoanReponsitory taiKhoanReponsitory, DatabaseConnectionService dbConnectionService)
+        public TaiKhoanController(TaiKhoanContext context, ITaiKhoanReponsitory taiKhoanReponsitory)
         {
             _context = context;
             this.taiKhoanReponsitory = taiKhoanReponsitory;
-            _dbConnectionService = dbConnectionService;
         }
         /// <summary>
         /// Hàm kiem tra tất cả các tài khoản co ton tai khong

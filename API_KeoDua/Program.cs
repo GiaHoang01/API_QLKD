@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor(); // Add IHttpContextAccessor service
 builder.Services.AddSession(options =>
 {
+    options.IdleTimeout = TimeSpan.FromMinutes(60); // Session tồn tại trong 30 phút
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -25,40 +26,28 @@ XmlConfigurator.Configure(new FileInfo("log4net.config"));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<TaiKhoanContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
 
-builder.Services.AddDbContext<TaiKhoanContext>((serviceProvider, options) =>
-{
-    var dbConnectionService = serviceProvider.GetRequiredService<DatabaseConnectionService>();
-    string connectionString = dbConnectionService.GetConnectionStringFromSession() ?? builder.Configuration.GetConnectionString("ConnectString");
-    options.UseSqlServer(connectionString);
-});
+builder.Services.AddDbContext<QuyenContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
 
-builder.Services.AddDbContext<QuyenContext>((serviceProvider, options) =>
-{
-    var dbConnectionService = serviceProvider.GetRequiredService<DatabaseConnectionService>();
-    string connectionString = dbConnectionService.GetConnectionStringFromSession();
-    options.UseSqlServer(connectionString);
-});
+builder.Services.AddDbContext<NhanVienContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
 
-builder.Services.AddDbContext<NhanVienContext>((serviceProvider, options) =>
-{
-    var dbConnectionService = serviceProvider.GetRequiredService<DatabaseConnectionService>();
-    string connectionString = dbConnectionService.GetConnectionStringFromSession();
-    options.UseSqlServer(connectionString);
-});
+builder.Services.AddDbContext<NhomQuyenContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
 
-builder.Services.AddDbContext<NhomQuyenContext>((serviceProvider, options) =>
-{
-    var dbConnectionService = serviceProvider.GetRequiredService<DatabaseConnectionService>();
-    string connectionString = dbConnectionService.GetConnectionStringFromSession();
-    options.UseSqlServer(connectionString);
-});
+
 
 // Add Repositories
 builder.Services.AddScoped<ITaiKhoanReponsitory, TaiKhoanReponsitory>();
 builder.Services.AddScoped<INhanVienReponsitory, NhanVienReponsitory>();
 builder.Services.AddScoped<INhomQuyenRepository, NhomQuyenRepository>();
-builder.Services.AddScoped<DatabaseConnectionService>();
 builder.Services.AddScoped<DbContextFactory>();
 var app = builder.Build();
 

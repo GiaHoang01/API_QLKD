@@ -15,17 +15,15 @@ namespace API_KeoDua.Controllers
         private readonly INhanVienReponsitory nhanVienReponsitory;
         private readonly TaiKhoanContext taiKhoanContext;
         private readonly ITaiKhoanReponsitory taiKhoanReponsitory;
-        private readonly DatabaseConnectionService _dbConnectionService;
 
         public NhanVienController(NhanVienContext context, INhanVienReponsitory nhanVienReponsitory
-            ,TaiKhoanContext taiKhoanContext,ITaiKhoanReponsitory taiKhoanReponsitory,
-            DatabaseConnectionService dbConnectionService)
+            ,TaiKhoanContext taiKhoanContext,ITaiKhoanReponsitory taiKhoanReponsitory
+         )
         {
             this.taiKhoanContext = taiKhoanContext;
             this.taiKhoanReponsitory=taiKhoanReponsitory;
             this.nhanVienContext = nhanVienContext;
             this.nhanVienReponsitory = nhanVienReponsitory;
-            this._dbConnectionService = dbConnectionService;
         }
 
         /// <summary>
