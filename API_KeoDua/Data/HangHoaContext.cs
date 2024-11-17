@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace API_KeoDua.Data
 {
@@ -10,6 +12,10 @@ namespace API_KeoDua.Data
         }
         #region DBSet
         public DbSet<HangHoa> tbl_CapQuyen { get; set; }
+        public IDbConnection CreateConnection()
+        {
+            return new SqlConnection(Database.GetConnectionString());
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
