@@ -18,16 +18,16 @@ namespace API_KeoDua.Data
         public decimal TongTriGia { get; set; }
 
         [MaxLength(255)]
-        public string GhiChu { get; set; }
+        public string? GhiChu { get; set; }
 
-        public Guid MaNV { get; set; }
+        public Guid? MaNV { get; set; }
 
         public Guid MaKhachHang { get; set; }
 
-        public Guid MaGioHang { get; set; }
+        public Guid? MaGioHang { get; set; }
 
         [MaxLength(10)]
-        public string MaHinhThuc { get; set; }
+        public string? MaHinhThuc { get; set; }
 
         [ForeignKey("MaHinhThuc")]
         public virtual HinhThucThanhToan HinhThucThanhToan { get; set; }
