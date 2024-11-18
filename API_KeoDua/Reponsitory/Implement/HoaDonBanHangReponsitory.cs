@@ -26,6 +26,7 @@ namespace API_KeoDua.Reponsitory.Implement
             this.gioHangContext = gioHangContext;
         }
         public int TotalRows { get; set; }
+
         #region Xác nhận hóa đơn bán hàng
         public async Task<List<HoaDonBanHang>> GetAllSaleInVoiceWithWait(string searchString, int startRow, int maxRows)
         {

@@ -10,7 +10,7 @@ using API_KeoDua.Data;
 
 namespace API_KeoDua.Reponsitory.Implement
 {
-    public class HangHoaReponsitory:IHangHoaReponsitory
+    public class HangHoaReponsitory : IHangHoaReponsitory
     {
         private readonly HangHoaContext hangHoaContext;
         private readonly LichSuGiaContext lichSuGiaContext;

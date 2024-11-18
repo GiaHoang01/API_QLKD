@@ -9,7 +9,6 @@ namespace API_KeoDua.Reponsitory.Implement
     {
         private readonly TaiKhoanContext _context;
         private readonly NhanVienContext _nhanVienContext;
-        private readonly DbContextFactory _dbContextFactory;
         public TaiKhoanReponsitory(TaiKhoanContext context,NhanVienContext nhanVienContext)
         {
             _context = context;
