@@ -12,6 +12,7 @@ namespace API_KeoDua.Reponsitory.Implement
     public class NhaCungCapReponsitory: INhaCungCapReponsitory
     {
         private readonly NhaCungCapContext nhaCungCapContext;
+
         public NhaCungCapReponsitory(NhaCungCapContext nhaCungCapContext)
         {
             this.nhaCungCapContext = nhaCungCapContext;
