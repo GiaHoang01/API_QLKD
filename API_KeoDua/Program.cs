@@ -42,12 +42,21 @@ builder.Services.AddDbContext<NhomQuyenContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
  ));
 
+builder.Services.AddDbContext<PhieuNhapHangContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
+
+builder.Services.AddDbContext<CT_PhieuNhapContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
 
 
 // Add Repositories
 builder.Services.AddScoped<ITaiKhoanReponsitory, TaiKhoanReponsitory>();
 builder.Services.AddScoped<INhanVienReponsitory, NhanVienReponsitory>();
 builder.Services.AddScoped<INhomQuyenRepository, NhomQuyenRepository>();
+builder.Services.AddScoped<IPhieuNhapHangReponsitory, PhieuNhapHangReponsitory>();
+builder.Services.AddScoped<ICT_PhieuNhapReponsitory, CT_PhieuNhapReponsitory>();
 var app = builder.Build();
 
 // Use CORS

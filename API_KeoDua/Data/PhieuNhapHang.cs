@@ -23,11 +23,5 @@ namespace API_KeoDua.Data
         public Guid MaNV { get; set; }
 
         public Guid MaNCC { get; set; }
-
-        [ForeignKey("MaNV")]
-        public virtual NhanVien NhanVien { get; set; }
-
-        [ForeignKey("MaNCC")]
-        public virtual NhaCungCap NhaCungCap { get; set; }
     }
 }
