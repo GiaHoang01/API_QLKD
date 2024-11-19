@@ -57,6 +57,12 @@ builder.Services.AddScoped<INhanVienReponsitory, NhanVienReponsitory>();
 builder.Services.AddScoped<INhomQuyenRepository, NhomQuyenRepository>();
 builder.Services.AddScoped<IPhieuNhapHangReponsitory, PhieuNhapHangReponsitory>();
 builder.Services.AddScoped<ICT_PhieuNhapReponsitory, CT_PhieuNhapReponsitory>();
+builder.Services.AddScoped<IHangHoaReponsitory, HangHoaReponsitory>();
+builder.Services.AddScoped<ILichSuGiaReponsitory, LichSuGiaReponsitory>();
+builder.Services.AddScoped<IKhachHangReponsitory, KhachHangReponsitory>();
+builder.Services.AddScoped<IGioHangReponsitory, GioHangReponsitory>();
+builder.Services.AddScoped<IHinhThucThanhToanReponsitory, HinhThucThanhToanReponsitory>();
+builder.Services.AddScoped<IHoaDonBanHangReponsitory, HoaDonBanHangReponsitory>();
 var app = builder.Build();
 
 // Use CORS

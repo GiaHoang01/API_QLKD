@@ -21,7 +21,7 @@ namespace API_KeoDua.Reponsitory.Implement
         }
 
         public int TotalRows { get; set; }
-        public async Task<List<HangHoa>> GetAllProduct(string searchString, int startRow, int maxRows)
+        public async Task<List<HangHoaLichSuGia>> GetAllProduct(string searchString, int startRow, int maxRows)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace API_KeoDua.Reponsitory.Implement
                         // Lấy tổng số hàng từ truy vấn đầu tiên
                         this.TotalRows = (await multi.ReadAsync<int>()).Single();
                         // Lấy danh sách hàng hóa từ truy vấn thứ hai
-                        return (await multi.ReadAsync<HangHoa>()).ToList();
+                        return (await multi.ReadAsync<HangHoaLichSuGia>()).ToList();
                     }
                 }
             }
