@@ -31,22 +31,51 @@ namespace API_KeoDua.Reponsitory.Implement
         /// 
         /// </summary>
         /// <param name="searchString"></param>
+        /// <param name="employeeId"></param>
+        /// <param name="cartId"></param>
+        /// <param name="customerId"></param>
+        /// <param name="maHinhThuc"></param>
         /// <param name="startRow"></param>
         /// <param name="maxRows"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<List<HoaDonBanHang>> GetAllSaleInVoiceWithWait(string searchString, int startRow, int maxRows)
+        public async Task<List<HoaDonBanHang>> GetAllSaleInVoiceWithWait(string searchString, Guid?employeeId,Guid?cartId,Guid customerId,string maHinhThuc, int startRow, int maxRows)
         {
             try
             {
-                string sqlWhere = "";
+                string sqlWhere = " WHERE TrangThai = N'Chờ xác nhận'"; // Điều kiện mặc định
                 var param = new DynamicParameters();
 
+                // Lọc theo từ khóa tìm kiếm
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    // Sử dụng TRIM() để loại bỏ khoảng trắng thừa và COLLATE để so sánh không phân biệt chữ hoa chữ thường
-                    sqlWhere += " WHERE LTRIM(RTRIM(GhiChu)) COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString AND TrangThai=N'Chờ xác nhận'";
+                    sqlWhere += " AND LTRIM(RTRIM(GhiChu)) COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString";
                     param.Add("@SearchString", $"%{searchString}%");
+                }
+
+                // Lọc theo EmployeeID (nếu có)
+                if (employeeId.HasValue)
+                {
+                    sqlWhere += " AND EmployeeID = @EmployeeID";
+                    param.Add("@EmployeeID", employeeId.Value);
+                }
+
+                // Lọc theo CartID (nếu có)
+                if (cartId.HasValue)
+                {
+                    sqlWhere += " AND CartID = @CartID";
+                    param.Add("@CartID", cartId.Value);
+                }
+
+                // Lọc theo CustomerID
+                sqlWhere += " AND CustomerID = @CustomerID";
+                param.Add("@CustomerID", customerId);
+
+                // Lọc theo mã hình thức (nếu có)
+                if (!string.IsNullOrEmpty(maHinhThuc))
+                {
+                    sqlWhere += " AND MaHinhThuc = @MaHinhThuc";
+                    param.Add("@MaHinhThuc", maHinhThuc);
                 }
 
 
@@ -83,24 +112,52 @@ namespace API_KeoDua.Reponsitory.Implement
         /// 
         /// </summary>
         /// <param name="searchString"></param>
+        /// <param name="employeeId"></param>
+        /// <param name="cartId"></param>
+        /// <param name="customerId"></param>
+        /// <param name="maHinhThuc"></param>
         /// <param name="startRow"></param>
         /// <param name="maxRows"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<List<HoaDonBanHang>> GetAllSaleInVoice(string searchString, int startRow, int maxRows)
+        public async Task<List<HoaDonBanHang>> GetAllSaleInVoice(string searchString, Guid? employeeId, Guid? cartId, Guid customerId, string maHinhThuc, int startRow, int maxRows)
         {
             try
             {
-                string sqlWhere = "";
+                string sqlWhere = " WHERE TrangThai <> N'Chờ xác nhận'"; // Điều kiện mặc định
                 var param = new DynamicParameters();
 
+                // Lọc theo từ khóa tìm kiếm
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    // Sử dụng TRIM() để loại bỏ khoảng trắng thừa và COLLATE để so sánh không phân biệt chữ hoa chữ thường
-                    sqlWhere += " WHERE LTRIM(RTRIM(GhiChu)) COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString AND TrangThai<>N'Chờ xác nhận'";
+                    sqlWhere += " AND LTRIM(RTRIM(GhiChu)) COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString";
                     param.Add("@SearchString", $"%{searchString}%");
                 }
 
+                // Lọc theo EmployeeID (nếu có)
+                if (employeeId!=null)
+                {
+                    sqlWhere += " AND EmployeeID = @EmployeeID";
+                    param.Add("@EmployeeID", employeeId);
+                }
+
+                // Lọc theo CartID (nếu có)
+                if (cartId!=null)
+                {
+                    sqlWhere += " AND CartID = @CartID";
+                    param.Add("@CartID", cartId);
+                }
+
+                // Lọc theo CustomerID
+                sqlWhere += " AND CustomerID = @CustomerID";
+                param.Add("@CustomerID", customerId);
+
+                // Lọc theo mã hình thức (nếu có)
+                if (!string.IsNullOrEmpty(maHinhThuc))
+                {
+                    sqlWhere += " AND MaHinhThuc = @MaHinhThuc";
+                    param.Add("@MaHinhThuc", maHinhThuc);
+                }
 
                 // Tạo câu truy vấn với điều kiện WHERE và phân trang
                 string sqlQuery = $@"
