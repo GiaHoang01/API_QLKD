@@ -27,6 +27,14 @@ namespace API_KeoDua.Reponsitory.Implement
         }
         public int TotalRows { get; set; }
         #region Xác nhận hóa đơn bán hàng
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <param name="startRow"></param>
+        /// <param name="maxRows"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<List<HoaDonBanHang>> GetAllSaleInVoiceWithWait(string searchString, int startRow, int maxRows)
         {
             try
@@ -37,7 +45,59 @@ namespace API_KeoDua.Reponsitory.Implement
                 if (!string.IsNullOrEmpty(searchString))
                 {
                     // Sử dụng TRIM() để loại bỏ khoảng trắng thừa và COLLATE để so sánh không phân biệt chữ hoa chữ thường
-                    sqlWhere += " WHERE SDT LIKE @SearchString AND TrangThai=N'Chờ xác nhận'";
+                    sqlWhere += " WHERE LTRIM(RTRIM(GhiChu)) COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString AND TrangThai=N'Chờ xác nhận'";
+                    param.Add("@SearchString", $"%{searchString}%");
+                }
+
+
+                // Tạo câu truy vấn với điều kiện WHERE và phân trang
+                string sqlQuery = $@"
+                    SELECT COUNT(1) FROM tbl_HoaDonBanHang WITH (NOLOCK) {sqlWhere};
+                    SELECT * FROM tbl_HoaDonBanHang WITH (NOLOCK) {sqlWhere}
+                    ORDER BY NgayBan ASC
+                    OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
+
+                param.Add("@StartRow", startRow);
+                param.Add("@MaxRows", maxRows);
+
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery, param))
+                    {
+                        // Lấy tổng số hàng từ truy vấn đầu tiên
+                        this.TotalRows = (await multi.ReadAsync<int>()).Single();
+                        // Lấy danh sách nhân viên từ truy vấn thứ hai
+                        return (await multi.ReadAsync<HoaDonBanHang>()).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ghi log hoặc xử lý ngoại lệ
+                throw new Exception("An error occurred while fetching employees", ex);
+            }
+        }
+        #endregion
+        #region Hóa đơn bán hàng
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <param name="startRow"></param>
+        /// <param name="maxRows"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<List<HoaDonBanHang>> GetAllSaleInVoice(string searchString, int startRow, int maxRows)
+        {
+            try
+            {
+                string sqlWhere = "";
+                var param = new DynamicParameters();
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    // Sử dụng TRIM() để loại bỏ khoảng trắng thừa và COLLATE để so sánh không phân biệt chữ hoa chữ thường
+                    sqlWhere += " WHERE LTRIM(RTRIM(GhiChu)) COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString AND TrangThai<>N'Chờ xác nhận'";
                     param.Add("@SearchString", $"%{searchString}%");
                 }
 
