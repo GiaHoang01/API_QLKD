@@ -53,11 +53,18 @@ namespace API_KeoDua.Controllers
                 int pageIndex = Convert.ToInt32(dicData["PageIndex"].ToString());
                 int pageSize = Convert.ToInt32(dicData["PageSize"].ToString());
                 string searchString = dicData["SearchString"].ToString();
-
+                Guid customerId = Guid.Parse(dicData["MaKhachHang"].ToString());
+                Guid? employeeId = string.IsNullOrWhiteSpace(dicData["MaNV"]?.ToString())
+                  ? null
+                  : Guid.Parse(dicData["MaNV"].ToString());
+                Guid? cartId = string.IsNullOrWhiteSpace(dicData["MaGioHang"]?.ToString())
+                 ? null
+                 : Guid.Parse(dicData["MaGioHang"].ToString());
+                string maHinhThuc = dicData["MaHinhThuc"].ToString();
                 int startRow = (pageIndex - 1) * pageSize;
                 int maxRows = pageSize;
 
-                List<HoaDonBanHang> saleInvoiceList = await this.hoaDonBanHangReponsitory.GetAllSaleInVoiceWithWait(searchString, startRow, maxRows);
+                List<HoaDonBanHang> saleInvoiceList = await this.hoaDonBanHangReponsitory.GetAllSaleInVoiceWithWait(searchString,employeeId,cartId,customerId,maHinhThuc, startRow, maxRows);
 
                 if (saleInvoiceList != null && saleInvoiceList.Any())
                 {
@@ -94,11 +101,18 @@ namespace API_KeoDua.Controllers
                 int pageIndex = Convert.ToInt32(dicData["PageIndex"].ToString());
                 int pageSize = Convert.ToInt32(dicData["PageSize"].ToString());
                 string searchString = dicData["SearchString"].ToString();
-
+                Guid customerId = Guid.Parse(dicData["MaKhachHang"].ToString());
+                Guid? employeeId = string.IsNullOrWhiteSpace(dicData["MaNV"]?.ToString())
+                 ? null
+                 : Guid.Parse(dicData["MaNV"].ToString());
+                Guid? cartId = string.IsNullOrWhiteSpace(dicData["MaGioHang"]?.ToString())
+                 ? null
+                 : Guid.Parse(dicData["MaGioHang"].ToString());
+                string maHinhThuc = dicData["SearchString"].ToString();
                 int startRow = (pageIndex - 1) * pageSize;
                 int maxRows = pageSize;
 
-                List<HoaDonBanHang> saleInvoiceList = await this.hoaDonBanHangReponsitory.GetAllSaleInVoice(searchString, startRow, maxRows);
+                List<HoaDonBanHang> saleInvoiceList = await this.hoaDonBanHangReponsitory.GetAllSaleInVoice(searchString,employeeId,cartId,customerId,maHinhThuc, startRow, maxRows);
 
                 if (saleInvoiceList != null && saleInvoiceList.Any())
                 {
