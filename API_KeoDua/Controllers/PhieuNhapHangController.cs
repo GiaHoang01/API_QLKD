@@ -28,11 +28,11 @@ namespace API_KeoDua.Controllers
         /// <param name="dicData">{SearchString:"string",FromDate:"date",ToDate:"Date",PageIndex:"int",PageSize:""}</param>
         /// <returns>Employees</returns>
         [HttpPost]
-        public async Task<ActionResult> getAllEmployees([FromBody] Dictionary<string, object> dicData)
+        public async Task<ActionResult> getAllPurchaseOrder([FromBody] Dictionary<string, object> dicData)
         {
             try
             {
-                logger.Debug("-------End getAllEmployees-------");
+                logger.Debug("-------End getAllPurchaseOrder-------");
                 ResponseModel repData = await ResponseFail();
 
                 int pageIndex = Convert.ToInt32(dicData["PageIndex"].ToString());
@@ -50,7 +50,7 @@ namespace API_KeoDua.Controllers
                     repData = await ResponseSucceeded();
                 }
 
-                repData.data = new { TotalRows = this.phieuNhapHangReponsitory.TotalRows, PurchaseOrder = phieuNhapHangs };
+                repData.data = new { TotalRows = this.phieuNhapHangReponsitory.TotalRows, PurchaseOrders = phieuNhapHangs };
                 return Ok(repData);
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace API_KeoDua.Controllers
             }
             finally
             {
-                logger.Debug("-------End getAllEmployees-------");
+                logger.Debug("-------End getAllPurchaseOrder-------");
             }
         }
 

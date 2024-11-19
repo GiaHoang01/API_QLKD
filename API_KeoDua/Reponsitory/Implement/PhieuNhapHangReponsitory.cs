@@ -22,37 +22,31 @@ namespace API_KeoDua.Reponsitory.Implement
         {
             try
             {
-                var sqlWhere = new StringBuilder("WHERE NgayNhap >= @FromDate AND NgayNhap <= @ToDate AND NgayDat >= @FromDate AND NgayDat <= @ToDate ");
+                var sqlWhere = new StringBuilder();
                 var param = new DynamicParameters();
 
-                // Gán tham số ngày
-                param.Add("@FromDate", fromDate);
-                param.Add("@ToDate", toDate);
-
-                // Thêm điều kiện tìm kiếm nếu có
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    sqlWhere.Append(" AND (MaPhieuNhap COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString OR MaNV LIKE @SearchString)");
+                    sqlWhere.Append("WHERE MaPhieuNhap COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString OR MaNV LIKE @SearchString");
                     param.Add("@SearchString", $"%{searchString}%");
                 }
+                else
+                {
+                    sqlWhere.Append("WHERE NgayNhap >= @FromDate AND NgayNhap <= @ToDate AND NgayDat >= @FromDate AND NgayDat <= @ToDate");
+                    param.Add("@FromDate", fromDate);
+                    param.Add("@ToDate", toDate);
+                }
 
-                // Tạo truy vấn phân trang
-                string sqlQuery = $@" SELECT COUNT(1) AS TotalRows FROM tbl_PhieuNhapHang WITH (NOLOCK) {sqlWhere};
-                SELECT * FROM tbl_PhieuNhapHang WITH (NOLOCK)  {sqlWhere} ORDER BY MaPhieuNhap ASC
-                OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
-
-                // Gán tham số phân trang
+                string sqlQuery = $@"SELECT COUNT(1) AS TotalRows FROM tbl_PhieuNhapHang WITH (NOLOCK) {sqlWhere};
+                                     SELECT * FROM tbl_PhieuNhapHang WITH (NOLOCK) {sqlWhere} ORDER BY MaPhieuNhap ASC
+                                     OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
                 param.Add("@StartRow", startRow);
                 param.Add("@MaxRows", maxRows);
-
-                // Kết nối và thực hiện truy vấn
                 using (var connection = this.phieuNhapHangContext.CreateConnection())
                 {
                     using (var multi = await connection.QueryMultipleAsync(sqlQuery, param))
                     {
-                        // Lấy tổng số dòng
                         this.TotalRows = (await multi.ReadFirstOrDefaultAsync<int>());
-
                         return (await multi.ReadAsync<PhieuNhapHang>()).ToList();
                     }
                 }
