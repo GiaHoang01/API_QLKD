@@ -40,7 +40,7 @@ namespace API_KeoDua.Reponsitory.Implement
         /// <param name="maxRows"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<List<HoaDonBanHang>> GetAllSaleInVoiceWithWait(string searchString, Guid?employeeId,Guid?cartId,Guid customerId,string maHinhThuc, int startRow, int maxRows)
+        public async Task<List<HoaDonBanHang>> GetAllSaleInVoiceWithWait(string searchString, Guid?employeeId,Guid?cartId,Guid? customerId,string? maHinhThuc, int startRow, int maxRows)
         {
             try
             {
@@ -57,19 +57,19 @@ namespace API_KeoDua.Reponsitory.Implement
                 // Lọc theo EmployeeID (nếu có)
                 if (employeeId.HasValue)
                 {
-                    sqlWhere += " AND EmployeeID = @EmployeeID";
-                    param.Add("@EmployeeID", employeeId.Value);
+                    sqlWhere += " AND MaNV = @EmployeeID";
+                    param.Add("@EmployeeID", employeeId);
                 }
 
                 // Lọc theo CartID (nếu có)
-                if (cartId.HasValue)
+                if (cartId!=null)
                 {
-                    sqlWhere += " AND CartID = @CartID";
-                    param.Add("@CartID", cartId.Value);
+                    sqlWhere += " AND MaGioHang = @CartID";
+                    param.Add("@CartID", cartId);
                 }
 
                 // Lọc theo CustomerID
-                sqlWhere += " AND CustomerID = @CustomerID";
+                sqlWhere += " AND MaKhachHang = @CustomerID";
                 param.Add("@CustomerID", customerId);
 
                 // Lọc theo mã hình thức (nếu có)
@@ -104,7 +104,7 @@ namespace API_KeoDua.Reponsitory.Implement
             catch (Exception ex)
             {
                 // Ghi log hoặc xử lý ngoại lệ
-                throw new Exception("An error occurred while fetching employees", ex);
+                throw new Exception("An error occurred while fetching saleinvoice", ex);
             }
         }
         #endregion
@@ -121,7 +121,7 @@ namespace API_KeoDua.Reponsitory.Implement
         /// <param name="maxRows"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<List<HoaDonBanHang>> GetAllSaleInVoice(string searchString, Guid? employeeId, Guid? cartId, Guid customerId, string maHinhThuc, int startRow, int maxRows)
+        public async Task<List<HoaDonBanHang>> GetAllSaleInVoice(string searchString, Guid? employeeId, Guid? cartId, Guid? customerId, string? maHinhThuc, int startRow, int maxRows)
         {
             try
             {
@@ -138,21 +138,23 @@ namespace API_KeoDua.Reponsitory.Implement
                 // Lọc theo EmployeeID (nếu có)
                 if (employeeId!=null)
                 {
-                    sqlWhere += " AND EmployeeID = @EmployeeID";
+                    sqlWhere += " AND MaNV = @EmployeeID";
                     param.Add("@EmployeeID", employeeId);
                 }
 
                 // Lọc theo CartID (nếu có)
                 if (cartId!=null)
                 {
-                    sqlWhere += " AND CartID = @CartID";
+                    sqlWhere += " AND MaGioHang = @CartID";
                     param.Add("@CartID", cartId);
                 }
 
                 // Lọc theo CustomerID
-                sqlWhere += " AND CustomerID = @CustomerID";
-                param.Add("@CustomerID", customerId);
-
+                if (customerId != null)
+                {
+                    sqlWhere += " AND MaKhachHang = @CustomerID";
+                    param.Add("@CustomerID", customerId);
+                }
                 // Lọc theo mã hình thức (nếu có)
                 if (!string.IsNullOrEmpty(maHinhThuc))
                 {
@@ -184,7 +186,7 @@ namespace API_KeoDua.Reponsitory.Implement
             catch (Exception ex)
             {
                 // Ghi log hoặc xử lý ngoại lệ
-                throw new Exception("An error occurred while fetching employees", ex);
+                throw new Exception("An error occurred while fetching saleinvoice", ex);
             }
         }
         #endregion

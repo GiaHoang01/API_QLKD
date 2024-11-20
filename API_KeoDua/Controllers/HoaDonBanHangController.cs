@@ -53,14 +53,16 @@ namespace API_KeoDua.Controllers
                 int pageIndex = Convert.ToInt32(dicData["PageIndex"].ToString());
                 int pageSize = Convert.ToInt32(dicData["PageSize"].ToString());
                 string searchString = dicData["SearchString"].ToString();
-                Guid customerId = Guid.Parse(dicData["MaKhachHang"].ToString());
+                Guid? customerId = string.IsNullOrWhiteSpace(dicData["MaKhachHang"]?.ToString())
+                 ? null
+                 : Guid.Parse(dicData["MaKhachHang"].ToString());
                 Guid? employeeId = string.IsNullOrWhiteSpace(dicData["MaNV"]?.ToString())
                   ? null
                   : Guid.Parse(dicData["MaNV"].ToString());
                 Guid? cartId = string.IsNullOrWhiteSpace(dicData["MaGioHang"]?.ToString())
                  ? null
                  : Guid.Parse(dicData["MaGioHang"].ToString());
-                string maHinhThuc = dicData["MaHinhThuc"].ToString();
+                string? maHinhThuc = string.IsNullOrWhiteSpace(dicData["MaHinhThuc"].ToString()) ? null : dicData["MaHinhThuc"].ToString();
                 int startRow = (pageIndex - 1) * pageSize;
                 int maxRows = pageSize;
 
@@ -101,14 +103,16 @@ namespace API_KeoDua.Controllers
                 int pageIndex = Convert.ToInt32(dicData["PageIndex"].ToString());
                 int pageSize = Convert.ToInt32(dicData["PageSize"].ToString());
                 string searchString = dicData["SearchString"].ToString();
-                Guid customerId = Guid.Parse(dicData["MaKhachHang"].ToString());
+                Guid? customerId = string.IsNullOrWhiteSpace(dicData["MaKhachHang"]?.ToString())
+                 ? null
+                 : Guid.Parse(dicData["MaKhachHang"].ToString());
                 Guid? employeeId = string.IsNullOrWhiteSpace(dicData["MaNV"]?.ToString())
                  ? null
                  : Guid.Parse(dicData["MaNV"].ToString());
                 Guid? cartId = string.IsNullOrWhiteSpace(dicData["MaGioHang"]?.ToString())
                  ? null
                  : Guid.Parse(dicData["MaGioHang"].ToString());
-                string maHinhThuc = dicData["SearchString"].ToString();
+                string? maHinhThuc =string.IsNullOrWhiteSpace(dicData["MaHinhThuc"].ToString())?null: dicData["MaHinhThuc"].ToString();
                 int startRow = (pageIndex - 1) * pageSize;
                 int maxRows = pageSize;
 

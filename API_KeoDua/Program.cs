@@ -49,8 +49,24 @@ builder.Services.AddDbContext<PhieuNhapHangContext>(options =>
 builder.Services.AddDbContext<CT_PhieuNhapContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
  ));
-
-
+builder.Services.AddDbContext<HangHoaContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
+builder.Services.AddDbContext<HoaDonBanHangContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
+builder.Services.AddDbContext<LichSuGiaContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
+builder.Services.AddDbContext<KhachHangContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
+builder.Services.AddDbContext<GioHangContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
+builder.Services.AddDbContext<HinhThucThanhToanContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
 // Add Repositories
 builder.Services.AddScoped<ITaiKhoanReponsitory, TaiKhoanReponsitory>();
 builder.Services.AddScoped<INhanVienReponsitory, NhanVienReponsitory>();

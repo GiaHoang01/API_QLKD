@@ -72,7 +72,7 @@ namespace API_KeoDua.Controllers
                 hangHoa.TenHangHoa = dicData["TenHangHoa"].ToString();
                 hangHoa.MoTa = dicData["MoTa"].ToString();
                 hangHoa.HinhAnh = dicData["HinhAnh"].ToString();
-                //hangHoa.LoaiHangHoa = dicData["LoaiHangHoa"].ToString();
+                hangHoa.MaLoai = dicData["MaLoai"].ToString();
                 LichSuGia lichSuGia = new LichSuGia();
                 lichSuGia.GiaBan = Convert.ToDecimal(dicData["GiaBan"].ToString());
                 ResponseModel repData = await ResponseFail();
