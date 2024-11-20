@@ -93,6 +93,47 @@ namespace API_KeoDua.Controllers
         /// <param name="dicData"></param>
         /// <returns></returns>
         [HttpPost]
+        public async Task<ActionResult> ConfirmSaleInvoice([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Begin ConfirmSaleInvoicet-------");
+                ResponseModel repData = await ResponseFail();
+                Guid saleId = Guid.Parse(dicData["MaHoaDon"].ToString());
+                Guid employeeId = Guid.Parse(dicData["MaNV"].ToString());
+                if (await(this.hoaDonBanHangReponsitory.ConfirmSaleInvoice(saleId,employeeId)))
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { };
+                if(repData.status==1)
+                {
+                    repData.message = "Đã cập nhật thành công";
+                }
+                else
+                {
+                    repData.message = "Đã cập nhật thất bại hoặc đã cập nhật rồi";
+                }
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End ConfirmSaleInvoice-------");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
         public async Task<ActionResult> getAllSaleInvoice([FromBody] Dictionary<string, object> dicData)
         {
             try

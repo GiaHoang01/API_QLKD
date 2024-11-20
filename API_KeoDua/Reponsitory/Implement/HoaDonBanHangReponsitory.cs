@@ -107,6 +107,42 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while fetching saleinvoice", ex);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maHoaDon"></param>
+        /// <param name="maNV"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<bool> ConfirmSaleInvoice(Guid maHoaDon,Guid maNV)
+        { 
+            try
+            {
+                string sqlUpdate = @"
+                UPDATE tbl_HoaDonBanHang
+                SET TrangThai = N'Mới tạo',
+                    NgayBan = GETDATE(),
+                    MaNV = @MaNV
+                WHERE MaHoaDon = @MaHoaDon AND TrangThai = N'Chờ xác nhận';"; // Điều kiện mặc định
+                var param = new DynamicParameters();
+                param.Add("@MaHoaDon", maHoaDon);
+                param.Add("@MaNV", maNV);
+               
+
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    int rowsAffected = await connection.ExecuteAsync(sqlUpdate, param);
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ghi log hoặc xử lý ngoại lệ
+                throw new Exception("An error occurred while fetching saleinvoice", ex);
+            }
+        }
+
         #endregion
         #region Hóa đơn bán hàng
         /// <summary>
