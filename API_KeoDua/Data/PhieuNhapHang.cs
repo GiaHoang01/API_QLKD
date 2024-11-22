@@ -11,6 +11,8 @@ namespace API_KeoDua.Data
 
         public DateTime NgayNhap { get; set; }
 
+        public DateTime NgayDat { get; set; }
+
         [MaxLength(50)]
         public string TrangThai  { get; set; }
 

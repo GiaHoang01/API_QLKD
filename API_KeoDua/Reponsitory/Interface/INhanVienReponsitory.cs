@@ -12,5 +12,6 @@ namespace API_KeoDua.Reponsitory.Interface
         public Task<NhanVienTaiKhoan> GetEmployeeByID(Guid MaNV);
         public Task DeleteEmployee (Guid MaNV);
         public Task UpdateEmployee(NhanVienTaiKhoan nhanVienTaiKhoan, Guid maNV);
+        public Task<List<NhanVien>> QuickSearchNhanVien(string searchString);
     } 
 }

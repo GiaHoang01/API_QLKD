@@ -1,4 +1,5 @@
 ﻿using API_KeoDua.Data;
+using API_KeoDua.DataView;
 using API_KeoDua.Reponsitory.Interface;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +11,11 @@ namespace API_KeoDua.Reponsitory.Implement
     public class PhieuNhapHangReponsitory:IPhieuNhapHangReponsitory
     {
         private readonly PhieuNhapHangContext phieuNhapHangContext;
-
-        public PhieuNhapHangReponsitory(PhieuNhapHangContext phieuNhapHangContext)
+        private readonly CT_PhieuNhapContext cT_PhieuNhapContext;
+        public PhieuNhapHangReponsitory(PhieuNhapHangContext phieuNhapHangContext, CT_PhieuNhapContext cT_PhieuNhapContext)
         {
             this.phieuNhapHangContext = phieuNhapHangContext;
+            this.cT_PhieuNhapContext = cT_PhieuNhapContext;
         }
 
         public int TotalRows { get; set; }
@@ -58,5 +60,39 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
+        public async Task<(PhieuNhapHang phieuNhap, List<CT_PhieuNhap> chiTietPhieuNhap)> GetPurchase_ByID(Guid maPhieuNhap)
+        {
+            try
+            {
+                // Query cho bảng PhieuNhapHang
+                var sqlPhieuNhap = @"SELECT * FROM tbl_PhieuNhapHang WHERE MaPhieuNhap = @MaPhieuNhap;";
+
+                // Query cho bảng CT_PhieuNhap và bảng liên quan
+                var sqlChiTietPhieuNhap = @"
+                SELECT * FROM  tbl_CT_PhieuNhap WHERE MaPhieuNhap = @MaPhieuNhap;";
+
+                // Biến lưu trữ kết quả
+                PhieuNhapHang phieuNhap;
+                List<CT_PhieuNhap> chiTietPhieuNhap;
+
+                // Truy vấn bảng tbl_PhieuNhapHang từ PhieuNhapHangContext
+                using (var connection1 = this.phieuNhapHangContext.CreateConnection())
+                {
+                    phieuNhap = await connection1.QueryFirstOrDefaultAsync<PhieuNhapHang>(sqlPhieuNhap, new { MaPhieuNhap = maPhieuNhap });
+                }
+
+                // Truy vấn bảng tbl_CT_PhieuNhap từ CT_PhieuNhapContext
+                using (var connection2 = this.cT_PhieuNhapContext.CreateConnection())
+                {
+                    chiTietPhieuNhap = (await connection2.QueryAsync<CT_PhieuNhap>(sqlChiTietPhieuNhap, new { MaPhieuNhap = maPhieuNhap })).ToList();
+                }
+
+                return (phieuNhap, chiTietPhieuNhap);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while fetching the purchase order details.", ex);
+            }
+        }
     }
 }
