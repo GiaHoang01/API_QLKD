@@ -2,13 +2,17 @@
 using API_KeoDua.DataView;
 using API_KeoDua.Reponsitory.Interface;
 using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
+using System.Transactions;
 namespace API_KeoDua.Reponsitory.Implement
 {
-    public class PhieuNhapHangReponsitory:IPhieuNhapHangReponsitory
+    public class PhieuNhapHangReponsitory : IPhieuNhapHangReponsitory
     {
         private readonly PhieuNhapHangContext phieuNhapHangContext;
         private readonly CT_PhieuNhapContext cT_PhieuNhapContext;
@@ -60,7 +64,7 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        public async Task<(PhieuNhapHang phieuNhap, List<CT_PhieuNhap> chiTietPhieuNhap)> GetPurchase_ByID(Guid maPhieuNhap)
+        public async Task<(PhieuNhapHang phieuNhap, List<CT_PhieuNhap> chiTietPhieuNhap)> GetPurchase_ByID(Guid? maPhieuNhap)
         {
             try
             {
@@ -94,5 +98,81 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while fetching the purchase order details.", ex);
             }
         }
+
+        public async Task AddPurchaseOrder(PhieuNhapHang phieuNhapHang, List<CT_PhieuNhap> ctPhieuNhaps)
+        {
+            // Sử dụng TransactionScope cho tất cả các DbContext
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    // Thêm phiếu nhập vào bảng tbl_PhieuNhapHang
+                    phieuNhapHang.NgayDat = DateTime.Now;
+                    phieuNhapHangContext.tbl_PhieuNhapHang.Add(phieuNhapHang);
+                    await phieuNhapHangContext.SaveChangesAsync();
+
+                    // Thêm chi tiết phiếu nhập vào bảng tbl_CT_PhieuNhap
+                    foreach (var detail in ctPhieuNhaps)
+                    {
+                        detail.MaPhieuNhap = (Guid)phieuNhapHang.MaPhieuNhap;
+                        cT_PhieuNhapContext.tbl_CT_PhieuNhap.Add(detail);
+                    }
+                    await cT_PhieuNhapContext.SaveChangesAsync();
+
+                    // Commit giao dịch
+                    transaction.Complete();
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi và rollback nếu có
+                    throw new InvalidOperationException("Có lỗi xảy ra khi thêm dữ liệu.", ex);
+                }
+            }
+        }
+
+
+        public async Task<bool> UpdatePurchaseOrder(PhieuNhapHang phieuNhapHang, List<CT_PhieuNhap> ctPhieuNhaps)
+        {
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    // Tìm phiếu nhập hiện tại
+                    var existingPhieuNhapHang = await phieuNhapHangContext.tbl_PhieuNhapHang.FindAsync(phieuNhapHang.MaPhieuNhap);
+                    if (existingPhieuNhapHang == null)
+                    {
+                        return false; // Không tìm thấy phiếu nhập
+                    }
+
+                    // Cập nhật thông tin phiếu nhập
+                    existingPhieuNhapHang.MaNCC = phieuNhapHang.MaNCC;
+                    existingPhieuNhapHang.MaNV = phieuNhapHang.MaNV;
+                    existingPhieuNhapHang.NgayNhap = phieuNhapHang.NgayNhap;
+                    await phieuNhapHangContext.SaveChangesAsync();
+
+                    string deleteQuery = @"DELETE FROM tbl_CT_PhieuNhap WHERE MaPhieuNhap = @MaPhieuNhap";
+                    var parameter = new SqlParameter("@MaPhieuNhap", phieuNhapHang.MaPhieuNhap);
+                    await cT_PhieuNhapContext.Database.ExecuteSqlRawAsync(deleteQuery, parameter);
+
+                    // **Thêm chi tiết phiếu nhập mới**
+                    foreach (var detail in ctPhieuNhaps)
+                    {
+                        detail.MaPhieuNhap = (Guid)phieuNhapHang.MaPhieuNhap;
+                        cT_PhieuNhapContext.tbl_CT_PhieuNhap.Add(detail);
+                    }
+                    await cT_PhieuNhapContext.SaveChangesAsync();
+
+                    // Hoàn tất giao dịch
+                    scope.Complete();
+                    return true; // Cập nhật thành công
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Có lỗi xảy ra khi cập nhật dữ liệu.", ex);
+                }
+            }
+        }
+
+
     }
 }
