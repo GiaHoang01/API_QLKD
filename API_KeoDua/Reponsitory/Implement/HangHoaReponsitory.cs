@@ -7,6 +7,7 @@ using API_KeoDua.DataView;
 using Microsoft.AspNetCore.Mvc;
 using API_KeoDua.Reponsitory.Interface;
 using API_KeoDua.Data;
+using Microsoft.CodeAnalysis;
 
 namespace API_KeoDua.Reponsitory.Implement
 {
@@ -30,28 +31,45 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    // Sử dụng TRIM() để loại bỏ khoảng trắng thừa và COLLATE để so sánh không phân biệt chữ hoa chữ thường
-                    sqlWhere += " WHERE TenHangHoa COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString AND g.NgayCapNhatGia = (\r\n SELECT MAX(g1.NgayCapNhatGia) \r\n        FROM tbl_LichSuGia g1 \r\n        WHERE g1.MaHangHoa = g.MaHangHoa\r\n    );";
+                    sqlWhere += " AND h.TenHangHoa COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString";
                     param.Add("@SearchString", $"%{searchString}%");
                 }
-                // Tạo câu truy vấn với điều kiện WHERE và phân trang
+
+                // Sử dụng GROUP BY để loại bỏ trùng lặp
                 string sqlQuery = $@"
-                    SELECT COUNT(1) FROM tbl_HangHoa WITH (NOLOCK) {sqlWhere};
-                    SELECT 
-                        h.MaHangHoa,
-                        h.TenHangHoa,
-                        h.HinhAnh,
-                        g.GiaBan,
-                        h.MoTa,
-                        h.MaLoai
-                    FROM 
-                        tbl_HangHoa h
-                    INNER JOIN 
-                        tbl_LichSuGia g
-                    ON 
-                        h.MaHangHoa = g.MaHangHoa {sqlWhere}
-                    ORDER BY TenHangHoa ASC
-                    OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
+                SELECT COUNT(1) 
+                FROM tbl_HangHoa h
+                INNER JOIN (
+                    SELECT MaHangHoa, MAX(NgayCapNhatGia) AS MaxNgayCapNhatGia
+                    FROM tbl_LichSuGia
+                    GROUP BY MaHangHoa
+                ) gMax
+                ON h.MaHangHoa = gMax.MaHangHoa
+                INNER JOIN tbl_LichSuGia g
+                ON g.MaHangHoa = gMax.MaHangHoa AND g.NgayCapNhatGia = gMax.MaxNgayCapNhatGia
+                WHERE 1=1 {sqlWhere};
+
+                SELECT 
+                    h.MaHangHoa,
+                    h.TenHangHoa,
+                    h.HinhAnh,
+                    g.GiaBan,
+                    h.MoTa,
+                    h.MaLoai,
+                    g.NgayCapNhatGia,
+                    g.GhiChu
+                FROM tbl_HangHoa h
+                INNER JOIN (
+                    SELECT MaHangHoa, MAX(NgayCapNhatGia) AS MaxNgayCapNhatGia
+                    FROM tbl_LichSuGia
+                    GROUP BY MaHangHoa
+                ) gMax
+                ON h.MaHangHoa = gMax.MaHangHoa
+                INNER JOIN tbl_LichSuGia g
+                ON g.MaHangHoa = gMax.MaHangHoa AND g.NgayCapNhatGia = gMax.MaxNgayCapNhatGia
+                WHERE 1=1 {sqlWhere}
+                ORDER BY h.TenHangHoa ASC
+                OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
 
                 param.Add("@StartRow", startRow);
                 param.Add("@MaxRows", maxRows);
@@ -69,26 +87,26 @@ namespace API_KeoDua.Reponsitory.Implement
             }
             catch (Exception ex)
             {
-                // Ghi log hoặc xử lý ngoại lệ
-                throw new Exception("An error occurred while fetching employees", ex);
+                throw new Exception("An error occurred while fetching products", ex);
             }
         }
 
-        public async Task AddProduct(HangHoa newProduct, decimal giaBan)
+        public async Task AddProduct(HangHoa newProduct, decimal giaBan, string? ghiChu)
         {
             using var transaction = await hangHoaContext.Database.BeginTransactionAsync();
             try
             {
                 var parameters = new[]
                 {
-            new SqlParameter("@TenHangHoa", newProduct.TenHangHoa),
-            new SqlParameter("@MoTa", string.IsNullOrEmpty(newProduct.MoTa) ? DBNull.Value : newProduct.MoTa),
-            new SqlParameter("@HinhAnh", string.IsNullOrEmpty(newProduct.HinhAnh) ? DBNull.Value : newProduct.HinhAnh),
-            new SqlParameter("@MaLoai", newProduct.MaLoai),
-            new SqlParameter("@GiaBan", giaBan)
-        };
+                    new SqlParameter("@TenHangHoa", newProduct.TenHangHoa),
+                    new SqlParameter("@MoTa", string.IsNullOrEmpty(newProduct.MoTa) ? DBNull.Value : newProduct.MoTa),
+                    new SqlParameter("@HinhAnh", string.IsNullOrEmpty(newProduct.HinhAnh) ? DBNull.Value : newProduct.HinhAnh),
+                    new SqlParameter("@MaLoai", newProduct.MaLoai),
+                    new SqlParameter("@GiaBan", giaBan),
+                    new SqlParameter("@GhiChu", ghiChu)
+                };
 
-                string storedProcedure = "EXEC SP_InsertHangHoa @TenHangHoa, @MoTa, @HinhAnh, @MaLoai, @GiaBan";
+                string storedProcedure = "EXEC SP_InsertHangHoa @TenHangHoa, @MoTa, @HinhAnh, @MaLoai, @GiaBan,@GhiChu";
 
                 // Gọi stored procedure
                 await hangHoaContext.Database.ExecuteSqlRawAsync(storedProcedure, parameters);
@@ -102,60 +120,95 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while adding the product", ex);
             }
         }
-
-        public async Task<List<HangHoa>> QuickSearchHangHoa(string searchString)
+        public async Task<bool> UpdateProduct(HangHoa updatedProduct, decimal giaBan,string? ghiChu)
         {
+            // Bắt đầu giao dịch với IsolationLevel.ReadUncommitted để tránh lock
+            using var transaction = await lichSuGiaContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadUncommitted);
             try
             {
-                DynamicParameters param = new DynamicParameters();
-                var sqlWhere = new StringBuilder();
-                if (!string.IsNullOrEmpty(searchString))
+                // Lấy sản phẩm hiện tại từ database với NOLOCK (ReadUncommitted)
+                var existingProduct = await hangHoaContext.tbl_HangHoa
+                    .FromSqlRaw("SELECT * FROM tbl_HangHoa WITH (NOLOCK) WHERE MaHangHoa = {0}", updatedProduct.MaHangHoa)
+                    .FirstOrDefaultAsync();
+
+                if (existingProduct == null)
                 {
-                    sqlWhere.Append(" WHERE (MaHangHoa LIKE @SearchString ESCAPE '\\' OR TenHangHoa LIKE @SearchString ESCAPE '\\')");
-                    param.Add("SearchString", "%" + searchString.Trim() + "%");
+                    throw new Exception("Product not found");
                 }
 
-                string sqlQuery = @"SELECT TOP 5 * FROM tbl_HangHoa WITH (NOLOCK)" + sqlWhere;
+                // Cập nhật thông tin sản phẩm
+                existingProduct.TenHangHoa = updatedProduct.TenHangHoa;
+                existingProduct.MoTa = updatedProduct.MoTa;
+                existingProduct.HinhAnh = updatedProduct.HinhAnh;
+                existingProduct.MaLoai = updatedProduct.MaLoai;
 
-                using (var connection = this.hangHoaContext.CreateConnection())
+                // Lưu thay đổi vào bảng hàng hóa
+                await hangHoaContext.SaveChangesAsync();
+
+                // Kiểm tra và thêm lịch sử giá nếu cần
+                var latestPrice = await lichSuGiaContext.tbl_LichSuGia
+                    .Where(g => g.MaHangHoa == existingProduct.MaHangHoa)
+                    .OrderByDescending(g => g.NgayCapNhatGia)
+                    .FirstOrDefaultAsync();
+
+                if (latestPrice == null || latestPrice.GiaBan != giaBan || latestPrice.GhiChu!=ghiChu)
                 {
-                    var resultData = (await connection.QueryAsync<HangHoa>(sqlQuery, param)).ToList();
-                    return resultData;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<string> getTenHangHoa_withByMaHangHoa(Guid maHangHoa)
-        {
-            try
-            {
-                string sqlQuery = @"SELECT TenHangHoa FROM tbl_HangHoa WHERE MaHangHoa = @MaHangHoa";
-                var param = new DynamicParameters();
-                param.Add("@MaHangHoa", maHangHoa);
-
-                using (var connection = this.hangHoaContext.CreateConnection())
-                {
-                    var tenHangHoa = await connection.QueryFirstOrDefaultAsync<string>(sqlQuery, param);
-
-                    if (string.IsNullOrEmpty(tenHangHoa))
+                    // Thêm giá mới vào bảng lịch sử giá
+                    var newPriceHistory = new LichSuGia
                     {
-                        throw new Exception("Không tìm thấy hàng hóa với mã đã cho.");
-                    }
+                        MaLichSu = Guid.NewGuid(),
+                        MaHangHoa = existingProduct.MaHangHoa,
+                        GiaBan = giaBan,
+                        NgayCapNhatGia = DateTime.Now,
+                        GhiChu = ghiChu
+                    };
 
-                    return tenHangHoa;
+                    await lichSuGiaContext.tbl_LichSuGia.AddAsync(newPriceHistory);
+
+                    // Lưu lịch sử giá vào database
+                    await lichSuGiaContext.SaveChangesAsync();
                 }
+
+                // Commit transaction
+                await transaction.CommitAsync();
+                return true;
             }
             catch (Exception ex)
             {
-                // Log hoặc xử lý ngoại lệ
-                throw new Exception("Có lỗi xảy ra khi lấy tên hàng hóa.", ex);
+                // Rollback transaction nếu có lỗi xảy ra
+                await transaction.RollbackAsync();
+                throw new Exception("An error occurred while updating the product", ex);
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="MaHangHoa"></param>
+        /// <returns></returns>
+        /// <exception cref="KeyNotFoundException"></exception>
+        /// <exception cref="Exception"></exception>
+        public async Task DeleteProduct(Guid MaHangHoa)
+        {
+            try
+            {
+                // Kiểm tra hàng hóa có tồn tại không
+                var hangHoa = await hangHoaContext.tbl_HangHoa.FirstOrDefaultAsync(nv => nv.MaHangHoa == MaHangHoa);
+                if (hangHoa == null)
+                {
+                    throw new KeyNotFoundException($"Không tìm thấy hàng hóa với mã: {MaHangHoa}");
+                }
 
+                // Xóa hàng hóa
+                lichSuGiaContext.tbl_LichSuGia.RemoveRange(this.lichSuGiaContext.tbl_LichSuGia.Where(m => m.MaHangHoa == MaHangHoa));
+                hangHoaContext.tbl_HangHoa.Remove(hangHoa);
+                await lichSuGiaContext.SaveChangesAsync();
+                await hangHoaContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi xóa hàng hóa: {ex.Message}", ex);
+            }
+        }
     }
 }

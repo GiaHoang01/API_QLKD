@@ -11,5 +11,7 @@ namespace API_KeoDua.DataView
         public string HinhAnh { get; set; }
         public string MaLoai { get; set; }
         public decimal GiaBan { get; set; }
+        public string GhiChu { get; set; }
+        public string NgayCapNhatGia { get; set; }
     }
 }
