@@ -148,7 +148,7 @@ namespace API_KeoDua.Reponsitory.Implement
                     .OrderByDescending(g => g.NgayCapNhatGia)
                     .FirstOrDefaultAsync();
 
-                if (latestPrice == null || latestPrice.GiaBan != giaBan)
+                if (latestPrice == null || latestPrice.GiaBan != giaBan || latestPrice.GhiChu!=ghiChu)
                 {
                     // Thêm giá mới vào bảng lịch sử giá
                     var newPriceHistory = new LichSuGia
