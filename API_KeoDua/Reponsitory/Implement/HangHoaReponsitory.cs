@@ -55,7 +55,9 @@ namespace API_KeoDua.Reponsitory.Implement
                     h.HinhAnh,
                     g.GiaBan,
                     h.MoTa,
-                    h.MaLoai
+                    h.MaLoai,
+                    g.NgayCapNhatGia,
+                    g.GhiChu
                 FROM tbl_HangHoa h
                 INNER JOIN (
                     SELECT MaHangHoa, MAX(NgayCapNhatGia) AS MaxNgayCapNhatGia
@@ -89,7 +91,7 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        public async Task AddProduct(HangHoa newProduct, decimal giaBan)
+        public async Task AddProduct(HangHoa newProduct, decimal giaBan, string? ghiChu)
         {
             using var transaction = await hangHoaContext.Database.BeginTransactionAsync();
             try
@@ -100,10 +102,11 @@ namespace API_KeoDua.Reponsitory.Implement
                     new SqlParameter("@MoTa", string.IsNullOrEmpty(newProduct.MoTa) ? DBNull.Value : newProduct.MoTa),
                     new SqlParameter("@HinhAnh", string.IsNullOrEmpty(newProduct.HinhAnh) ? DBNull.Value : newProduct.HinhAnh),
                     new SqlParameter("@MaLoai", newProduct.MaLoai),
-                    new SqlParameter("@GiaBan", giaBan)
+                    new SqlParameter("@GiaBan", giaBan),
+                    new SqlParameter("@GhiChu", ghiChu)
                 };
 
-                string storedProcedure = "EXEC SP_InsertHangHoa @TenHangHoa, @MoTa, @HinhAnh, @MaLoai, @GiaBan";
+                string storedProcedure = "EXEC SP_InsertHangHoa @TenHangHoa, @MoTa, @HinhAnh, @MaLoai, @GiaBan,@GhiChu";
 
                 // Gọi stored procedure
                 await hangHoaContext.Database.ExecuteSqlRawAsync(storedProcedure, parameters);

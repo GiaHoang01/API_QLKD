@@ -75,9 +75,12 @@ namespace API_KeoDua.Controllers
                 //hangHoa.MaLoai = dicData["MaLoai"].ToString();
                 LichSuGia lichSuGia = new LichSuGia();
                 lichSuGia.GiaBan = Convert.ToDecimal(dicData["GiaBan"].ToString());
+                lichSuGia.GhiChu = dicData.ContainsKey("GhiChu") && dicData["GhiChu"] != null
+                ? dicData["GhiChu"].ToString()
+                : null;
                 ResponseModel repData = await ResponseFail();
 
-                await this.hangHoaReponsitory.AddProduct(hangHoa, lichSuGia.GiaBan);
+                await this.hangHoaReponsitory.AddProduct(hangHoa, lichSuGia.GiaBan,lichSuGia.GhiChu);
                 repData = await ResponseSucceeded();
                 repData.data = new { };
                 return Ok(repData);
@@ -107,7 +110,9 @@ namespace API_KeoDua.Controllers
                 HangHoa hangHoa = JsonConvert.DeserializeObject<HangHoa>(dicData["HangHoa"].ToString());
                 LichSuGia lichSuGia = new LichSuGia();
                 lichSuGia.GiaBan = Convert.ToDecimal(dicData["GiaBan"].ToString());
-                lichSuGia.GhiChu = dicData["GhiChu"].ToString();
+                lichSuGia.GhiChu = dicData.ContainsKey("GhiChu") && dicData["GhiChu"] != null
+                ? dicData["GhiChu"].ToString()
+                : null;
                 if (await (this.hangHoaReponsitory.UpdateProduct(hangHoa, lichSuGia.GiaBan,lichSuGia.GhiChu)))
                 {
                     repData = await ResponseSucceeded();
@@ -159,7 +164,7 @@ namespace API_KeoDua.Controllers
             }
             finally
             {
-                logger.Debug("-------End DeleteEmployee-------");
+                logger.Debug("-------End DeleteProduct-------");
             }
         }
     }
