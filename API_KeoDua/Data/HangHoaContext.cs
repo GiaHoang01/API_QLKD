@@ -11,7 +11,7 @@ namespace API_KeoDua.Data
 
         }
         #region DBSet
-        public DbSet<HangHoa> tbl_CapQuyen { get; set; }
+        public DbSet<HangHoa> tbl_HangHoa { get; set; }
         public IDbConnection CreateConnection()
         {
             return new SqlConnection(Database.GetConnectionString());

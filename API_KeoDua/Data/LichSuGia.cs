@@ -14,7 +14,7 @@ namespace API_KeoDua.Data
         public DateTime NgayCapNhatGia { get; set; }
 
         [MaxLength(255)]
-        public string GhiChu { get; set; }
+        public string? GhiChu { get; set; }
 
         public Guid MaHangHoa { get; set; }
 
