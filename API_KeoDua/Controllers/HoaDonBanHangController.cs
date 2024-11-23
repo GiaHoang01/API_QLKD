@@ -1,8 +1,6 @@
 ﻿using API_KeoDua.Data;
-using API_KeoDua.DataView;
 using API_KeoDua.Models;
 using API_KeoDua.Reponsitory.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_KeoDua.Controllers

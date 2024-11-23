@@ -26,6 +26,11 @@ namespace API_KeoDua.Controllers
             this.lichSuGiaContext = lichSuGiaContext;
             this.lichSuGiaReponsitory = lichSuGiaReponsitory;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> getAllProduct([FromBody] Dictionary<string, object> dicData)
         {
@@ -61,6 +66,11 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------End getAllProduct-------");
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> AddProduct([FromBody] Dictionary<string, object> dicData)
         {
@@ -95,6 +105,11 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------Begin AddProduct-------");
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> UpdateProduct([FromBody] Dictionary<string, object> dicData)
         {
@@ -165,6 +180,40 @@ namespace API_KeoDua.Controllers
             finally
             {
                 logger.Debug("-------End DeleteProduct-------");
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> getPriceHistoryProduct([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End getAllProduct-------");
+                ResponseModel repData = await ResponseFail();
+
+                Guid maHangHoa = Guid.Parse(dicData["MaHangHoa"].ToString());
+
+                List<LichSuGia> priceList = await this.hangHoaReponsitory.GetPriceHistoryProduct(maHangHoa);
+
+                if (priceList != null && priceList.Any())
+                {
+                    repData = await ResponseSucceeded();
+                }
+                repData.data = new {  PriceList = priceList };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End getAllProduct-------");
             }
         }
     }
