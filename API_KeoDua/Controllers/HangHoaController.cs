@@ -6,6 +6,7 @@ using API_KeoDua.Models;
 using API_KeoDua.Reponsitory.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace API_KeoDua.Controllers
 {
@@ -25,11 +26,11 @@ namespace API_KeoDua.Controllers
             this.lichSuGiaContext = lichSuGiaContext;
             this.lichSuGiaReponsitory = lichSuGiaReponsitory;
         }
-       /// <summary>
-       /// lấy tất cả các sản phẩm
-       /// </summary>
-       /// <param name="dicData"></param>
-       /// <returns></returns>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> getAllProduct([FromBody] Dictionary<string, object> dicData)
         {
@@ -65,9 +66,8 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------End getAllProduct-------");
             }
         }
-       
         /// <summary>
-        /// Thêm sản phẩm
+        /// 
         /// </summary>
         /// <param name="dicData"></param>
         /// <returns></returns>
@@ -77,18 +77,20 @@ namespace API_KeoDua.Controllers
             try
             {
                 logger.Debug("-------Begin AddProduct-------");
-                LoaiHangHoa loaiHangHoa = new LoaiHangHoa();
-                HangHoa hangHoa=new HangHoa();
+                HangHoa hangHoa = JsonConvert.DeserializeObject<HangHoa>(dicData["HangHoa"].ToString());
                 hangHoa.MaHangHoa = Guid.NewGuid();
-                hangHoa.TenHangHoa = dicData["TenHangHoa"].ToString();
-                hangHoa.MoTa = dicData["MoTa"].ToString();
-                hangHoa.HinhAnh = dicData["HinhAnh"].ToString();
-                hangHoa.MaLoai = dicData["MaLoai"].ToString();
+                //hangHoa.TenHangHoa = dicData["TenHangHoa"].ToString();
+                //hangHoa.MoTa = dicData["MoTa"].ToString();
+                //hangHoa.HinhAnh = dicData["HinhAnh"].ToString();
+                //hangHoa.MaLoai = dicData["MaLoai"].ToString();
                 LichSuGia lichSuGia = new LichSuGia();
                 lichSuGia.GiaBan = Convert.ToDecimal(dicData["GiaBan"].ToString());
+                lichSuGia.GhiChu = dicData.ContainsKey("GhiChu") && dicData["GhiChu"] != null
+                ? dicData["GhiChu"].ToString()
+                : null;
                 ResponseModel repData = await ResponseFail();
 
-                await this.hangHoaReponsitory.AddProduct(hangHoa, lichSuGia.GiaBan);
+                await this.hangHoaReponsitory.AddProduct(hangHoa, lichSuGia.GiaBan,lichSuGia.GhiChu);
                 repData = await ResponseSucceeded();
                 repData.data = new { };
                 return Ok(repData);
@@ -103,60 +105,43 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------Begin AddProduct-------");
             }
         }
-
         /// <summary>
-        /// Hàm quick search hàng hóa 
-        /// </summary>
-        /// <param name="dicData">{SearchString:"string"}</param>
-        /// <returns>NhaCungCaps</returns>
-        [HttpPost]
-        public async Task<ActionResult> quickSearchHangHoa([FromBody] Dictionary<string, object> dicData)
-        {
-            try
-            {
-                logger.Debug("------- quickSearchHangHoa-------");
-                ResponseModel repData = await ResponseFail();
-
-                string searchString = dicData["SearchString"].ToString();
-
-                List<HangHoa> hangHoas = await this.hangHoaReponsitory.QuickSearchHangHoa(searchString);
-
-                if (hangHoas != null && hangHoas.Any())
-                {
-                    repData = await ResponseSucceeded();
-                }
-
-                repData.data = new { HangHoas = hangHoas };
-                return Ok(repData);
-            }
-            catch (Exception ex)
-            {
-                ResponseModel repData = await ResponseException();
-                return Ok(repData);
-            }
-            finally
-            {
-                logger.Debug("-------End quickSearchHangHoa-------");
-            }
-        }
-
-        /// <summary>
-        /// Lấy tên hàng hóa dựa vào mã 
+        /// 
         /// </summary>
         /// <param name="dicData"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> getTenHangHoa_withByMaHangHoa([FromBody] Dictionary<string, object> dicData)
+        public async Task<ActionResult> UpdateProduct([FromBody] Dictionary<string, object> dicData)
         {
             try
             {
-                logger.Debug("-------Begin getTenHangHoa_withByMaHangHoa-------");
-              
+                logger.Debug("-------Begin UpdateProduct-------");
                 ResponseModel repData = await ResponseFail();
-                Guid maHangHoa = Guid.Parse(dicData["MaHangHoa"].ToString());
-                string tenHangHoa= await this.hangHoaReponsitory.getTenHangHoa_withByMaHangHoa(maHangHoa);
-                repData = await ResponseSucceeded();
-                repData.data = new { TenHangHoa=tenHangHoa};
+                //if (!dicData.ContainsKey("MaHangHoa") || !dicData.ContainsKey("GiaBan"))
+                //{
+                //    repData.message = "Thiếu thông tin mã hàng hóa hoặc giá bán.";
+                //    return Ok(repData); // Trả về nếu thiếu thông tin quan trọng
+                //}
+                HangHoa hangHoa = JsonConvert.DeserializeObject<HangHoa>(dicData["HangHoa"].ToString());
+                LichSuGia lichSuGia = new LichSuGia();
+                lichSuGia.GiaBan = Convert.ToDecimal(dicData["GiaBan"].ToString());
+                lichSuGia.GhiChu = dicData.ContainsKey("GhiChu") && dicData["GhiChu"] != null
+                ? dicData["GhiChu"].ToString()
+                : null;
+                if (await (this.hangHoaReponsitory.UpdateProduct(hangHoa, lichSuGia.GiaBan,lichSuGia.GhiChu)))
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { };
+                if (repData.status == 1)
+                {
+                    repData.message = "Đã cập nhật thành công";
+                }
+                else
+                {
+                    repData.message = "Đã cập nhật thất bại hoặc đã cập nhật rồi";
+                }
                 return Ok(repData);
             }
             catch (Exception ex)
@@ -166,10 +151,70 @@ namespace API_KeoDua.Controllers
             }
             finally
             {
-                logger.Debug("-------Begin AddProduct-------");
+                logger.Debug("-------End UpdateProduct-------");
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> DeleteProduct([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End DeleteProduct-------");
+                Guid maHangHoa = Guid.Parse(dicData["MaHangHoa"].ToString());
+                ResponseModel repData = await ResponseFail();
+                await this.hangHoaReponsitory.DeleteProduct(maHangHoa);
+                repData = await ResponseSucceeded();
+                repData.data = new { };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End DeleteProduct-------");
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> getPriceHistoryProduct([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End getAllProduct-------");
+                ResponseModel repData = await ResponseFail();
 
+                Guid maHangHoa = Guid.Parse(dicData["MaHangHoa"].ToString());
 
+                List<LichSuGia> priceList = await this.hangHoaReponsitory.GetPriceHistoryProduct(maHangHoa);
+
+                if (priceList != null && priceList.Any())
+                {
+                    repData = await ResponseSucceeded();
+                }
+                repData.data = new {  PriceList = priceList };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End getAllProduct-------");
+            }
+        }
     }
 }

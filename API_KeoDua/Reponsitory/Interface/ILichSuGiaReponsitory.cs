@@ -7,5 +7,6 @@ namespace API_KeoDua.Reponsitory.Interface
     public interface ILichSuGiaReponsitory
     {
         public int TotalRows { get; set; }
+        
     }
 }
