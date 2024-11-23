@@ -210,5 +210,36 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception($"Lỗi khi xóa hàng hóa: {ex.Message}", ex);
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="MaHangHoa"></param>
+        /// <returns></returns>
+        public async Task<List<LichSuGia>> GetPriceHistoryProduct(Guid MaHangHoa)
+        {
+            try
+            {
+                string sqlWhere = "";
+                var param = new DynamicParameters();
+                // Sử dụng GROUP BY để loại bỏ trùng lặp
+                string sqlQuery = $@"
+                SELECT * 
+                FROM tbl_LichSuGia l
+                WHERE l.MaHangHoa=@MaHangHoa";
+
+                param.Add("@MaHangHoa", MaHangHoa);
+                using (var connection = this.lichSuGiaContext.CreateConnection())
+                {
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery, param))
+                    {
+                        return (await multi.ReadAsync<LichSuGia>()).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while fetching products", ex);
+            }
+        }
     }
 }

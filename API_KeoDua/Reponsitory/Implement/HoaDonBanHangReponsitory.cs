@@ -57,20 +57,23 @@ namespace API_KeoDua.Reponsitory.Implement
                 // Lọc theo EmployeeID (nếu có)
                 if (employeeId.HasValue)
                 {
-                    sqlWhere += " AND MaNV = @EmployeeID";
-                    param.Add("@EmployeeID", employeeId);
+                    sqlWhere += " AND MaNV = @MaNV";
+                    param.Add("@MaNV", employeeId);
                 }
 
                 // Lọc theo CartID (nếu có)
                 if (cartId!=null)
                 {
-                    sqlWhere += " AND MaGioHang = @CartID";
-                    param.Add("@CartID", cartId);
+                    sqlWhere += " AND MaGioHang = @MaGioHang";
+                    param.Add("@MaGioHang", cartId);
                 }
 
                 // Lọc theo CustomerID
-                sqlWhere += " AND MaKhachHang = @CustomerID";
-                param.Add("@CustomerID", customerId);
+                if (customerId != null)
+                {
+                    sqlWhere += " AND MaKhachHang = @MaKhachHang";
+                    param.Add("@MaKhachHang", customerId);
+                }
 
                 // Lọc theo mã hình thức (nếu có)
                 if (!string.IsNullOrEmpty(maHinhThuc))
@@ -175,22 +178,22 @@ namespace API_KeoDua.Reponsitory.Implement
                 // Lọc theo EmployeeID (nếu có)
                 if (employeeId!=null)
                 {
-                    sqlWhere += " AND MaNV = @EmployeeID";
-                    param.Add("@EmployeeID", employeeId);
+                    sqlWhere += " AND MaNV = @MaNV";
+                    param.Add("@MaNV", employeeId);
                 }
 
                 // Lọc theo CartID (nếu có)
                 if (cartId!=null)
                 {
-                    sqlWhere += " AND MaGioHang = @CartID";
-                    param.Add("@CartID", cartId);
+                    sqlWhere += " AND MaGioHang = @MaGioHang";
+                    param.Add("@MaGioHang", cartId);
                 }
 
                 // Lọc theo CustomerID
                 if (customerId != null)
                 {
-                    sqlWhere += " AND MaKhachHang = @CustomerID";
-                    param.Add("@CustomerID", customerId);
+                    sqlWhere += " AND MaKhachHang = @MaKhachHang";
+                    param.Add("@MaKhachHang", customerId);
                 }
                 // Lọc theo mã hình thức (nếu có)
                 if (!string.IsNullOrEmpty(maHinhThuc))
