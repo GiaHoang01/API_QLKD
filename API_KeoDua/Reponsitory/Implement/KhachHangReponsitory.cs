@@ -30,7 +30,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 if(!string.IsNullOrEmpty(searchString))
                 {
                     sqlWhere += " WHERE TenKhachHang COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString";
-                    param.Add("@SearString", $"%{searchString}");
+                    param.Add("@SearchString", $"%{searchString}%");
                 }
 
                 string sqlQuery = $@"
@@ -51,9 +51,76 @@ namespace API_KeoDua.Reponsitory.Implement
             }
             catch (Exception ex)
             {
-                throw new Exception("Have error when load customer!", ex);
+                throw new Exception("Have an error when load customer!", ex);
+            }
+        }
+
+        public async Task<bool> AddCustomer(KhachHang khachHang)
+        {
+            try
+            {
+                await this.khachHangContext.tbl_KhachHang.AddAsync(khachHang);
+                await this.khachHangContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Have an error when add customer", ex);
+            }
+        }
+
+        public async Task<KhachHang> GetCustomerByID(Guid MaKH)
+        {
+            try
+            {
+                DynamicParameters param = new DynamicParameters();
+                var sqlQuery = @"SELECT * FROM tbl_KhachHang WHERE MaKhachHang = @MaKH";
+                param.Add("@MaKH", MaKH);
+
+                using (var connection = this.khachHangContext.CreateConnection())
+                {
+                    var result = await connection.QueryFirstOrDefaultAsync<KhachHang>(sqlQuery, param);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Have an error when get info customer", ex);
+            }
+        }
+
+        public async Task<bool> DeleteCustomer (Guid MaKH)
+        {
+            try
+            {
+                var khachHang = await khachHangContext.tbl_KhachHang.FirstOrDefaultAsync(kh => kh.MaKhachHang == MaKH);
+                if (khachHang == null)
+                {
+                    return false;
+                }
+
+                khachHangContext.tbl_KhachHang.Remove(khachHang);
+                await khachHangContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi xóa nhân viên: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<bool> UpdateCustomer(KhachHang kh)
+        {
+            try
+            {
+                this.khachHangContext.Entry(kh).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                await this.khachHangContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }
-
 }

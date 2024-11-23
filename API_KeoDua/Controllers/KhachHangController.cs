@@ -1,7 +1,9 @@
 ﻿using API_KeoDua.Data;
+using API_KeoDua.DataView;
 using API_KeoDua.Models;
 using API_KeoDua.Reponsitory.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace API_KeoDua.Controllers
 {
@@ -59,6 +61,132 @@ namespace API_KeoDua.Controllers
             }
         }
 
+        /// <summary>
+        /// Hàm lấy thông tin chi tiết khách hàng
+        /// </summary>
+        /// <param name="dicData">{CustomerID: Guid}</param>
+        /// <returns>KhachHang</returns>
+        [HttpPost]
+        public async Task<ActionResult> GetCustomerByID([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End GetCustomerByID-------");
+                ResponseModel repData = await ResponseFail();
 
+                Guid maKH = Guid.Parse(dicData["MaKH"].ToString());
+                KhachHang khachHang = await this.khachHangReponsitory.GetCustomerByID(maKH);
+
+                if (khachHang != null)
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { KhachHang = khachHang };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End GetCustomerByID-------");
+            }
+        }
+
+        /// <summary>
+        /// Hàm thêm khách hàng
+        /// </summary>
+        /// <param name="dicData">{"KhachHang": KhachHang}</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> AddCustomer([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End AddCustomer-------");
+                ResponseModel repData = await ResponseFail();
+
+                KhachHang khachHang = JsonConvert.DeserializeObject<KhachHang>(dicData["KhachHang"].ToString());
+                khachHang.MaKhachHang = Guid.NewGuid();
+
+                await this.khachHangReponsitory.AddCustomer(khachHang);
+                repData = await ResponseSucceeded();
+                repData.data = new { };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End AddCustomer-------");
+            }
+        }
+
+        /// <summary>
+        /// Hàm Xóa khách hàng
+        /// </summary>
+        /// <param name="dicData">{"MaKhachHang": Guid}</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> DeleteCustomer([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End DeleteCustomer-------");
+                ResponseModel repData = await ResponseFail();
+
+                Guid maKH = Guid.Parse(dicData["MaKhachHang"].ToString());
+                await this.khachHangReponsitory.DeleteCustomer(maKH);
+                repData = await ResponseSucceeded();
+                repData.data = new { };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End DeleteCustomer-------");
+            }
+        }
+
+        /// <summary>
+        /// Hàm sửa khách hàng
+        /// </summary>
+        /// <param name="dicData">{KhachHang: "KhachHang"}</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> UpdateCustomer([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End UpdatetCustomer-------");
+                ResponseModel repData = await ResponseFail();
+
+                KhachHang khachHang = JsonConvert.DeserializeObject<KhachHang>(dicData["KhachHang"].ToString());
+                await this.khachHangReponsitory.UpdateCustomer(khachHang);
+                repData = await ResponseSucceeded();
+                repData.data = new { };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End UpdatetCustomer-------");
+            }
+        }
     }
 }
+
