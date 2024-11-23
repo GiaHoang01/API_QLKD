@@ -54,5 +54,42 @@ namespace API_KeoDua.Controllers
             }
         }
 
+        /// <summary>
+        /// Hàm searchNhaCungCap_byMaNCC 
+        /// </summary>
+        /// <param name="dicData">{maNCC:"string"}</param>
+        /// <returns>NhaCungCaps</returns>
+        [HttpPost]
+        public async Task<ActionResult> searchNhaCungCap_byMaNCC([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("------- searchNhaCungCap_byMaNCC-------");
+                ResponseModel repData = await ResponseFail();
+
+                Guid maNCC = Guid.Parse(dicData["MaNCC"].ToString());
+
+                string tenNCC = await this.nhaCungCapReponsitory.SearchNhaCungCap_ByMaNCC(maNCC);
+
+                if (tenNCC != null)
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { tenNCC = tenNCC };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End searchNhaCungCap_byMaNCC-------");
+            }
+        }
+
+
     }
 }

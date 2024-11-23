@@ -73,6 +73,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while fetching employees", ex);
             }
         }
+
         public async Task AddProduct(HangHoa newProduct, decimal giaBan)
         {
             using var transaction = await hangHoaContext.Database.BeginTransactionAsync();
@@ -101,6 +102,60 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while adding the product", ex);
             }
         }
+
+        public async Task<List<HangHoa>> QuickSearchHangHoa(string searchString)
+        {
+            try
+            {
+                DynamicParameters param = new DynamicParameters();
+                var sqlWhere = new StringBuilder();
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    sqlWhere.Append(" WHERE (MaHangHoa LIKE @SearchString ESCAPE '\\' OR TenHangHoa LIKE @SearchString ESCAPE '\\')");
+                    param.Add("SearchString", "%" + searchString.Trim() + "%");
+                }
+
+                string sqlQuery = @"SELECT TOP 5 * FROM tbl_HangHoa WITH (NOLOCK)" + sqlWhere;
+
+                using (var connection = this.hangHoaContext.CreateConnection())
+                {
+                    var resultData = (await connection.QueryAsync<HangHoa>(sqlQuery, param)).ToList();
+                    return resultData;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<string> getTenHangHoa_withByMaHangHoa(Guid maHangHoa)
+        {
+            try
+            {
+                string sqlQuery = @"SELECT TenHangHoa FROM tbl_HangHoa WHERE MaHangHoa = @MaHangHoa";
+                var param = new DynamicParameters();
+                param.Add("@MaHangHoa", maHangHoa);
+
+                using (var connection = this.hangHoaContext.CreateConnection())
+                {
+                    var tenHangHoa = await connection.QueryFirstOrDefaultAsync<string>(sqlQuery, param);
+
+                    if (string.IsNullOrEmpty(tenHangHoa))
+                    {
+                        throw new Exception("Không tìm thấy hàng hóa với mã đã cho.");
+                    }
+
+                    return tenHangHoa;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log hoặc xử lý ngoại lệ
+                throw new Exception("Có lỗi xảy ra khi lấy tên hàng hóa.", ex);
+            }
+        }
+
 
     }
 }

@@ -25,6 +25,11 @@ namespace API_KeoDua.Controllers
             this.lichSuGiaContext = lichSuGiaContext;
             this.lichSuGiaReponsitory = lichSuGiaReponsitory;
         }
+       /// <summary>
+       /// lấy tất cả các sản phẩm
+       /// </summary>
+       /// <param name="dicData"></param>
+       /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> getAllProduct([FromBody] Dictionary<string, object> dicData)
         {
@@ -60,6 +65,12 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------End getAllProduct-------");
             }
         }
+       
+        /// <summary>
+        /// Thêm sản phẩm
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> AddProduct([FromBody] Dictionary<string, object> dicData)
         {
@@ -92,5 +103,73 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------Begin AddProduct-------");
             }
         }
+
+        /// <summary>
+        /// Hàm quick search hàng hóa 
+        /// </summary>
+        /// <param name="dicData">{SearchString:"string"}</param>
+        /// <returns>NhaCungCaps</returns>
+        [HttpPost]
+        public async Task<ActionResult> quickSearchHangHoa([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("------- quickSearchHangHoa-------");
+                ResponseModel repData = await ResponseFail();
+
+                string searchString = dicData["SearchString"].ToString();
+
+                List<HangHoa> hangHoas = await this.hangHoaReponsitory.QuickSearchHangHoa(searchString);
+
+                if (hangHoas != null && hangHoas.Any())
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { HangHoas = hangHoas };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End quickSearchHangHoa-------");
+            }
+        }
+
+        /// <summary>
+        /// Lấy tên hàng hóa dựa vào mã 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> getTenHangHoa_withByMaHangHoa([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Begin getTenHangHoa_withByMaHangHoa-------");
+              
+                ResponseModel repData = await ResponseFail();
+                Guid maHangHoa = Guid.Parse(dicData["MaHangHoa"].ToString());
+                string tenHangHoa= await this.hangHoaReponsitory.getTenHangHoa_withByMaHangHoa(maHangHoa);
+                repData = await ResponseSucceeded();
+                repData.data = new { TenHangHoa=tenHangHoa};
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------Begin AddProduct-------");
+            }
+        }
+
+
     }
 }

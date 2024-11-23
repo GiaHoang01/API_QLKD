@@ -50,5 +50,31 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw ex;
             }
         }
+
+        /// <summary>
+        /// Hàm search nha cung cap theo maNCC
+        /// </summary>
+        /// <param name="maNCC"></param>
+        /// <returns></returns>
+        public async Task<string> SearchNhaCungCap_ByMaNCC(Guid maNCC)
+        {
+            try
+            {
+                string sqlQuery = @" SELECT tenNCC FROM tbl_NhaCungCap WHERE maNCC = @MaNCC";
+                var param = new DynamicParameters();
+                param.Add("@MaNCC", maNCC);
+
+                using (var connection = this.nhaCungCapContext.CreateConnection())
+                {
+                    var result = await connection.QueryFirstOrDefaultAsync<string>(sqlQuery, param);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ghi log hoặc xử lý ngoại lệ
+                throw new Exception("An error occurred while fetching employees", ex);
+            }
+        }
     }
 }

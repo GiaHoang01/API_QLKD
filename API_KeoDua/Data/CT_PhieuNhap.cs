@@ -15,14 +15,10 @@ namespace API_KeoDua.Data
 
         public int SoLuong { get; set; }
 
+        public int SoLuongDat { get; set; }
+
         public decimal DonGia { get; set; }
 
         public decimal ThanhTien { get; set; }
-
-        [ForeignKey("MaPhieuNhap")]
-        public virtual PhieuNhapHang PhieuNhapHang { get; set; }
-
-        [ForeignKey("MaHangHoa")]
-        public virtual HangHoa HangHoa { get; set; }
     }
 }
