@@ -29,11 +29,11 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    sqlWhere.Append(" Where (MaNhomQuyen like @SearchString ESCAPE '\\' OR (TenNhomQuyen) like @SearchString ESCAPE '\\')");
+                    sqlWhere.Append(" AND (MaNhomQuyen like @SearchString ESCAPE '\\' OR (TenNhomQuyen) like @SearchString ESCAPE '\\')");
                     param.Add("SearchString", "%" + searchString + "%");
                 }
 
-                string sqlQuery = @"SELECT * FROM tbl_NhomQuyen WITH (NOLOCK)" + sqlWhere;
+                string sqlQuery = @"SELECT * FROM tbl_NhomQuyen WITH (NOLOCK) where MaNhomQuyen!='NQ00000005' " + sqlWhere;
 
                 using (var connection = this.nhomQuyenContext.CreateConnection())
                 {

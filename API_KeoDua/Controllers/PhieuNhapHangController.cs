@@ -40,7 +40,7 @@ namespace API_KeoDua.Controllers
                 int startRow = (pageIndex - 1) * pageSize;
                 int maxRows = pageSize;
 
-                List<PhieuNhapHang> phieuNhapHangs = await this.phieuNhapHangReponsitory.GetAllPurchase(fromDate,toDate,searchString, startRow, maxRows);
+                List<PhieuNhapHang> phieuNhapHangs = await this.phieuNhapHangReponsitory.GetAllPurchase(fromDate, toDate, searchString, startRow, maxRows);
 
                 if (phieuNhapHangs != null && phieuNhapHangs.Any())
                 {
@@ -62,21 +62,63 @@ namespace API_KeoDua.Controllers
         }
 
         /// <summary>
+        /// Hàm lấy danh sách tất cả các đơn hàng
+        /// </summary>
+        /// <param name="dicData">{SearchString:"string",FromDate:"date",ToDate:"Date",PageIndex:"int",PageSize:""}</param>
+        /// <returns>Employees</returns>
+        [HttpPost]
+        public async Task<ActionResult> getAllPurchaseOrderRequest([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End getAllPurchaseOrderRequest-------");
+                ResponseModel repData = await ResponseFail();
+
+                int pageIndex = Convert.ToInt32(dicData["PageIndex"].ToString());
+                int pageSize = Convert.ToInt32(dicData["PageSize"].ToString());
+                string searchString = dicData["SearchString"].ToString();
+                DateTime fromDate = DateTime.Parse(dicData["FromDate"].ToString());
+                DateTime toDate = DateTime.Parse(dicData["ToDate"].ToString());
+                int startRow = (pageIndex - 1) * pageSize;
+                int maxRows = pageSize;
+
+                List<PhieuNhapHang> phieuNhapHangs = await this.phieuNhapHangReponsitory.GetAllPurchaseRequest(fromDate, toDate, searchString, startRow, maxRows);
+
+                if (phieuNhapHangs != null && phieuNhapHangs.Any())
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { TotalRows = this.phieuNhapHangReponsitory.TotalRows, PurchaseOrders = phieuNhapHangs };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End getAllPurchaseOrderRequest-------");
+            }
+        }
+
+        /// <summary>
         /// Hàm thêm mới,chi tiết đơn đặt hàng theo id  status:1 thêm mới , status :2 chi tiết
         /// </summary>
         /// <param name="dicData">{MaPhieuNhap:"Guid",Status:"int"}</param>
         /// <returns>Employees</returns>
         [HttpPost]
-        public async Task<ActionResult> getPurchaseOrder_ByID([FromBody] Dictionary<string, object> dicData)
+        public async Task<ActionResult> getPurchaseOrderRequest_ByID([FromBody] Dictionary<string, object> dicData)
         {
             try
             {
-                logger.Debug("-------Start getPurchaseOrder_ByID-------");
+                logger.Debug("-------Start getPurchaseOrderRequest_ByID-------");
                 ResponseModel repData = await ResponseFail();
-                Guid? maPhieuNhap = dicData.ContainsKey("MaPhieuNhap") && !string.IsNullOrEmpty(dicData["MaPhieuNhap"]?.ToString())? Guid.Parse(dicData["MaPhieuNhap"].ToString()): (Guid?)null;
-                
+                Guid? maPhieuNhap = dicData.ContainsKey("MaPhieuNhap") && !string.IsNullOrEmpty(dicData["MaPhieuNhap"]?.ToString()) ? Guid.Parse(dicData["MaPhieuNhap"].ToString()) : (Guid?)null;
+
                 int status = Convert.ToInt32(dicData["Status"].ToString());
-                if(status==1)
+                if (status == 1)
                 {
                     PhieuNhapHang phieuNhap = new PhieuNhapHang();
                     phieuNhap.MaPhieuNhap = Guid.NewGuid();
@@ -112,10 +154,9 @@ namespace API_KeoDua.Controllers
             }
             finally
             {
-                logger.Debug("-------End getPurchaseOrder_ByID-------");
+                logger.Debug("-------End getPurchaseOrderRequest_ByID-------");
             }
         }
-
 
         /// <summary>
         /// Lưu và thay đổi trang thái đơn đặt hàng 
@@ -123,7 +164,7 @@ namespace API_KeoDua.Controllers
         /// <param name="dicData">{MaPhieuNhap:"Guid",status:"int"}</param>
         /// <returns>Employees</returns>
         [HttpPost]
-        public async Task<ActionResult> SavePurchaseOrder([FromBody] Dictionary<string, object> dicData)
+        public async Task<ActionResult> SavePurchaseOrder_Request([FromBody] Dictionary<string, object> dicData)
         {
             try
             {
@@ -135,13 +176,13 @@ namespace API_KeoDua.Controllers
                 int status = Convert.ToInt32(dicData["Status"].ToString());
                 if (status == 1)
                 {
-                    await this.phieuNhapHangReponsitory.AddPurchaseOrder(phieuNhapHang, ct_PhieuNhaps);
+                    await this.phieuNhapHangReponsitory.AddPurchaseOrderRequest(phieuNhapHang, ct_PhieuNhaps);
                     repData = await ResponseSucceeded();
                     repData.data = new { };
                 }
                 else
                 {
-                    bool isUpdate=await this.phieuNhapHangReponsitory.UpdatePurchaseOrder(phieuNhapHang, ct_PhieuNhaps);
+                    bool isUpdate = await this.phieuNhapHangReponsitory.UpdatePurchaseOrderRequest(phieuNhapHang, ct_PhieuNhaps);
                     if (!isUpdate)
                     {
                         repData = await ResponseFail();
@@ -164,6 +205,39 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------End SavePurchaseOrder-------");
             }
         }
+
+        /// <summary>
+        /// Lưu và thay đổi trang thái đơn đặt hàng 
+        /// </summary>
+        /// <param name="dicData">{MaPhieuNhap:"Guid",status:"int"}</param>
+        /// <returns>Employees</returns>
+        [HttpPost]
+        public async Task<ActionResult> DeletePurchaseOrder_Request([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Start DeletePurchaseOrder_Request-------");
+                ResponseModel repData = await ResponseFail();
+                Guid maPhieuNhap = Guid.Parse(dicData["MaPhieuNhap"].ToString());
+                this.phieuNhapHangReponsitory.DeletePurchaseOrderRequest(maPhieuNhap);
+                repData = await ResponseSucceeded();
+                repData.data = new { };
+
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và trả về thông báo lỗi
+                logger.Error("Error in DeletePurchaseOrder_Request", ex);
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End DeletePurchaseOrder_Request-------");
+            }
+        }
+
 
     }
 }

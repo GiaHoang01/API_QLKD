@@ -64,6 +64,45 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
+        public async Task<List<PhieuNhapHang>> GetAllPurchaseRequest(DateTime fromDate, DateTime toDate, string searchString, int startRow, int maxRows)
+        {
+            try
+            {
+                var sqlWhere = new StringBuilder();
+                var param = new DynamicParameters();
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    sqlWhere.Append("and MaPhieuNhap COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString OR MaNV LIKE @SearchString");
+                    param.Add("@SearchString", $"%{searchString}%");
+                }
+                else
+                {
+                    sqlWhere.Append("and NgayNhap >= @FromDate AND NgayNhap <= @ToDate AND NgayDat >= @FromDate AND NgayDat <= @ToDate");
+                    param.Add("@FromDate", fromDate);
+                    param.Add("@ToDate", toDate);
+                }
+
+                string sqlQuery = $@"SELECT COUNT(1) AS TotalRows FROM tbl_PhieuNhapHang WITH (NOLOCK) Where TrangThai=N'Mới tạo' {sqlWhere};
+                                     SELECT * FROM tbl_PhieuNhapHang WITH (NOLOCK) Where TrangThai=N'Mới tạo' {sqlWhere} ORDER BY MaPhieuNhap ASC OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
+                param.Add("@StartRow", startRow);
+                param.Add("@MaxRows", maxRows);
+                using (var connection = this.phieuNhapHangContext.CreateConnection())
+                {
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery, param))
+                    {
+                        this.TotalRows = (await multi.ReadFirstOrDefaultAsync<int>());
+                        return (await multi.ReadAsync<PhieuNhapHang>()).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và ghi log
+                throw new Exception("An error occurred while fetching purchase records", ex);
+            }
+        }
+
         public async Task<(PhieuNhapHang phieuNhap, List<CT_PhieuNhap> chiTietPhieuNhap)> GetPurchase_ByID(Guid? maPhieuNhap)
         {
             try
@@ -99,7 +138,7 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        public async Task AddPurchaseOrder(PhieuNhapHang phieuNhapHang, List<CT_PhieuNhap> ctPhieuNhaps)
+        public async Task AddPurchaseOrderRequest(PhieuNhapHang phieuNhapHang, List<CT_PhieuNhap> ctPhieuNhaps)
         {
             // Sử dụng TransactionScope cho tất cả các DbContext
             using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -108,6 +147,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 {
                     // Thêm phiếu nhập vào bảng tbl_PhieuNhapHang
                     phieuNhapHang.NgayDat = DateTime.Now;
+                    phieuNhapHang.TrangThai = "Mới tạo";
                     phieuNhapHangContext.tbl_PhieuNhapHang.Add(phieuNhapHang);
                     await phieuNhapHangContext.SaveChangesAsync();
 
@@ -130,8 +170,7 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-
-        public async Task<bool> UpdatePurchaseOrder(PhieuNhapHang phieuNhapHang, List<CT_PhieuNhap> ctPhieuNhaps)
+        public async Task<bool> UpdatePurchaseOrderRequest(PhieuNhapHang phieuNhapHang, List<CT_PhieuNhap> ctPhieuNhaps)
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
@@ -148,6 +187,7 @@ namespace API_KeoDua.Reponsitory.Implement
                     existingPhieuNhapHang.MaNCC = phieuNhapHang.MaNCC;
                     existingPhieuNhapHang.MaNV = phieuNhapHang.MaNV;
                     existingPhieuNhapHang.NgayNhap = phieuNhapHang.NgayNhap;
+                    existingPhieuNhapHang.GhiChu = phieuNhapHang.GhiChu;
                     await phieuNhapHangContext.SaveChangesAsync();
 
                     string deleteQuery = @"DELETE FROM tbl_CT_PhieuNhap WHERE MaPhieuNhap = @MaPhieuNhap";
@@ -158,6 +198,7 @@ namespace API_KeoDua.Reponsitory.Implement
                     foreach (var detail in ctPhieuNhaps)
                     {
                         detail.MaPhieuNhap = (Guid)phieuNhapHang.MaPhieuNhap;
+                        detail.ThanhTien = detail.DonGia * detail.SoLuongDat;
                         cT_PhieuNhapContext.tbl_CT_PhieuNhap.Add(detail);
                     }
                     await cT_PhieuNhapContext.SaveChangesAsync();
@@ -169,6 +210,39 @@ namespace API_KeoDua.Reponsitory.Implement
                 catch (Exception ex)
                 {
                     throw new InvalidOperationException("Có lỗi xảy ra khi cập nhật dữ liệu.", ex);
+                }
+            }
+        }
+
+        public async Task<bool> DeletePurchaseOrderRequest(Guid maPhieuNhap)
+        {
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    // Tìm phiếu nhập hàng cần xóa
+                    var existingPhieuNhapHang = await phieuNhapHangContext.tbl_PhieuNhapHang.FindAsync(maPhieuNhap);
+                    if (existingPhieuNhapHang == null)
+                    {
+                        return false; // Không tìm thấy phiếu nhập hàng
+                    }
+
+                    // Xóa tất cả chi tiết phiếu nhập liên quan
+                    string deleteDetailsQuery = @"DELETE FROM tbl_CT_PhieuNhap WHERE MaPhieuNhap = @MaPhieuNhap";
+                    var parameter = new SqlParameter("@MaPhieuNhap", maPhieuNhap);
+                    await cT_PhieuNhapContext.Database.ExecuteSqlRawAsync(deleteDetailsQuery, parameter);
+
+                    // Xóa phiếu nhập hàng
+                    phieuNhapHangContext.tbl_PhieuNhapHang.Remove(existingPhieuNhapHang);
+                    await phieuNhapHangContext.SaveChangesAsync();
+
+                    // Hoàn tất giao dịch
+                    scope.Complete();
+                    return true; // Xóa thành công
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Có lỗi xảy ra khi xóa dữ liệu.", ex);
                 }
             }
         }

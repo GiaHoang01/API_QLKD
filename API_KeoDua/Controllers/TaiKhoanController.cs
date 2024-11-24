@@ -62,11 +62,10 @@ namespace API_KeoDua.Controllers
             try
             {
                 logger.Debug("-------End Login-------");
-
+                ResponseModel repData = await ResponseFail();
                 string userName = dicData["UserName"].ToString();
                 string password = dicData["PassWord"].ToString();
-                ResponseModel repData = await ResponseFail();
-
+              
                 string tendn= await this.taiKhoanReponsitory.login(userName,password);
 
                 if (tendn!=null)

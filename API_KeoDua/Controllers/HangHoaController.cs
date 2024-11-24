@@ -166,7 +166,7 @@ namespace API_KeoDua.Controllers
             }
             finally
             {
-                logger.Debug("-------Begin AddProduct-------");
+                logger.Debug("-------Begin getTenHangHoa_withByMaHangHoa-------");
             }
         }
 
