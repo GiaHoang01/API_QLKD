@@ -103,6 +103,46 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
+        public async Task<List<PhieuNhapHang>> GetAllPurchaseRequest_NoSubmit(DateTime fromDate, DateTime toDate, string searchString, int startRow, int maxRows)
+        {
+            try
+            {
+                var sqlWhere = new StringBuilder();
+                var param = new DynamicParameters();
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    sqlWhere.Append("and MaPhieuNhap COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString OR MaNV LIKE @SearchString");
+                    param.Add("@SearchString", $"%{searchString}%");
+                }
+                else
+                {
+                    sqlWhere.Append("and NgayNhap >= @FromDate AND NgayNhap <= @ToDate AND NgayDat >= @FromDate AND NgayDat <= @ToDate");
+                    param.Add("@FromDate", fromDate);
+                    param.Add("@ToDate", toDate);
+                }
+
+                string sqlQuery = $@"SELECT COUNT(1) AS TotalRows FROM tbl_PhieuNhapHang WITH (NOLOCK) Where TrangThai!=N'Hoàn tất' {sqlWhere};
+                                     SELECT * FROM tbl_PhieuNhapHang WITH (NOLOCK) Where TrangThai!=N'Hoàn tất' {sqlWhere} ORDER BY MaPhieuNhap ASC OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
+                param.Add("@StartRow", startRow);
+                param.Add("@MaxRows", maxRows);
+                using (var connection = this.phieuNhapHangContext.CreateConnection())
+                {
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery, param))
+                    {
+                        this.TotalRows = (await multi.ReadFirstOrDefaultAsync<int>());
+                        return (await multi.ReadAsync<PhieuNhapHang>()).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và ghi log
+                throw new Exception("An error occurred while fetching purchase records", ex);
+            }
+        }
+
+
         public async Task<(PhieuNhapHang phieuNhap, List<CT_PhieuNhap> chiTietPhieuNhap)> GetPurchase_ByID(Guid? maPhieuNhap)
         {
             try
@@ -247,6 +287,134 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
+        public async Task ConfirmPurchaseOrder(PhieuNhapHang phieuNhapHang, List<CT_PhieuNhap> cT_PhieuNhaps)
+        {
+            bool isComplete = true;
+            bool hasPartial = false;
+
+            // Kiểm tra số lượng so với số lượng đặt
+            foreach (var ct in cT_PhieuNhaps)
+            {
+                if (ct.SoLuong != ct.SoLuongDat)
+                {
+                    isComplete = false;
+                    hasPartial = true;
+                    break;
+                }
+            }
+
+            // Cập nhật trạng thái của phiếu nhập
+            if (isComplete)
+            {
+                phieuNhapHang.TrangThai = "Hoàn tất";
+            }
+            else if (hasPartial)
+            {
+                phieuNhapHang.TrangThai = "Hoàn tất một nữa";
+            }
+
+            // Lưu thay đổi trạng thái vào cơ sở dữ liệu
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    // Tìm phiếu nhập hiện tại
+                    var existingPhieuNhapHang = await phieuNhapHangContext.tbl_PhieuNhapHang
+                        .FirstOrDefaultAsync(p => p.MaPhieuNhap == phieuNhapHang.MaPhieuNhap);
+
+                    if (existingPhieuNhapHang == null)
+                    {
+                        throw new InvalidOperationException($"Không tìm thấy phiếu nhập với mã: {phieuNhapHang.MaPhieuNhap}");
+                    }
+
+                    // Cập nhật trạng thái phiếu nhập
+                    existingPhieuNhapHang.TrangThai = phieuNhapHang.TrangThai;
+                    await phieuNhapHangContext.SaveChangesAsync();
+
+                    // Hoàn tất giao dịch
+                    scope.Complete();
+                }
+                catch (Exception ex)
+                {
+                    // Ghi log lỗi và ném lại ngoại lệ
+                    Console.WriteLine($"Error: {ex.Message}");
+                    throw new InvalidOperationException("Có lỗi xảy ra khi cập nhật trạng thái phiếu nhập.", ex);
+                }
+            }
+        }
+
+        public async Task<Guid> CreateNewPurchaseOrder(Guid maPhieuNhap)
+        {
+            // Lấy các chi tiết phiếu nhập của phiếu nhập cũ
+            var ctPhieuNhaps = await cT_PhieuNhapContext.tbl_CT_PhieuNhap
+                .Where(ct => ct.MaPhieuNhap == maPhieuNhap)
+                .ToListAsync();
+
+            if (ctPhieuNhaps == null || !ctPhieuNhaps.Any())
+            {
+                throw new InvalidOperationException("Không có chi tiết phiếu nhập để tạo phiếu mới.");
+            }
+
+            // Tạo phiếu nhập mới với trạng thái "Đặt lại hàng thiếu"
+            var newPhieuNhapHang = new PhieuNhapHang
+            {
+                MaPhieuNhap = Guid.NewGuid(),
+                TrangThai = "Đặt lại hàng thiếu", // Trạng thái phiếu nhập mới
+                NgayNhap = DateTime.Now,
+                NgayDat = DateTime.Now,
+                TongTriGia = 0,
+            };
+
+            // Thêm phiếu nhập mới vào cơ sở dữ liệu
+            phieuNhapHangContext.tbl_PhieuNhapHang.Add(newPhieuNhapHang);
+            await phieuNhapHangContext.SaveChangesAsync();
+
+            // Tạo chi tiết phiếu nhập mới dựa trên số lượng đặt trừ số lượng nhận
+            foreach (var ct in ctPhieuNhaps)
+            {
+                var soLuongMoi = ct.SoLuongDat - ct.SoLuong; // Tính số lượng mới
+
+                // Kiểm tra nếu số lượng còn lại sau khi trừ > 0
+                if (soLuongMoi > 0)
+                {
+                    var newCT_PhieuNhap = new CT_PhieuNhap
+                    {
+                        MaPhieuNhap = newPhieuNhapHang.MaPhieuNhap,
+                        MaHangHoa = ct.MaHangHoa,
+                        SoLuongDat = soLuongMoi,
+                        DonGia = ct.DonGia
+                    };
+
+                    cT_PhieuNhapContext.tbl_CT_PhieuNhap.Add(newCT_PhieuNhap);
+                }
+            }
+
+            await cT_PhieuNhapContext.SaveChangesAsync();
+
+            // Cập nhật phiếu nhập cũ
+            var existingPhieuNhapHang = await phieuNhapHangContext.tbl_PhieuNhapHang
+                .Where(p => p.MaPhieuNhap == maPhieuNhap)
+                .FirstOrDefaultAsync();
+
+            if (existingPhieuNhapHang != null)
+            {
+                // Cập nhật trạng thái của phiếu nhập cũ thành "Hoàn tất"
+                existingPhieuNhapHang.TrangThai = "Hoàn tất";
+
+                // Cập nhật số lượng phiếu nhập cũ thành số lượng nhận
+                foreach (var ct in ctPhieuNhaps)
+                {
+                    ct.SoLuongDat = ct.SoLuong; // Đặt số lượng bằng số lượng đặt
+                    cT_PhieuNhapContext.tbl_CT_PhieuNhap.Update(ct);
+                }
+
+                // Lưu thay đổi cho phiếu nhập cũ
+                await cT_PhieuNhapContext.SaveChangesAsync();
+            }
+
+            // Trả về Tuple chứa cả mã phiếu cũ và mã phiếu mới
+            return  newPhieuNhapHang.MaPhieuNhap;
+        }
 
     }
 }

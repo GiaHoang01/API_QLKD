@@ -162,8 +162,8 @@ namespace API_KeoDua.Controllers
         /// <summary>
         /// Lưu và thay đổi trang thái đơn đặt hàng 
         /// </summary>
-        /// <param name="dicData">{MaPhieuNhap:"Guid",status:"int"}</param>
-        /// <returns>Employees</returns>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> SavePurchaseOrder_Request([FromBody] Dictionary<string, object> dicData)
         {
@@ -239,6 +239,111 @@ namespace API_KeoDua.Controllers
             }
         }
 
+        /// <summary>
+        /// xác nhận đơn đặt hàng 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> ConfirmPurchaseOrder([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Start ConfirmPurchaseOrder-------");
+                ResponseModel repData = await ResponseFail();
+                PhieuNhapHang phieuNhapHang = JsonConvert.DeserializeObject<PhieuNhapHang>(dicData["PurchaseOrder"].ToString());
+                List<CT_PhieuNhap> ct_PhieuNhaps = JsonConvert.DeserializeObject<List<CT_PhieuNhap>>(dicData["PurchaseOrderDetail"].ToString());
+                this.phieuNhapHangReponsitory.ConfirmPurchaseOrder(phieuNhapHang, ct_PhieuNhaps);
+                repData = await ResponseSucceeded();
+                repData.data = new { };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và trả về thông báo lỗi
+                logger.Error("Error in ConfirmPurchaseOrder", ex);
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End ConfirmPurchaseOrder-------");
+            }
+        }
+
+        /// <summary>
+        /// tạo phiếu nhập mới từ phiếu chưa hoàn thành
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> CreateNewPurchaseOrder([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Start CreateNewPurchaseOrder-------");
+                ResponseModel repData = await ResponseFail();
+                Guid maPhieuNhap= Guid.Parse(dicData["MaPhieuNhap"].ToString());
+
+                Guid maPhieuNhapNew = await this.phieuNhapHangReponsitory.CreateNewPurchaseOrder(maPhieuNhap);
+                repData = await ResponseSucceeded();
+                repData.data = new { maPhieuNhap =maPhieuNhapNew };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và trả về thông báo lỗi
+                logger.Error("Error in CreateNewPurchaseOrder", ex);
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End CreateNewPurchaseOrder-------");
+            }
+        }
+
+        /// <summary>
+        /// Hàm lấy danh sách tất cả các đơn hàng chưa hoàn tất
+        /// </summary>
+        /// <param name="dicData">{SearchString:"string",FromDate:"date",ToDate:"Date",PageIndex:"int",PageSize:""}</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> getAllPurchaseOrderNoSubmit([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End getAllPurchaseOrderNoSubmit-------");
+                ResponseModel repData = await ResponseFail();
+
+                int pageIndex = Convert.ToInt32(dicData["PageIndex"].ToString());
+                int pageSize = Convert.ToInt32(dicData["PageSize"].ToString());
+                string searchString = dicData["SearchString"].ToString();
+                DateTime fromDate = DateTime.Parse(dicData["FromDate"].ToString());
+                DateTime toDate = DateTime.Parse(dicData["ToDate"].ToString());
+                int startRow = (pageIndex - 1) * pageSize;
+                int maxRows = pageSize;
+
+                List<PhieuNhapHang> phieuNhapHangs = await this.phieuNhapHangReponsitory.GetAllPurchaseRequest_NoSubmit(fromDate, toDate, searchString, startRow, maxRows);
+
+                if (phieuNhapHangs != null && phieuNhapHangs.Any())
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { TotalRows = this.phieuNhapHangReponsitory.TotalRows, PurchaseOrders = phieuNhapHangs };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End getAllPurchaseOrderNoSubmit-------");
+            }
+        }
 
     }
 }
