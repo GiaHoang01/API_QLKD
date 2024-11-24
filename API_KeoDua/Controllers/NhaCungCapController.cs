@@ -67,7 +67,9 @@ namespace API_KeoDua.Controllers
                 logger.Debug("------- searchNhaCungCap_byMaNCC-------");
                 ResponseModel repData = await ResponseFail();
 
-                Guid maNCC = Guid.Parse(dicData["MaNCC"].ToString());
+                Guid? maNCC = string.IsNullOrWhiteSpace(dicData["MaNCC"]?.ToString())
+                 ? null
+                 : Guid.Parse(dicData["MaNCC"].ToString());
 
                 string tenNCC = await this.nhaCungCapReponsitory.SearchNhaCungCap_ByMaNCC(maNCC);
 

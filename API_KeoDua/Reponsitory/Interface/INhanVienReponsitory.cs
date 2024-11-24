@@ -9,7 +9,7 @@ namespace API_KeoDua.Reponsitory.Interface
 
         public Task<List<NhanVien>> GetAllEmployee(string searchString, int startRow, int maxRows);
         public Task AddEmployee(NhanVienTaiKhoan nhanVienTaiKhoan);
-        public Task<NhanVienTaiKhoan> GetEmployeeByID(Guid MaNV);
+        public Task<NhanVienTaiKhoan> GetEmployeeByID(Guid? MaNV);
         public Task DeleteEmployee (Guid MaNV);
         public Task UpdateEmployee(NhanVienTaiKhoan nhanVienTaiKhoan, Guid maNV);
         public Task<List<NhanVien>> QuickSearchNhanVien(string searchString);

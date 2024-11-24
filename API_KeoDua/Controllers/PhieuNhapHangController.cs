@@ -253,7 +253,13 @@ namespace API_KeoDua.Controllers
                 ResponseModel repData = await ResponseFail();
                 PhieuNhapHang phieuNhapHang = JsonConvert.DeserializeObject<PhieuNhapHang>(dicData["PurchaseOrder"].ToString());
                 List<CT_PhieuNhap> ct_PhieuNhaps = JsonConvert.DeserializeObject<List<CT_PhieuNhap>>(dicData["PurchaseOrderDetail"].ToString());
-                this.phieuNhapHangReponsitory.ConfirmPurchaseOrder(phieuNhapHang, ct_PhieuNhaps);
+                bool isSubmit=await this.phieuNhapHangReponsitory.ConfirmPurchaseOrder(phieuNhapHang, ct_PhieuNhaps);
+                if(!isSubmit)
+                {
+                    repData = await ResponseFail();
+                    repData.data = new { };
+                    return Ok(repData);
+                }    
                 repData = await ResponseSucceeded();
                 repData.data = new { };
                 return Ok(repData);

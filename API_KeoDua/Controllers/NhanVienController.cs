@@ -119,7 +119,9 @@ namespace API_KeoDua.Controllers
             {
                 logger.Debug("-------End getEmployeeByID-------");
                 ResponseModel repData = await ResponseFail();
-                Guid maNV = Guid.Parse(dicData["MaNV"].ToString());
+                Guid? maNV = string.IsNullOrWhiteSpace(dicData["MaNV"]?.ToString())
+                  ? null
+                  : Guid.Parse(dicData["MaNV"].ToString());
 
                 NhanVienTaiKhoan employeeAccount = await this.nhanVienReponsitory.GetEmployeeByID(maNV);
 
