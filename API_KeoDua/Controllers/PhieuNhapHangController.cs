@@ -124,6 +124,7 @@ namespace API_KeoDua.Controllers
                     phieuNhap.MaPhieuNhap = Guid.NewGuid();
                     phieuNhap.NgayDat = DateTime.Now;
                     phieuNhap.NgayNhap = DateTime.Now;
+                    phieuNhap.TrangThai = "Mới tạo";
                     List<CT_PhieuNhap> cT_PhieuNhaps = new List<CT_PhieuNhap>();
                     repData = await ResponseSucceeded();
                     repData.data = new { phieuNhap = phieuNhap, ChiTietPhieuNhap = cT_PhieuNhaps };
