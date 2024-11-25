@@ -1,4 +1,5 @@
 ﻿using API_KeoDua.Data;
+using API_KeoDua.DataView;
 using API_KeoDua.Models;
 using API_KeoDua.Reponsitory.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +48,8 @@ namespace API_KeoDua.Controllers
             {
                 logger.Debug("-------Begin getAllSaleInvoiceWithWait-------");
                 ResponseModel repData = await ResponseFail();
-
+                DateTime fromDate = DateTime.Parse(dicData["FromDate"].ToString());
+                DateTime toDate = DateTime.Parse(dicData["ToDate"].ToString());
                 int pageIndex = Convert.ToInt32(dicData["PageIndex"].ToString());
                 int pageSize = Convert.ToInt32(dicData["PageSize"].ToString());
                 string searchString = dicData["SearchString"].ToString();
@@ -64,7 +66,7 @@ namespace API_KeoDua.Controllers
                 int startRow = (pageIndex - 1) * pageSize;
                 int maxRows = pageSize;
 
-                List<HoaDonBanHang> saleInvoiceList = await this.hoaDonBanHangReponsitory.GetAllSaleInVoiceWithWait(searchString,employeeId,cartId,customerId,maHinhThuc, startRow, maxRows);
+                List<HoaDonBanHangView> saleInvoiceList = await this.hoaDonBanHangReponsitory.GetAllSaleInVoiceWithWait(fromDate,toDate,searchString,employeeId,cartId,customerId,maHinhThuc, startRow, maxRows);
 
                 if (saleInvoiceList != null && saleInvoiceList.Any())
                 {
@@ -138,7 +140,8 @@ namespace API_KeoDua.Controllers
             {
                 logger.Debug("-------Begin getAllSaleInvoice-------");
                 ResponseModel repData = await ResponseFail();
-
+                DateTime fromDate = DateTime.Parse(dicData["FromDate"].ToString());
+                DateTime toDate = DateTime.Parse(dicData["ToDate"].ToString());
                 int pageIndex = Convert.ToInt32(dicData["PageIndex"].ToString());
                 int pageSize = Convert.ToInt32(dicData["PageSize"].ToString());
                 string searchString = dicData["SearchString"].ToString();
@@ -155,7 +158,7 @@ namespace API_KeoDua.Controllers
                 int startRow = (pageIndex - 1) * pageSize;
                 int maxRows = pageSize;
 
-                List<HoaDonBanHang> saleInvoiceList = await this.hoaDonBanHangReponsitory.GetAllSaleInVoice(searchString,employeeId,cartId,customerId,maHinhThuc, startRow, maxRows);
+                List<HoaDonBanHangView> saleInvoiceList = await this.hoaDonBanHangReponsitory.GetAllSaleInVoice(fromDate,toDate,searchString,employeeId,cartId,customerId,maHinhThuc, startRow, maxRows);
 
                 if (saleInvoiceList != null && saleInvoiceList.Any())
                 {
