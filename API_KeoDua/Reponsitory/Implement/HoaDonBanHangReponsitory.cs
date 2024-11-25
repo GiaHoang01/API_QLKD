@@ -247,8 +247,8 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 string sqlQuery = @"
                                     SELECT 
-                                        h.MaHoaDon, h.NgayTao, h.TrangThai, h.MaKhachHang, 
-                                        k.TenKhachHang, k.Email, k.Sdt
+                                        h.*, 
+                                        k.* 
                                     FROM tbl_HoaDonBanHang h
                                     INNER JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
                                     WHERE h.TrangThai = N'Mới tạo' " + sqlWhere;
