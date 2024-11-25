@@ -3,6 +3,7 @@ using API_KeoDua.DataView;
 using API_KeoDua.Models;
 using API_KeoDua.Reponsitory.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace API_KeoDua.Controllers
 {
@@ -176,6 +177,84 @@ namespace API_KeoDua.Controllers
             finally
             {
                 logger.Debug("-------End getAllSaleInvoice-------");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> SaveSaleInvoice([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Start SaveSaleInvoice-------");
+                ResponseModel repData = await ResponseFail();
+                HoaDonBanHang hoaDonBanHang = JsonConvert.DeserializeObject<HoaDonBanHang>(dicData["HoaDonBanHang"].ToString());
+                List<CT_HoaDonBanHang> ct_HoaDonBanHangs = JsonConvert.DeserializeObject<List<CT_HoaDonBanHang>>(dicData["CTHoaDonBanHang"].ToString());
+
+                int status = Convert.ToInt32(dicData["Status"].ToString());
+                if (status == 1)
+                {
+                    await this.hoaDonBanHangReponsitory.AddSaleInvoice(hoaDonBanHang, ct_HoaDonBanHangs);
+                    repData = await ResponseSucceeded();
+                    repData.data = new { };
+                }
+                else
+                {
+                    bool isUpdate = await this.hoaDonBanHangReponsitory.UpdateSaleInvoice(hoaDonBanHang, ct_HoaDonBanHangs);
+                    if (!isUpdate)
+                    {
+                        repData = await ResponseFail();
+                        repData.data = new { };
+                    }
+                    repData = await ResponseSucceeded();
+                    repData.data = new { };
+                }
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và trả về thông báo lỗi
+                logger.Error("Error in SaveSaleInvoice", ex);
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End SaveSaleInvoice-------");
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> DeleteSaleInvoice([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Start DeleteSaleInvoice-------");
+                ResponseModel repData = await ResponseFail();
+                Guid maHoaDon = Guid.Parse(dicData["MaHoaDon"].ToString());
+                this.hoaDonBanHangReponsitory.DeleteSaleInvoice(maHoaDon);
+                repData = await ResponseSucceeded();
+                repData.data = new { };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và trả về thông báo lỗi
+                logger.Error("Error in DeleteSaleInvoice", ex);
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End DeletePurchaseOrder_Request-------");
             }
         }
 

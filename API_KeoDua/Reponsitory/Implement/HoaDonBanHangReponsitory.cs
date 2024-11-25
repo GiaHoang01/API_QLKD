@@ -9,6 +9,7 @@ using API_KeoDua.DataView;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Linq;
+using System.Transactions;
 
 namespace API_KeoDua.Reponsitory.Implement
 {
@@ -19,13 +20,15 @@ namespace API_KeoDua.Reponsitory.Implement
         private readonly KhachHangContext khachHangContext;
         private readonly HinhThucThanhToanContext hinhThucThanhToanContext;
         private readonly GioHangContext gioHangContext;
-        public HoaDonBanHangReponsitory(HoaDonBanHangContext hoaDonBanHangContext,NhanVienContext nhanVienContext,KhachHangContext khachHangContext,HinhThucThanhToanContext hinhThucThanhToanContext,GioHangContext gioHangContext)
+        private readonly CT_HoaDonBanHangContext cT_HoaDonBanHangContext;
+        public HoaDonBanHangReponsitory(HoaDonBanHangContext hoaDonBanHangContext,NhanVienContext nhanVienContext,KhachHangContext khachHangContext,HinhThucThanhToanContext hinhThucThanhToanContext,GioHangContext gioHangContext, CT_HoaDonBanHangContext cT_HoaDonBanHangContext)
         {
             this.hoaDonBanHangContext = hoaDonBanHangContext;
             this.nhanVienContext = nhanVienContext;
             this.khachHangContext = khachHangContext;
             this.hinhThucThanhToanContext = hinhThucThanhToanContext;
             this.gioHangContext = gioHangContext;
+            this.cT_HoaDonBanHangContext=cT_HoaDonBanHangContext ;
         }
         public int TotalRows { get; set; }
 
@@ -283,6 +286,112 @@ namespace API_KeoDua.Reponsitory.Implement
             {
                 throw ex;
             }
+        }
+        public async Task AddSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
+        {
+            // Sử dụng TransactionScope cho tất cả các DbContext
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    // Thêm phiếu nhập vào bảng tbl_PhieuNhapHang
+                    hoaDonBanHang.NgayBan = DateTime.Now;
+                    hoaDonBanHang.TrangThai = "Mới tạo";
+                    hoaDonBanHangContext.tbl_HoaDonBanHang.Add(hoaDonBanHang);
+                    await hoaDonBanHangContext.SaveChangesAsync();
+
+                    // Thêm chi tiết phiếu nhập vào bảng tbl_CT_PhieuNhap
+                    foreach (var detail in cT_HoaDonBanHangs)
+                    {
+                        detail.MaHoaDon = (Guid)hoaDonBanHang.MaHoaDon;
+                        cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                    }
+                    await cT_HoaDonBanHangContext.SaveChangesAsync();
+
+                    // Commit giao dịch
+                    transaction.Complete();
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi và rollback nếu có
+                    throw new InvalidOperationException("Có lỗi xảy ra khi thêm dữ liệu.", ex);
+                }
+            }
+        }
+
+        public async Task<bool> UpdateSaleInvoice (HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
+        {
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    // Tìm phiếu nhập hiện tại
+                    var existingHoaDon = await hoaDonBanHangContext.tbl_HoaDonBanHang.FindAsync(hoaDonBanHang.MaHoaDon);
+                    if (existingHoaDon == null)
+                    {
+                        return false; // Không tìm thấy phiếu nhập
+                    }
+
+                    // Cập nhật thông tin phiếu nhập
+                    existingHoaDon.MaNV = hoaDonBanHang.MaNV;
+                    existingHoaDon.MaKhachHang = hoaDonBanHang.MaKhachHang;
+                    existingHoaDon.NgayBan = hoaDonBanHang.NgayBan;
+                    existingHoaDon.NgayThanhToan = hoaDonBanHang.NgayThanhToan;
+                    existingHoaDon.MaHinhThuc = hoaDonBanHang.MaHinhThuc;
+                    existingHoaDon.GhiChu = hoaDonBanHang.GhiChu;
+                    await hoaDonBanHangContext.SaveChangesAsync();
+
+                    string deleteQuery = @"DELETE FROM tbl_CT_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon";
+                    var parameter = new SqlParameter("@MaHoaDon", hoaDonBanHang.MaHoaDon);
+                    await cT_HoaDonBanHangContext.Database.ExecuteSqlRawAsync(deleteQuery, parameter);
+
+                    // **Thêm chi tiết phiếu nhập mới**
+                    foreach (var detail in cT_HoaDonBanHangs)
+                    {
+                        detail.MaHoaDon = (Guid)hoaDonBanHang.MaHoaDon;
+                        detail.ThanhTien = detail.DonGia * detail.SoLuong;
+                        cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                    }
+                    await cT_HoaDonBanHangContext.SaveChangesAsync();
+
+                    // Hoàn tất giao dịch
+                    scope.Complete();
+                    return true; // Cập nhật thành công
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Có lỗi xảy ra khi cập nhật dữ liệu.", ex);
+                }
+            }
+        }
+
+        public async Task<bool> DeleteSaleInvoice (Guid maHoaDon)
+        {
+            using var transaction = await hoaDonBanHangContext.Database.BeginTransactionAsync();
+            try
+            {
+                // Xóa tất cả chi tiết phiếu nhập liên quan
+                string deleteDetailsQuery = @"DELETE FROM tbl_CT_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon";
+                var parameter = new SqlParameter("@MaHoaDon", maHoaDon);
+                await cT_HoaDonBanHangContext.Database.ExecuteSqlRawAsync(deleteDetailsQuery, parameter);
+
+                // Xóa phiếu nhập hàng
+                var existingHoaDon = await hoaDonBanHangContext.tbl_HoaDonBanHang.FindAsync(maHoaDon);
+                if (existingHoaDon != null)
+                {
+                    hoaDonBanHangContext.tbl_HoaDonBanHang.Remove(existingHoaDon);
+                    await hoaDonBanHangContext.SaveChangesAsync();
+                }
+
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException("Có lỗi xảy ra khi xóa dữ liệu.", ex);
+            }
+
         }
     }
 }
