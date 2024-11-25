@@ -9,13 +9,14 @@ namespace API_KeoDua.Data
         [Key]
         public Guid MaPhieuGiao { get; set; }
 
-        [MaxLength(50)]
+        public DateTime NgayTao { get; set; }
         public DateTime NgayGiao { get; set; }
 
         [MaxLength(50)]
         public string TrangThai { get; set; }
 
         public Guid MaHoaDon { get; set; }
+        public Guid MaNV { get; set; }
 
 
         [ForeignKey("MaHoaDon")]
