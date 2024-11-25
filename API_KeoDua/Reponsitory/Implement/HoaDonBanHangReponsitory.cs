@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using API_KeoDua.DataView;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System.Linq;
 
 namespace API_KeoDua.Reponsitory.Implement
 {
@@ -41,13 +42,14 @@ namespace API_KeoDua.Reponsitory.Implement
         /// <param name="maxRows"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<List<HoaDonBanHang>> GetAllSaleInVoiceWithWait(string searchString, Guid?employeeId,Guid?cartId,Guid? customerId,string? maHinhThuc, int startRow, int maxRows)
+        public async Task<List<HoaDonBanHangView>> GetAllSaleInVoiceWithWait(DateTime fromDate, DateTime toDate, string searchString, Guid?employeeId,Guid?cartId,Guid? customerId,string? maHinhThuc, int startRow, int maxRows)
         {
             try
             {
-                string sqlWhere = " WHERE TrangThai = N'Chờ xác nhận'"; // Điều kiện mặc định
+                string sqlWhere = " WHERE TrangThai = N'Chờ xác nhận' AND h.MaKhachHang = k.MaKhachHang AND  NgayBan >= @FromDate AND NgayBan <= @ToDate"; // Điều kiện mặc định
                 var param = new DynamicParameters();
-
+                param.Add("@FromDate", fromDate);
+                param.Add("@ToDate", toDate);
                 // Lọc theo từ khóa tìm kiếm
                 if (!string.IsNullOrEmpty(searchString))
                 {
@@ -58,36 +60,36 @@ namespace API_KeoDua.Reponsitory.Implement
                 // Lọc theo EmployeeID (nếu có)
                 if (employeeId.HasValue)
                 {
-                    sqlWhere += " AND MaNV = @MaNV";
+                    sqlWhere += " AND h.MaNV = @MaNV";
                     param.Add("@MaNV", employeeId);
                 }
 
                 // Lọc theo CartID (nếu có)
                 if (cartId!=null)
                 {
-                    sqlWhere += " AND MaGioHang = @MaGioHang";
+                    sqlWhere += " AND h.MaGioHang = @MaGioHang";
                     param.Add("@MaGioHang", cartId);
                 }
 
                 // Lọc theo CustomerID
                 if (customerId != null)
                 {
-                    sqlWhere += " AND MaKhachHang = @MaKhachHang";
+                    sqlWhere += " AND h.MaKhachHang = @MaKhachHang";
                     param.Add("@MaKhachHang", customerId);
                 }
 
                 // Lọc theo mã hình thức (nếu có)
                 if (!string.IsNullOrEmpty(maHinhThuc))
                 {
-                    sqlWhere += " AND MaHinhThuc = @MaHinhThuc";
+                    sqlWhere += " AND h.MaHinhThuc = @MaHinhThuc";
                     param.Add("@MaHinhThuc", maHinhThuc);
                 }
 
 
                 // Tạo câu truy vấn với điều kiện WHERE và phân trang
                 string sqlQuery = $@"
-                    SELECT COUNT(1) FROM tbl_HoaDonBanHang WITH (NOLOCK) {sqlWhere};
-                    SELECT * FROM tbl_HoaDonBanHang WITH (NOLOCK) {sqlWhere}
+                    SELECT COUNT(1) FROM tbl_HoaDonBanHang  h,tbl_KhachHang k WITH (NOLOCK) {sqlWhere};
+                    SELECT * FROM tbl_HoaDonBanHang h, tbl_KhachHang k WITH (NOLOCK) {sqlWhere}
                     ORDER BY NgayBan ASC
                     OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
 
@@ -101,7 +103,7 @@ namespace API_KeoDua.Reponsitory.Implement
                         // Lấy tổng số hàng từ truy vấn đầu tiên
                         this.TotalRows = (await multi.ReadAsync<int>()).Single();
                         // Lấy danh sách nhân viên từ truy vấn thứ hai
-                        return (await multi.ReadAsync<HoaDonBanHang>()).ToList();
+                        return (await multi.ReadAsync<HoaDonBanHangView>()).ToList();
                     }
                 }
             }
@@ -162,12 +164,14 @@ namespace API_KeoDua.Reponsitory.Implement
         /// <param name="maxRows"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<List<HoaDonBanHang>> GetAllSaleInVoice(string searchString, Guid? employeeId, Guid? cartId, Guid? customerId, string? maHinhThuc, int startRow, int maxRows)
+        public async Task<List<HoaDonBanHangView>> GetAllSaleInVoice(DateTime fromDate, DateTime toDate, string searchString, Guid? employeeId, Guid? cartId, Guid? customerId, string? maHinhThuc, int startRow, int maxRows)
         {
             try
             {
-                string sqlWhere = " WHERE TrangThai <> N'Chờ xác nhận'"; // Điều kiện mặc định
+                string sqlWhere = " WHERE TrangThai <> N'Chờ xác nhận' AND h.MaKhachHang=k.MaKhachHang AND h.MaNV=n.MaNV AND NgayBan >= @FromDate AND NgayBan <= @ToDate"; // Điều kiện mặc định
                 var param = new DynamicParameters();
+                param.Add("@FromDate", fromDate);
+                param.Add("@ToDate", toDate);
 
                 // Lọc theo từ khóa tìm kiếm
                 if (!string.IsNullOrEmpty(searchString))
@@ -179,34 +183,34 @@ namespace API_KeoDua.Reponsitory.Implement
                 // Lọc theo EmployeeID (nếu có)
                 if (employeeId!=null)
                 {
-                    sqlWhere += " AND MaNV = @MaNV";
+                    sqlWhere += " AND h.MaNV = @MaNV";
                     param.Add("@MaNV", employeeId);
                 }
 
                 // Lọc theo CartID (nếu có)
                 if (cartId!=null)
                 {
-                    sqlWhere += " AND MaGioHang = @MaGioHang";
+                    sqlWhere += " AND h.MaGioHang = @MaGioHang";
                     param.Add("@MaGioHang", cartId);
                 }
 
                 // Lọc theo CustomerID
                 if (customerId != null)
                 {
-                    sqlWhere += " AND MaKhachHang = @MaKhachHang";
+                    sqlWhere += " AND h.MaKhachHang = @MaKhachHang";
                     param.Add("@MaKhachHang", customerId);
                 }
                 // Lọc theo mã hình thức (nếu có)
                 if (!string.IsNullOrEmpty(maHinhThuc))
                 {
-                    sqlWhere += " AND MaHinhThuc = @MaHinhThuc";
+                    sqlWhere += " AND h.MaHinhThuc = @MaHinhThuc";
                     param.Add("@MaHinhThuc", maHinhThuc);
                 }
 
                 // Tạo câu truy vấn với điều kiện WHERE và phân trang
                 string sqlQuery = $@"
-                    SELECT COUNT(1) FROM tbl_HoaDonBanHang WITH (NOLOCK) {sqlWhere};
-                    SELECT * FROM tbl_HoaDonBanHang WITH (NOLOCK) {sqlWhere}
+                    SELECT COUNT(1) FROM tbl_HoaDonBanHang h,tbl_NhanVien n, tbl_KhachHang k WITH (NOLOCK) {sqlWhere};
+                    SELECT * FROM tbl_HoaDonBanHang h,tbl_NhanVien n, tbl_KhachHang k WITH (NOLOCK) {sqlWhere}
                     ORDER BY NgayBan ASC
                     OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
 
@@ -220,7 +224,7 @@ namespace API_KeoDua.Reponsitory.Implement
                         // Lấy tổng số hàng từ truy vấn đầu tiên
                         this.TotalRows = (await multi.ReadAsync<int>()).Single();
                         // Lấy danh sách nhân viên từ truy vấn thứ hai
-                        return (await multi.ReadAsync<HoaDonBanHang>()).ToList();
+                        return (await multi.ReadAsync<HoaDonBanHangView>()).ToList();
                     }
                 }
             }
