@@ -223,6 +223,7 @@ namespace API_KeoDua.Reponsitory.Implement
                         return false; // Không tìm thấy phiếu nhập
                     }
 
+
                     // Cập nhật thông tin phiếu nhập
                     existingPhieuNhapHang.MaNCC = phieuNhapHang.MaNCC;
                     existingPhieuNhapHang.MaNV = phieuNhapHang.MaNV;
@@ -256,36 +257,45 @@ namespace API_KeoDua.Reponsitory.Implement
 
         public async Task<bool> DeletePurchaseOrderRequest(Guid maPhieuNhap)
         {
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            using var transaction = await phieuNhapHangContext.Database.BeginTransactionAsync();
+            try
             {
-                try
+                // Kiểm tra trạng thái của phiếu nhập trước khi xóa
+                var phieuNhapHang = await phieuNhapHangContext.tbl_PhieuNhapHang
+                    .FirstOrDefaultAsync(p => p.MaPhieuNhap == maPhieuNhap);
+
+                if (phieuNhapHang == null)
                 {
-                    // Tìm phiếu nhập hàng cần xóa
-                    var existingPhieuNhapHang = await phieuNhapHangContext.tbl_PhieuNhapHang.FindAsync(maPhieuNhap);
-                    if (existingPhieuNhapHang == null)
-                    {
-                        return false; // Không tìm thấy phiếu nhập hàng
-                    }
-
-                    // Xóa tất cả chi tiết phiếu nhập liên quan
-                    string deleteDetailsQuery = @"DELETE FROM tbl_CT_PhieuNhap WHERE MaPhieuNhap = @MaPhieuNhap";
-                    var parameter = new SqlParameter("@MaPhieuNhap", maPhieuNhap);
-                    await cT_PhieuNhapContext.Database.ExecuteSqlRawAsync(deleteDetailsQuery, parameter);
-
-                    // Xóa phiếu nhập hàng
-                    phieuNhapHangContext.tbl_PhieuNhapHang.Remove(existingPhieuNhapHang);
-                    await phieuNhapHangContext.SaveChangesAsync();
-
-                    // Hoàn tất giao dịch
-                    scope.Complete();
-                    return true; // Xóa thành công
+                    return false;
                 }
-                catch (Exception ex)
+                if (phieuNhapHang.TrangThai !="Mới tạo")
                 {
-                    throw new InvalidOperationException("Có lỗi xảy ra khi xóa dữ liệu.", ex);
+                    return false; 
                 }
+
+                // Tạo tham số cho stored procedure
+                var parameters = new[]
+                {
+            new SqlParameter("@MaPhieuNhap", SqlDbType.UniqueIdentifier) { Value = maPhieuNhap }
+        };
+
+                // Thực thi stored procedure xóa chi tiết phiếu nhập
+                await phieuNhapHangContext.Database.ExecuteSqlRawAsync(
+                    "EXEC DeletePurchaseOrderRequest @MaPhieuNhap", parameters);
+
+                // Commit transaction sau khi thực hiện thành công
+                await transaction.CommitAsync();
+                return true; // Nếu xóa thành công, trả về true
+            }
+            catch (Exception ex)
+            {
+                // Nếu có lỗi, rollback transaction
+                await transaction.RollbackAsync();
+                throw new Exception("An error occurred while deleting the purchase order and its details", ex);
             }
         }
+
+
 
         public async Task<bool> ConfirmPurchaseOrder(PhieuNhapHang phieuNhapHang, List<CT_PhieuNhap> cT_PhieuNhaps)
         {
@@ -367,79 +377,112 @@ namespace API_KeoDua.Reponsitory.Implement
 
         public async Task<Guid> CreateNewPurchaseOrder(Guid maPhieuNhap)
         {
-            // Lấy các chi tiết phiếu nhập của phiếu nhập cũ
-            var ctPhieuNhaps = await cT_PhieuNhapContext.tbl_CT_PhieuNhap
-                .Where(ct => ct.MaPhieuNhap == maPhieuNhap)
-                .ToListAsync();
-
-            if (ctPhieuNhaps == null || !ctPhieuNhaps.Any())
+            using var transaction = await phieuNhapHangContext.Database.BeginTransactionAsync();
+            try
             {
-                throw new InvalidOperationException("Không có chi tiết phiếu nhập để tạo phiếu mới.");
-            }
+                // Vô hiệu hóa trigger trước khi thực hiện các thay đổi
+                await phieuNhapHangContext.Database.ExecuteSqlRawAsync("DISABLE TRIGGER [dbo].[TRG_UpdateThanhTien_CT_PhieuNhap] ON [dbo].[tbl_CT_PhieuNhap]");
+                await phieuNhapHangContext.Database.ExecuteSqlRawAsync("DISABLE TRIGGER [dbo].[TRG_UpdateTongTriGia_PhieuNhap] ON [dbo].[tbl_CT_PhieuNhap]");
 
-            // Lấy thông tin phiếu nhập cũ
-            var existingPhieuNhapHang = await phieuNhapHangContext.tbl_PhieuNhapHang
-                .Where(p => p.MaPhieuNhap == maPhieuNhap)
-                .FirstOrDefaultAsync();
+                // Lấy các chi tiết phiếu nhập của phiếu nhập cũ
+                var ctPhieuNhaps = await phieuNhapHangContext.tbl_CT_PhieuNhap
+                    .Where(ct => ct.MaPhieuNhap == maPhieuNhap)
+                    .ToListAsync();
 
-            if (existingPhieuNhapHang == null)
-            {
-                throw new InvalidOperationException("Không tìm thấy phiếu nhập với mã: " + maPhieuNhap);
-            }
-
-            // Tạo phiếu nhập mới với thông tin gốc từ phiếu nhập cũ
-            var newPhieuNhapHang = new PhieuNhapHang
-            {
-                MaPhieuNhap = Guid.NewGuid(), // Tạo mã phiếu nhập mới
-                TrangThai = "Đặt lại hàng thiếu", // Trạng thái phiếu nhập mới
-                NgayNhap = DateTime.Now,
-                NgayDat = DateTime.Now,
-                MaNCC = existingPhieuNhapHang.MaNCC,  // Gán lại nhà cung cấp từ phiếu cũ
-                MaNV = existingPhieuNhapHang.MaNV,  // Gán lại nhân viên từ phiếu cũ
-                GhiChu = existingPhieuNhapHang.GhiChu, // Ghi chú từ phiếu cũ
-            };
-
-            // Thêm phiếu nhập mới vào cơ sở dữ liệu
-            phieuNhapHangContext.tbl_PhieuNhapHang.Add(newPhieuNhapHang);
-            await phieuNhapHangContext.SaveChangesAsync();
-
-            // Tạo chi tiết phiếu nhập mới dựa trên số lượng đặt trừ số lượng nhận
-            foreach (var ct in ctPhieuNhaps)
-            {
-                var soLuongMoi = ct.SoLuongDat - ct.SoLuong; // Tính số lượng mới
-
-                // Kiểm tra nếu số lượng còn lại sau khi trừ > 0
-                if (soLuongMoi > 0)
+                if (ctPhieuNhaps == null || !ctPhieuNhaps.Any())
                 {
-                    var newCT_PhieuNhap = new CT_PhieuNhap
-                    {
-                        MaPhieuNhap = newPhieuNhapHang.MaPhieuNhap,
-                        MaHangHoa = ct.MaHangHoa,
-                        SoLuongDat = soLuongMoi,
-                        DonGia = ct.DonGia
-                    };
-
-                    cT_PhieuNhapContext.tbl_CT_PhieuNhap.Add(newCT_PhieuNhap);
+                    throw new InvalidOperationException("Không có chi tiết phiếu nhập để tạo phiếu mới.");
                 }
+
+                // Lấy thông tin phiếu nhập cũ
+                var existingPhieuNhapHang = await phieuNhapHangContext.tbl_PhieuNhapHang
+                    .Where(p => p.MaPhieuNhap == maPhieuNhap)
+                    .FirstOrDefaultAsync();
+
+                if (existingPhieuNhapHang == null)
+                {
+                    throw new InvalidOperationException("Không tìm thấy phiếu nhập với mã: " + maPhieuNhap);
+                }
+
+                // Tạo phiếu nhập mới với thông tin gốc từ phiếu nhập cũ
+                var newPhieuNhapHang = new PhieuNhapHang
+                {
+                    MaPhieuNhap = Guid.NewGuid(), // Tạo mã phiếu nhập mới
+                    TrangThai = "Mới tạo",
+                    NgayNhap = DateTime.Now,
+                    NgayDat = DateTime.Now,
+                    MaNCC = existingPhieuNhapHang.MaNCC, // Gán lại nhà cung cấp từ phiếu cũ
+                    MaNV = existingPhieuNhapHang.MaNV,  // Gán lại nhân viên từ phiếu cũ
+                    GhiChu = existingPhieuNhapHang.GhiChu, // Ghi chú từ phiếu cũ
+                };
+
+                // Thêm phiếu nhập mới vào cơ sở dữ liệu
+                phieuNhapHangContext.tbl_PhieuNhapHang.Add(newPhieuNhapHang);
+                await phieuNhapHangContext.SaveChangesAsync();
+
+                decimal totalThanhTien = 0; // Tổng tiền cho phiếu nhập mới
+
+                // Tạo chi tiết phiếu nhập mới dựa trên số lượng đặt trừ số lượng nhận
+                foreach (var ct in ctPhieuNhaps)
+                {
+                    var soLuongMoi = ct.SoLuongDat - ct.SoLuong; // Tính số lượng mới
+
+                    // Kiểm tra nếu số lượng còn lại sau khi trừ > 0
+                    if (soLuongMoi > 0)
+                    {
+                        var newCT_PhieuNhap = new CT_PhieuNhap
+                        {
+                            MaPhieuNhap = newPhieuNhapHang.MaPhieuNhap,
+                            MaHangHoa = ct.MaHangHoa,
+                            SoLuongDat = soLuongMoi,
+                            DonGia = ct.DonGia
+                        };
+
+                        // Tính toán ThanhTien cho chi tiết phiếu nhập
+                        newCT_PhieuNhap.ThanhTien = newCT_PhieuNhap.SoLuongDat * newCT_PhieuNhap.DonGia;
+                        totalThanhTien += newCT_PhieuNhap.ThanhTien; // Cộng vào tổng tiền của phiếu nhập
+
+                        phieuNhapHangContext.tbl_CT_PhieuNhap.Add(newCT_PhieuNhap);
+                    }
+                }
+
+                await phieuNhapHangContext.SaveChangesAsync();
+
+                // Cập nhật phiếu nhập cũ
+                existingPhieuNhapHang.TrangThai = "Hoàn tất"; // Cập nhật trạng thái phiếu nhập cũ
+
+                // Cập nhật lại số lượng đặt của các chi tiết phiếu nhập cũ thành số lượng đã nhận
+                foreach (var ct in ctPhieuNhaps)
+                {
+                    ct.SoLuongDat = ct.SoLuong;
+                    phieuNhapHangContext.tbl_CT_PhieuNhap.Update(ct);
+                }
+
+                await phieuNhapHangContext.SaveChangesAsync();
+
+                // Cập nhật TongTriGia của phiếu nhập cũ
+                existingPhieuNhapHang.TongTriGia = totalThanhTien; // Cập nhật tổng trị giá phiếu nhập
+
+                phieuNhapHangContext.tbl_PhieuNhapHang.Update(existingPhieuNhapHang);
+                await phieuNhapHangContext.SaveChangesAsync();
+
+                // Commit transaction nếu mọi thứ thành công
+                await transaction.CommitAsync();
+
+                // Bật lại trigger sau khi thao tác xong
+                await phieuNhapHangContext.Database.ExecuteSqlRawAsync("ENABLE TRIGGER [dbo].[TRG_UpdateThanhTien_CT_PhieuNhap] ON [dbo].[tbl_CT_PhieuNhap]");
+                await phieuNhapHangContext.Database.ExecuteSqlRawAsync("ENABLE TRIGGER [dbo].[TRG_UpdateTongTriGia_PhieuNhap] ON [dbo].[tbl_CT_PhieuNhap]");
+
+                // Trả về mã phiếu nhập mới
+                return newPhieuNhapHang.MaPhieuNhap;
             }
-
-            await cT_PhieuNhapContext.SaveChangesAsync();
-
-            // Cập nhật phiếu nhập cũ
-            existingPhieuNhapHang.TrangThai = "Hoàn tất"; // Cập nhật trạng thái phiếu nhập cũ
-
-            // Cập nhật lại số lượng đặt của các chi tiết phiếu nhập cũ thành số lượng đã nhận
-            foreach (var ct in ctPhieuNhaps)
+            catch (Exception ex)
             {
-                ct.SoLuongDat = ct.SoLuong; 
-                cT_PhieuNhapContext.tbl_CT_PhieuNhap.Update(ct);
+                // Rollback nếu xảy ra lỗi
+                await transaction.RollbackAsync();
+                Console.WriteLine($"Error occurred: {ex.Message}");
+                throw;
             }
-
-            // Lưu thay đổi cho phiếu nhập cũ
-            await cT_PhieuNhapContext.SaveChangesAsync();
-
-            // Trả về mã phiếu nhập mới
-            return newPhieuNhapHang.MaPhieuNhap;
         }
 
     }

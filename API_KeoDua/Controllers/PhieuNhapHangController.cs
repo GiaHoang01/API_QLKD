@@ -41,11 +41,8 @@ namespace API_KeoDua.Controllers
                 int maxRows = pageSize;
 
                 List<PhieuNhapHang> phieuNhapHangs = await this.phieuNhapHangReponsitory.GetAllPurchase(fromDate, toDate, searchString, startRow, maxRows);
-
-                if (phieuNhapHangs != null && phieuNhapHangs.Any())
-                {
                     repData = await ResponseSucceeded();
-                }
+
 
                 repData.data = new { TotalRows = this.phieuNhapHangReponsitory.TotalRows, PurchaseOrders = phieuNhapHangs };
                 return Ok(repData);
@@ -84,10 +81,7 @@ namespace API_KeoDua.Controllers
 
                 List<PhieuNhapHang> phieuNhapHangs = await this.phieuNhapHangReponsitory.GetAllPurchaseRequest(fromDate, toDate, searchString, startRow, maxRows);
 
-                if (phieuNhapHangs != null && phieuNhapHangs.Any())
-                {
-                    repData = await ResponseSucceeded();
-                }
+                repData = await ResponseSucceeded();
 
                 repData.data = new { TotalRows = this.phieuNhapHangReponsitory.TotalRows, PurchaseOrders = phieuNhapHangs };
                 return Ok(repData);
@@ -220,7 +214,15 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------Start DeletePurchaseOrder_Request-------");
                 ResponseModel repData = await ResponseFail();
                 Guid maPhieuNhap = Guid.Parse(dicData["MaPhieuNhap"].ToString());
-                this.phieuNhapHangReponsitory.DeletePurchaseOrderRequest(maPhieuNhap);
+
+                bool isCheck=await this.phieuNhapHangReponsitory.DeletePurchaseOrderRequest(maPhieuNhap);
+                if(!isCheck)
+                {
+                    repData = await ResponseFail();
+                    repData.message = "Phiếu nhập hàng này đã được phê duyệt";
+
+                    return Ok(repData);
+                }    
                 repData = await ResponseSucceeded();
                 repData.data = new { };
 
