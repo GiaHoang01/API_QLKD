@@ -175,5 +175,40 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------End getAllSaleInvoice-------");
             }
         }
+
+        /// <summary>
+        /// QuickSearch hóa đơn mới tạo
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> quickSearchSaleInvoiceNewCreated([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Begin quickSearchSaleInvoiceNewCreated-------");
+                ResponseModel repData = await ResponseFail();
+
+                string searchString = dicData["SearchString"].ToString();
+
+                var resultData = await this.hoaDonBanHangReponsitory.QuickSearchSaleInvoiceNewCreated(searchString);
+
+                if (resultData != null && resultData.Any())
+                {
+                    repData = await ResponseSucceeded();
+                    repData.data = new { HoaDonKhachHang = resultData }; // Trả dữ liệu kết hợp
+                }
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End quickSearchSaleInvoiceNewCreated-------");
+            }
+        }
     }
 }

@@ -216,6 +216,31 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
+        public async Task<List<NhanVien>> QuickSearchDeliveryEmployee(string searchString)
+        {
+            try
+            {
+                DynamicParameters param = new DynamicParameters();
+                var sqlWhere = new StringBuilder();
 
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    sqlWhere.Append(" AND (MaNV like @SearchString ESCAPE '\\' OR (TenNV) like @SearchString ESCAPE '\\') ");
+                    param.Add("SearchString", $"%{searchString}%");
+                }
+
+                string sqlQuery = @"SELECT * FROM tbl_NhanVien WITH (NOLOCK) WHERE ChucVu = N'Nhân viên giao hàng' " + sqlWhere;
+
+                using (var connection = this.nhanVienContext.CreateConnection())
+                {
+                    var resultData = (await connection.QueryAsync<NhanVien>(sqlQuery, param)).ToList();
+                    return resultData;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using API_KeoDua.DataView;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace API_KeoDua.Reponsitory.Implement
 {
@@ -230,5 +231,54 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
         #endregion
+
+        public async Task<List<object>> QuickSearchSaleInvoiceNewCreated(string searchString)
+        {
+            try
+            {
+                DynamicParameters param = new DynamicParameters();
+                var sqlWhere = new StringBuilder();
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    sqlWhere.Append(" AND MaHoaDon like @SearchString ESCAPE '\\' ");
+                    param.Add("SearchString", $"%{searchString}%");
+                }
+
+                string sqlQuery = @"
+                                    SELECT 
+                                        h.MaHoaDon, h.NgayTao, h.TrangThai, h.MaKhachHang, 
+                                        k.TenKhachHang, k.Email, k.Sdt
+                                    FROM tbl_HoaDonBanHang h
+                                    INNER JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
+                                    WHERE h.TrangThai = N'Mới tạo' " + sqlWhere;
+
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    var resultData = await connection.QueryAsync(sqlQuery, param);
+                    var response = resultData.Select(row => new
+                    {
+                        MaHoaDon = row.MaHoaDon,
+                        NgayBan = row.NgayBan,
+                        TrangThai = row.TrangThai,
+                        TongTriGia = row.TongTriGia,
+                        GhiChu = row.GhiChu,
+                        MaKhachHang = row.MaKhachHang,
+                        TenKhachHang = row.TenKhachHang,
+                        Email = row.Email,
+                        SDT = row.SDT,
+                        GioiTinh = row.GioiTinh,
+                        MaLoaiKH = row.MaLoaiKH,
+                    }).ToList<object>();
+
+                    return response;
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

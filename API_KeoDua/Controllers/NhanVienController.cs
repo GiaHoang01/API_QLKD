@@ -239,5 +239,41 @@ namespace API_KeoDua.Controllers
             }
         }
 
+        /// <summary>
+        /// Hàm quick search nhân viên giao hàng
+        /// </summary>
+        /// <param name="dicData">{SearchString:"string"}</param>
+        /// <returns>nhanViens</returns>
+        [HttpPost]
+        public async Task<ActionResult> quickSearchDeliveryEmployee([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("------- quickSearchDeliveryEmployee-------");
+                ResponseModel repData = await ResponseFail();
+
+                string searchString = dicData["SearchString"].ToString();
+
+                List<NhanVien> nhanviens = await this.nhanVienReponsitory.QuickSearchDeliveryEmployee(searchString);
+
+                if (nhanviens != null && nhanviens.Any())
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { NhanViens = nhanviens };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End quickSearchDeliveryEmployee-------");
+            }
+        }
+
     }
 }
