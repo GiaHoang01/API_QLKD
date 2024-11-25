@@ -24,6 +24,9 @@ namespace API_KeoDua.Data
         [MaxLength(10)]
         public string MaLoaiKH { get; set; }
 
+        [MaxLength (10)]
+        public string? Sdt {  get; set; }
+
         [ForeignKey("TenTaiKhoan")]
         public virtual TaiKhoan TaiKhoan { get; set; }
 

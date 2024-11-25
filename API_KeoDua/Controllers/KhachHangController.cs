@@ -112,6 +112,13 @@ namespace API_KeoDua.Controllers
                 KhachHang khachHang = JsonConvert.DeserializeObject<KhachHang>(dicData["KhachHang"].ToString());
                 khachHang.MaKhachHang = Guid.NewGuid();
 
+                // Kiểm tra nếu số điện thoại đã tồn tại
+                if (await this.khachHangReponsitory.IsPhoneNumberExists(khachHang.Sdt))
+                {
+                    repData.message = "Số điện thoại đã tồn tại.";
+                    return Ok(repData);
+                }
+
                 await this.khachHangReponsitory.AddCustomer(khachHang);
                 repData = await ResponseSucceeded();
                 repData.data = new { };

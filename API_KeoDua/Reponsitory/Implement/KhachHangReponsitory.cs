@@ -29,7 +29,7 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 if(!string.IsNullOrEmpty(searchString))
                 {
-                    sqlWhere += " WHERE TenKhachHang COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString";
+                    sqlWhere += " WHERE SDT COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString";
                     param.Add("@SearchString", $"%{searchString}%");
                 }
 
@@ -55,10 +55,22 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
+        public async Task<bool> IsPhoneNumberExists(string phoneNumber)
+        {
+            return await this.khachHangContext.tbl_KhachHang
+                .AnyAsync(kh => kh.Sdt == phoneNumber);
+        }
+
+
         public async Task<bool> AddCustomer(KhachHang khachHang)
         {
             try
             {
+                if (await IsPhoneNumberExists(khachHang.Sdt))
+                {
+                    throw new Exception("Số điện thoại đã tồn tại.");
+                }
+
                 await this.khachHangContext.tbl_KhachHang.AddAsync(khachHang);
                 await this.khachHangContext.SaveChangesAsync();
                 return true;

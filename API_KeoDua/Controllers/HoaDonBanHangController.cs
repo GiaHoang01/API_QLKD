@@ -60,7 +60,7 @@ namespace API_KeoDua.Controllers
                 Guid? cartId = string.IsNullOrWhiteSpace(dicData["MaGioHang"]?.ToString())
                  ? null
                  : Guid.Parse(dicData["MaGioHang"].ToString());
-                string? maHinhThuc = string.IsNullOrWhiteSpace(dicData["MaHinhThuc"].ToString()) ? null : dicData["MaHinhThuc"].ToString();`
+                string? maHinhThuc = string.IsNullOrWhiteSpace(dicData["MaHinhThuc"].ToString()) ? null : dicData["MaHinhThuc"].ToString();
                 int startRow = (pageIndex - 1) * pageSize;
                 int maxRows = pageSize;
 
