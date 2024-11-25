@@ -44,7 +44,7 @@ namespace API_KeoDua.Reponsitory.Implement
         {
             try
             {
-                string sqlWhere = " WHERE TrangThai = N'Chờ xác nhận'"; // Điều kiện mặc định
+                string sqlWhere = " WHERE TrangThai = N'Chờ xác nhận' AND h.MaKhachHang=k.MaKhachHang"; // Điều kiện mặc định
                 var param = new DynamicParameters();
 
                 // Lọc theo từ khóa tìm kiếm
@@ -86,7 +86,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 // Tạo câu truy vấn với điều kiện WHERE và phân trang
                 string sqlQuery = $@"
                     SELECT COUNT(1) FROM tbl_HoaDonBanHang WITH (NOLOCK) {sqlWhere};
-                    SELECT * FROM tbl_HoaDonBanHang WITH (NOLOCK) {sqlWhere}
+                    SELECT * FROM tbl_HoaDonBanHang h, tbl_KhachHang k WITH (NOLOCK) {sqlWhere}
                     ORDER BY NgayBan ASC
                     OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
 
@@ -165,7 +165,7 @@ namespace API_KeoDua.Reponsitory.Implement
         {
             try
             {
-                string sqlWhere = " WHERE TrangThai <> N'Chờ xác nhận'"; // Điều kiện mặc định
+                string sqlWhere = " WHERE TrangThai <> N'Chờ xác nhận' AND h.MaKhachHang=k.MaKhachHang AND h.MaNV=n.MaNV"; // Điều kiện mặc định
                 var param = new DynamicParameters();
 
                 // Lọc theo từ khóa tìm kiếm
@@ -205,7 +205,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 // Tạo câu truy vấn với điều kiện WHERE và phân trang
                 string sqlQuery = $@"
                     SELECT COUNT(1) FROM tbl_HoaDonBanHang WITH (NOLOCK) {sqlWhere};
-                    SELECT * FROM tbl_HoaDonBanHang WITH (NOLOCK) {sqlWhere}
+                    SELECT * FROM tbl_HoaDonBanHang h,tbl_NhanVien n, tbl_KhachHang k WITH (NOLOCK) {sqlWhere}
                     ORDER BY NgayBan ASC
                     OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
 
