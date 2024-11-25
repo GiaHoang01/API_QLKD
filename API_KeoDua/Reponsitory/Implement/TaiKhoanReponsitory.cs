@@ -30,14 +30,14 @@ namespace API_KeoDua.Reponsitory.Implement
                 var account = await _context.TaiKhoan.FirstOrDefaultAsync(acc => acc.TenTaiKhoan == user && acc.MatKhau == pass);
                 if (account == null)
                 {
-                    return "Tài khoản không tồn tại";
+                    return null;
                 }
 
                 // Fetch employee info from database using NhânViênContext
                 var employee = await _nhanVienContext.tbl_NhanVien
                     .FirstOrDefaultAsync(nv => nv.TenTaiKhoan == account.TenTaiKhoan);
 
-                return employee?.TenNV ?? "Tên nhân viên không tồn tại"; // Return employee name if found
+                return employee?.TenNV ?? null; 
             }
             catch (Exception ex)
             {
