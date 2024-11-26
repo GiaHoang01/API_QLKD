@@ -421,34 +421,41 @@ namespace API_KeoDua.Reponsitory.Implement
         /// <exception cref="InvalidOperationException"></exception>
         public async Task<bool> DeleteSaleInvoice (Guid maHoaDon)
         {
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            using var transaction = await hoaDonBanHangContext.Database.BeginTransactionAsync();
+            try
             {
-                try
+                // Kiểm tra trạng thái của hóa đơn trước khi xóa
+                var hoaDon = await hoaDonBanHangContext.tbl_HoaDonBanHang
+                    .FirstOrDefaultAsync(p => p.MaHoaDon == maHoaDon);
+
+                if (hoaDon == null)
                 {
-                    // Tìm phiếu nhập hàng cần xóa
-                    var existingHoaDon = await hoaDonBanHangContext.tbl_HoaDonBanHang.FindAsync(maHoaDon);
-                    if (existingHoaDon== null)
-                    {
-                        return false; // Không tìm thấy phiếu nhập hàng
-                    }
-
-                    // Xóa tất cả chi tiết phiếu nhập liên quan
-                    string deleteDetailsQuery = @"DELETE FROM tbl_CT_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon";
-                    var parameter = new SqlParameter("@MaHoaDon", maHoaDon);
-                    await cT_HoaDonBanHangContext.Database.ExecuteSqlRawAsync(deleteDetailsQuery, parameter);
-
-                    // Xóa phiếu nhập hàng
-                    hoaDonBanHangContext.tbl_HoaDonBanHang.Remove(existingHoaDon);
-                    await hoaDonBanHangContext.SaveChangesAsync();
-
-                    // Hoàn tất giao dịch
-                    scope.Complete();
-                    return true; // Xóa thành công
+                    return false;
                 }
-                catch (Exception ex)
+                if (hoaDon.TrangThai != "Mới tạo" && hoaDon.TrangThai!="Chờ xác nhận")
                 {
-                    throw new InvalidOperationException("Có lỗi xảy ra khi xóa dữ liệu.", ex);
+                    return false;
                 }
+
+                // Tạo tham số cho stored procedure
+                var parameters = new[]
+                {
+                    new SqlParameter("@MaHoaDon", SqlDbType.UniqueIdentifier) { Value = maHoaDon }
+                };
+
+                // Thực thi stored procedure xóa chi tiết phiếu nhập
+                await hoaDonBanHangContext.Database.ExecuteSqlRawAsync(
+                    "EXEC DeleteSaleInvoice @MaHoaDon", parameters);
+
+                // Commit transaction sau khi thực hiện thành công
+                await transaction.CommitAsync();
+                return true; // Nếu xóa thành công, trả về true
+            }
+            catch (Exception ex)
+            {
+                // Nếu có lỗi, rollback transaction
+                await transaction.RollbackAsync();
+                throw new Exception("An error occurred while deleting the sale invoice and its details", ex);
             }
         }
         #endregion
