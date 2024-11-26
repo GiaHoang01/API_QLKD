@@ -367,31 +367,35 @@ namespace API_KeoDua.Reponsitory.Implement
 
         public async Task<bool> DeleteSaleInvoice (Guid maHoaDon)
         {
-            using var transaction = await hoaDonBanHangContext.Database.BeginTransactionAsync();
-            try
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                // Xóa tất cả chi tiết phiếu nhập liên quan
-                string deleteDetailsQuery = @"DELETE FROM tbl_CT_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon";
-                var parameter = new SqlParameter("@MaHoaDon", maHoaDon);
-                await cT_HoaDonBanHangContext.Database.ExecuteSqlRawAsync(deleteDetailsQuery, parameter);
-
-                // Xóa phiếu nhập hàng
-                var existingHoaDon = await hoaDonBanHangContext.tbl_HoaDonBanHang.FindAsync(maHoaDon);
-                if (existingHoaDon != null)
+                try
                 {
+                    // Tìm phiếu nhập hàng cần xóa
+                    var existingHoaDon = await hoaDonBanHangContext.tbl_HoaDonBanHang.FindAsync(maHoaDon);
+                    if (existingHoaDon== null)
+                    {
+                        return false; // Không tìm thấy phiếu nhập hàng
+                    }
+
+                    // Xóa tất cả chi tiết phiếu nhập liên quan
+                    string deleteDetailsQuery = @"DELETE FROM tbl_CT_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon";
+                    var parameter = new SqlParameter("@MaHoaDon", maHoaDon);
+                    await cT_HoaDonBanHangContext.Database.ExecuteSqlRawAsync(deleteDetailsQuery, parameter);
+
+                    // Xóa phiếu nhập hàng
                     hoaDonBanHangContext.tbl_HoaDonBanHang.Remove(existingHoaDon);
                     await hoaDonBanHangContext.SaveChangesAsync();
+
+                    // Hoàn tất giao dịch
+                    scope.Complete();
+                    return true; // Xóa thành công
                 }
-
-                await transaction.CommitAsync();
-                return true;
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Có lỗi xảy ra khi xóa dữ liệu.", ex);
+                }
             }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                throw new InvalidOperationException("Có lỗi xảy ra khi xóa dữ liệu.", ex);
-            }
-
         }
     }
 }
