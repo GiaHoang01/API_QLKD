@@ -152,6 +152,40 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
+        /// <summary>
+        /// Hủy hàng do khách đổi ý trên giao diện khách hàng
+        /// </summary>
+        /// <param name="maHoaDon"></param>
+        /// <param name="maNV"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<bool> CancelSaleInvoice(Guid maHoaDon, Guid maNV)
+        {
+            try
+            {
+                string sqlUpdate = @"
+                UPDATE tbl_HoaDonBanHang
+                SET TrangThai = N'Đã hủy do khách đổi ý',
+                    NgayBan = GETDATE(),
+                    MaNV = @MaNV
+                WHERE MaHoaDon = @MaHoaDon AND TrangThai = N'Chờ xác nhận' AND GhiChu LIKE N'%Đã hủy do khách đổi ý%'"; // Điều kiện mặc định
+                var param = new DynamicParameters();
+                param.Add("@MaHoaDon", maHoaDon);
+                param.Add("@MaNV", maNV);
+
+
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    int rowsAffected = await connection.ExecuteAsync(sqlUpdate, param);
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ghi log hoặc xử lý ngoại lệ
+                throw new Exception("An error occurred while fetching saleinvoice", ex);
+            }
+        }
         #endregion
 
         #region Hóa đơn bán hàng
@@ -171,7 +205,7 @@ namespace API_KeoDua.Reponsitory.Implement
         {
             try
             {
-                string sqlWhere = " WHERE TrangThai <> N'Chờ xác nhận' AND h.MaKhachHang=k.MaKhachHang AND h.MaNV=n.MaNV AND NgayBan >= @FromDate AND NgayBan <= @ToDate"; // Điều kiện mặc định
+                string sqlWhere = " WHERE h.MaKhachHang=k.MaKhachHang AND h.MaNV=n.MaNV AND NgayBan >= @FromDate AND NgayBan <= @ToDate"; // Điều kiện mặc định
                 var param = new DynamicParameters();
                 param.Add("@FromDate", fromDate);
                 param.Add("@ToDate", toDate);
@@ -237,7 +271,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while fetching saleinvoice", ex);
             }
         }
-        #endregion
+        
 
         public async Task<List<object>> QuickSearchSaleInvoiceNewCreated(string searchString)
         {
@@ -287,6 +321,14 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw ex;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hoaDonBanHang"></param>
+        /// <param name="cT_HoaDonBanHangs"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public async Task AddSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
         {
             // Sử dụng TransactionScope cho tất cả các DbContext
@@ -318,7 +360,13 @@ namespace API_KeoDua.Reponsitory.Implement
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hoaDonBanHang"></param>
+        /// <param name="cT_HoaDonBanHangs"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public async Task<bool> UpdateSaleInvoice (HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -365,6 +413,12 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maHoaDon"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public async Task<bool> DeleteSaleInvoice (Guid maHoaDon)
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -397,5 +451,6 @@ namespace API_KeoDua.Reponsitory.Implement
                 }
             }
         }
+        #endregion
     }
 }
