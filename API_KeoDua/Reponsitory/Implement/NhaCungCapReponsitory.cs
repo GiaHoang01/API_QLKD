@@ -56,7 +56,7 @@ namespace API_KeoDua.Reponsitory.Implement
         /// </summary>
         /// <param name="maNCC"></param>
         /// <returns></returns>
-        public async Task<string> SearchNhaCungCap_ByMaNCC(Guid maNCC)
+        public async Task<string> SearchNhaCungCap_ByMaNCC(Guid? maNCC)
         {
             try
             {
