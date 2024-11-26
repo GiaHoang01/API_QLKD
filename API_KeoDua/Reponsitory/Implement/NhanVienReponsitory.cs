@@ -107,7 +107,7 @@ namespace API_KeoDua.Reponsitory.Implement
 
         }
 
-        public async Task<NhanVienTaiKhoan> GetEmployeeByID(Guid MaNV)
+        public async Task<NhanVienTaiKhoan> GetEmployeeByID(Guid? MaNV)
         {
             try
             {
