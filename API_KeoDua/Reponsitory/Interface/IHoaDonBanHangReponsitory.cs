@@ -10,5 +10,9 @@ namespace API_KeoDua.Reponsitory.Interface
         public Task<List<HoaDonBanHangView>> GetAllSaleInVoice(DateTime fromDate, DateTime toDate, string searchString, Guid? employeeId, Guid? cartId, Guid? customerId, string? maHinhThuc, int startRow, int maxRows);
         public Task<bool> ConfirmSaleInvoice(Guid maHoaDon, Guid maNV);
         public Task<List<object>> QuickSearchSaleInvoiceNewCreated(string searchString);
+        public Task AddSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs);
+        public Task<bool> UpdateSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs);
+        public Task<bool> DeleteSaleInvoice(Guid maHoaDon);
+        public Task<bool> CancelSaleInvoice(Guid maHoaDon, Guid maNV);
     }
 }

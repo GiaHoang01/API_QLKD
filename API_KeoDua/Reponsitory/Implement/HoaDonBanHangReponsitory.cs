@@ -9,6 +9,7 @@ using API_KeoDua.DataView;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Linq;
+using System.Transactions;
 
 namespace API_KeoDua.Reponsitory.Implement
 {
@@ -19,13 +20,15 @@ namespace API_KeoDua.Reponsitory.Implement
         private readonly KhachHangContext khachHangContext;
         private readonly HinhThucThanhToanContext hinhThucThanhToanContext;
         private readonly GioHangContext gioHangContext;
-        public HoaDonBanHangReponsitory(HoaDonBanHangContext hoaDonBanHangContext,NhanVienContext nhanVienContext,KhachHangContext khachHangContext,HinhThucThanhToanContext hinhThucThanhToanContext,GioHangContext gioHangContext)
+        private readonly CT_HoaDonBanHangContext cT_HoaDonBanHangContext;
+        public HoaDonBanHangReponsitory(HoaDonBanHangContext hoaDonBanHangContext,NhanVienContext nhanVienContext,KhachHangContext khachHangContext,HinhThucThanhToanContext hinhThucThanhToanContext,GioHangContext gioHangContext, CT_HoaDonBanHangContext cT_HoaDonBanHangContext)
         {
             this.hoaDonBanHangContext = hoaDonBanHangContext;
             this.nhanVienContext = nhanVienContext;
             this.khachHangContext = khachHangContext;
             this.hinhThucThanhToanContext = hinhThucThanhToanContext;
             this.gioHangContext = gioHangContext;
+            this.cT_HoaDonBanHangContext=cT_HoaDonBanHangContext ;
         }
         public int TotalRows { get; set; }
 
@@ -149,6 +152,40 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
+        /// <summary>
+        /// Hủy hàng do khách đổi ý trên giao diện khách hàng
+        /// </summary>
+        /// <param name="maHoaDon"></param>
+        /// <param name="maNV"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<bool> CancelSaleInvoice(Guid maHoaDon, Guid maNV)
+        {
+            try
+            {
+                string sqlUpdate = @"
+                UPDATE tbl_HoaDonBanHang
+                SET TrangThai = N'Đã hủy do khách đổi ý',
+                    NgayBan = GETDATE(),
+                    MaNV = @MaNV
+                WHERE MaHoaDon = @MaHoaDon AND TrangThai = N'Chờ xác nhận' AND GhiChu LIKE N'%Đã hủy do khách đổi ý%'"; // Điều kiện mặc định
+                var param = new DynamicParameters();
+                param.Add("@MaHoaDon", maHoaDon);
+                param.Add("@MaNV", maNV);
+
+
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    int rowsAffected = await connection.ExecuteAsync(sqlUpdate, param);
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ghi log hoặc xử lý ngoại lệ
+                throw new Exception("An error occurred while fetching saleinvoice", ex);
+            }
+        }
         #endregion
 
         #region Hóa đơn bán hàng
@@ -168,7 +205,7 @@ namespace API_KeoDua.Reponsitory.Implement
         {
             try
             {
-                string sqlWhere = " WHERE TrangThai <> N'Chờ xác nhận' AND h.MaKhachHang=k.MaKhachHang AND h.MaNV=n.MaNV AND NgayBan >= @FromDate AND NgayBan <= @ToDate"; // Điều kiện mặc định
+                string sqlWhere = " WHERE h.MaKhachHang=k.MaKhachHang AND h.MaNV=n.MaNV AND NgayBan >= @FromDate AND NgayBan <= @ToDate"; // Điều kiện mặc định
                 var param = new DynamicParameters();
                 param.Add("@FromDate", fromDate);
                 param.Add("@ToDate", toDate);
@@ -234,7 +271,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while fetching saleinvoice", ex);
             }
         }
-        #endregion
+        
 
         public async Task<List<object>> QuickSearchSaleInvoiceNewCreated(string searchString)
         {
@@ -284,5 +321,143 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw ex;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hoaDonBanHang"></param>
+        /// <param name="cT_HoaDonBanHangs"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public async Task AddSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
+        {
+            // Sử dụng TransactionScope cho tất cả các DbContext
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    // Thêm phiếu nhập vào bảng tbl_PhieuNhapHang
+                    hoaDonBanHang.NgayBan = DateTime.Now;
+                    hoaDonBanHang.TrangThai = "Mới tạo";
+                    hoaDonBanHangContext.tbl_HoaDonBanHang.Add(hoaDonBanHang);
+                    await hoaDonBanHangContext.SaveChangesAsync();
+
+                    // Thêm chi tiết phiếu nhập vào bảng tbl_CT_PhieuNhap
+                    foreach (var detail in cT_HoaDonBanHangs)
+                    {
+                        detail.MaHoaDon = (Guid)hoaDonBanHang.MaHoaDon;
+                        cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                    }
+                    await cT_HoaDonBanHangContext.SaveChangesAsync();
+
+                    // Commit giao dịch
+                    transaction.Complete();
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi và rollback nếu có
+                    throw new InvalidOperationException("Có lỗi xảy ra khi thêm dữ liệu.", ex);
+                }
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hoaDonBanHang"></param>
+        /// <param name="cT_HoaDonBanHangs"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public async Task<bool> UpdateSaleInvoice (HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
+        {
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    // Tìm phiếu nhập hiện tại
+                    var existingHoaDon = await hoaDonBanHangContext.tbl_HoaDonBanHang.FindAsync(hoaDonBanHang.MaHoaDon);
+                    if (existingHoaDon == null)
+                    {
+                        return false; // Không tìm thấy phiếu nhập
+                    }
+
+                    // Cập nhật thông tin phiếu nhập
+                    existingHoaDon.MaNV = hoaDonBanHang.MaNV;
+                    existingHoaDon.MaKhachHang = hoaDonBanHang.MaKhachHang;
+                    existingHoaDon.NgayBan = hoaDonBanHang.NgayBan;
+                    existingHoaDon.NgayThanhToan = hoaDonBanHang.NgayThanhToan;
+                    existingHoaDon.MaHinhThuc = hoaDonBanHang.MaHinhThuc;
+                    existingHoaDon.GhiChu = hoaDonBanHang.GhiChu;
+                    await hoaDonBanHangContext.SaveChangesAsync();
+
+                    string deleteQuery = @"DELETE FROM tbl_CT_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon";
+                    var parameter = new SqlParameter("@MaHoaDon", hoaDonBanHang.MaHoaDon);
+                    await cT_HoaDonBanHangContext.Database.ExecuteSqlRawAsync(deleteQuery, parameter);
+
+                    // **Thêm chi tiết phiếu nhập mới**
+                    foreach (var detail in cT_HoaDonBanHangs)
+                    {
+                        detail.MaHoaDon = (Guid)hoaDonBanHang.MaHoaDon;
+                        detail.ThanhTien = detail.DonGia * detail.SoLuong;
+                        cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                    }
+                    await cT_HoaDonBanHangContext.SaveChangesAsync();
+
+                    // Hoàn tất giao dịch
+                    scope.Complete();
+                    return true; // Cập nhật thành công
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Có lỗi xảy ra khi cập nhật dữ liệu.", ex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maHoaDon"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public async Task<bool> DeleteSaleInvoice (Guid maHoaDon)
+        {
+            using var transaction = await hoaDonBanHangContext.Database.BeginTransactionAsync();
+            try
+            {
+                // Kiểm tra trạng thái của hóa đơn trước khi xóa
+                var hoaDon = await hoaDonBanHangContext.tbl_HoaDonBanHang
+                    .FirstOrDefaultAsync(p => p.MaHoaDon == maHoaDon);
+
+                if (hoaDon == null)
+                {
+                    return false;
+                }
+                if (hoaDon.TrangThai != "Mới tạo" && hoaDon.TrangThai!="Chờ xác nhận")
+                {
+                    return false;
+                }
+
+                // Tạo tham số cho stored procedure
+                var parameters = new[]
+                {
+                    new SqlParameter("@MaHoaDon", SqlDbType.UniqueIdentifier) { Value = maHoaDon }
+                };
+
+                // Thực thi stored procedure xóa chi tiết phiếu nhập
+                await hoaDonBanHangContext.Database.ExecuteSqlRawAsync(
+                    "EXEC DeleteSaleInvoice @MaHoaDon", parameters);
+
+                // Commit transaction sau khi thực hiện thành công
+                await transaction.CommitAsync();
+                return true; // Nếu xóa thành công, trả về true
+            }
+            catch (Exception ex)
+            {
+                // Nếu có lỗi, rollback transaction
+                await transaction.RollbackAsync();
+                throw new Exception("An error occurred while deleting the sale invoice and its details", ex);
+            }
+        }
+        #endregion
     }
 }
