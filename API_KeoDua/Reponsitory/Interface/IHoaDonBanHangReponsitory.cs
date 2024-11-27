@@ -14,5 +14,6 @@ namespace API_KeoDua.Reponsitory.Interface
         public Task<bool> UpdateSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs);
         public Task<bool> DeleteSaleInvoice(Guid maHoaDon);
         public Task<bool> CancelSaleInvoice(Guid maHoaDon, Guid maNV);
+        public Task<(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)> GetInvoice_ByID(Guid? maHoaDon);
     }
 }
