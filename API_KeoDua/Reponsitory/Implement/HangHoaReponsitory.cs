@@ -228,7 +228,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while fetching products", ex);
             }
         }
-        public async Task<List<HangHoa>> QuickSearchHangHoa(string searchString)
+        public async Task<List<HangHoaLichSuGia>> QuickSearchHangHoa(string searchString)
         {
             try
             {
@@ -236,23 +236,46 @@ namespace API_KeoDua.Reponsitory.Implement
                 var sqlWhere = new StringBuilder();
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    sqlWhere.Append(" WHERE (MaHangHoa LIKE @SearchString ESCAPE '\\' OR TenHangHoa LIKE @SearchString ESCAPE '\\')");
+                    sqlWhere.Append(" WHERE (h.MaHangHoa LIKE @SearchString OR h.TenHangHoa LIKE @SearchString) ");
                     param.Add("SearchString", "%" + searchString.Trim() + "%");
                 }
 
-                string sqlQuery = @"SELECT TOP 5 * FROM tbl_HangHoa WITH (NOLOCK)" + sqlWhere;
+                string sqlQuery = @"
+                    WITH LatestPrices AS (
+                        SELECT 
+                            MaHangHoa, 
+                            MAX(NgayCapNhatGia) AS NgayCapNhatGia
+                        FROM tbl_LichSuGia
+                        GROUP BY MaHangHoa
+                    )
+                    SELECT DISTINCT TOP 5 
+                        h.MaHangHoa,
+                        h.TenHangHoa,
+                        h.HinhAnh,
+                        g.GiaBan,
+                        h.MoTa,
+                        h.MaLoai
+                    FROM 
+                        tbl_HangHoa h
+                    INNER JOIN 
+                        tbl_LichSuGia g ON h.MaHangHoa = g.MaHangHoa
+                    INNER JOIN 
+                        LatestPrices lp ON g.MaHangHoa = lp.MaHangHoa AND g.NgayCapNhatGia = lp.NgayCapNhatGia
+                    " + sqlWhere;
 
                 using (var connection = this.hangHoaContext.CreateConnection())
                 {
-                    var resultData = (await connection.QueryAsync<HangHoa>(sqlQuery, param)).ToList();
+                    var resultData = (await connection.QueryAsync<HangHoaLichSuGia>(sqlQuery, param)).ToList();
                     return resultData;
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                // Log lỗi
+                throw;
             }
         }
+
         public async Task<string> getTenHangHoa_withByMaHangHoa(Guid maHangHoa)
         {
             try
