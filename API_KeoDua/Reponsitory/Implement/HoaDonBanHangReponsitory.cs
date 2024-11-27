@@ -272,6 +272,42 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
+        public async Task<(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)> GetInvoice_ByID(Guid? maHoaDon)
+        {
+            try
+            {
+                // Query cho bảng HoaDonBanHang
+                var sqlHoaDon = @"SELECT * FROM tbl_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon;";
+
+                // Query cho bảng CT_HoaDonBanHang và bảng liên quan
+                var sqlChiTietHoaDon = @"
+                SELECT * FROM  tbl_CT_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon;";
+
+                // Biến lưu trữ kết quả
+                HoaDonBanHang hoaDonBanHang;
+                List<CT_HoaDonBanHang> cT_HoaDonBanHangs;
+
+                // Truy vấn bảng tbl_PhieuNhapHang từ PhieuNhapHangContext
+                using (var connection1 = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    hoaDonBanHang = await connection1.QueryFirstOrDefaultAsync<HoaDonBanHang>(sqlHoaDon, new { MaHoaDon = maHoaDon });
+                }
+
+                // Truy vấn bảng tbl_CT_PhieuNhap từ CT_PhieuNhapContext
+                using (var connection2 = this.cT_HoaDonBanHangContext.CreateConnection())
+                {
+                    cT_HoaDonBanHangs = (await connection2.QueryAsync<CT_HoaDonBanHang>(sqlChiTietHoaDon, new { MaHoaDon = maHoaDon })).ToList();
+                }
+
+                return (hoaDonBanHang, cT_HoaDonBanHangs);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while fetching the sale order details.", ex);
+            }
+        }
+
+
         public async Task<List<object>> QuickSearchSaleInvoiceNewCreated(string searchString)
         {
             try

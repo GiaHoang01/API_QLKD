@@ -226,6 +226,63 @@ namespace API_KeoDua.Controllers
         /// </summary>
         /// <param name="dicData"></param>
         /// <returns></returns>
+
+        [HttpPost]
+        public async Task<ActionResult> getSaleInvoice_ByID([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Start getSaleInvoice_ByID-------");
+                ResponseModel repData = await ResponseFail();
+                Guid? maHoaDon = dicData.ContainsKey("MaHoaDon") && !string.IsNullOrEmpty(dicData["MaHoaDon"]?.ToString()) ? Guid.Parse(dicData["MaHoaDon"].ToString()) : (Guid?)null;
+
+                int status = Convert.ToInt32(dicData["Status"].ToString());
+                if (status == 1)
+                {
+                    HoaDonBanHangView hoaDonBanHang = new HoaDonBanHangView();
+                    hoaDonBanHang.MaHoaDon = Guid.NewGuid();
+                    hoaDonBanHang.NgayBan = DateTime.Now;
+                    hoaDonBanHang.NgayThanhToan = DateTime.Now;
+                    hoaDonBanHang.TrangThai = "Mới tạo";
+                    List<CT_HoaDonBanHang> cT_HoaDonBanHangs = new List<CT_HoaDonBanHang>();
+                    repData = await ResponseSucceeded();
+                    repData.data = new { hoaDonBanHang = hoaDonBanHang, CTHoaDonBanHang = cT_HoaDonBanHangs };
+                }
+                else
+                {
+                    var result = await this.hoaDonBanHangReponsitory.GetInvoice_ByID(maHoaDon);
+                    var hoaDonBanHang = result.hoaDonBanHang;
+                    var chiTietHoaDonBanHang = result.cT_HoaDonBanHangs;
+                    if (hoaDonBanHang == null && (chiTietHoaDonBanHang == null || !chiTietHoaDonBanHang.Any()))
+                    {
+                        repData = await ResponseFail();
+                        repData.message = "Không tìm thấy phiếu nhập hoặc chi tiết phiếu nhập.";
+                        return Ok(repData);
+                    }
+                    repData = await ResponseSucceeded();
+                    repData.data = new { HoaDonBanHang = hoaDonBanHang, ChiTietHoaDonBanHang = chiTietHoaDonBanHang };
+
+                }
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và trả về thông báo lỗi
+                logger.Error("Error in getSaleInvoice_ByID", ex);
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End getSaleInvoice_ByID-------");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> SaveSaleInvoice([FromBody] Dictionary<string, object> dicData)
         {
