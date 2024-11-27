@@ -9,6 +9,7 @@ using API_KeoDua.DataView;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace API_KeoDua.Reponsitory.Implement
 {
@@ -245,38 +246,52 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    sqlWhere.Append(" AND MaHoaDon like @SearchString ESCAPE '\\' ");
+                    sqlWhere.Append(" AND h.MaHoaDon like @SearchString ESCAPE '\\' ");
                     param.Add("SearchString", $"%{searchString}%");
                 }
 
                 string sqlQuery = @"
-                                    SELECT 
-                                        h.*, 
-                                        k.* 
-                                    FROM tbl_HoaDonBanHang h
-                                    INNER JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
-                                    WHERE h.TrangThai = N'Mới tạo' " + sqlWhere;
+            SELECT 
+                h.MaHoaDon, h.NgayBan, h.TrangThai, h.TongTriGia, h.GhiChu, h.MaHinhThuc,
+                k.MaKhachHang, k.TenKhachHang, k.Email, k.SDT, k.GioiTinh, k.MaLoaiKH,
+                t.MaThongTin, t.SDT AS SDTGiaoHang, t.DiaChi, t.MacDinh
+            FROM tbl_HoaDonBanHang h
+            INNER JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
+            LEFT JOIN tbl_ThongTinGiaoHang t ON k.MaKhachHang = t.MaKhachHang
+            WHERE h.TrangThai = N'Mới tạo' " + sqlWhere;
 
                 using (var connection = this.hoaDonBanHangContext.CreateConnection())
                 {
                     var resultData = await connection.QueryAsync(sqlQuery, param);
-                    var response = resultData.Select(row => new
-                    {
-                        MaHoaDon = row.MaHoaDon,
-                        NgayBan = row.NgayBan,
-                        TrangThai = row.TrangThai,
-                        TongTriGia = row.TongTriGia,
-                        GhiChu = row.GhiChu,
-                        MaKhachHang = row.MaKhachHang,
-                        TenKhachHang = row.TenKhachHang,
-                        Email = row.Email,
-                        SDT = row.SDT,
-                        GioiTinh = row.GioiTinh,
-                        MaLoaiKH = row.MaLoaiKH,
-                    }).ToList<object>();
 
-                    return response;
-                    
+                    var groupedResult = resultData
+                        .GroupBy(row => row.MaHoaDon)
+                        .Select(group => new
+                        {
+                            MaHoaDon = group.First().MaHoaDon,
+                            NgayBan = group.First().NgayBan,
+                            TrangThai = group.First().TrangThai,
+                            TongTriGia = group.First().TongTriGia,
+                            GhiChu = group.First().GhiChu,
+                            MaHinhThuc = group.First().MaHinhThuc,
+                            MaKhachHang = group.First().MaKhachHang,
+                            TenKhachHang = group.First().TenKhachHang,
+                            Email = group.First().Email,
+                            SDT = group.First().SDT,
+                            GioiTinh = group.First().GioiTinh,
+                            MaLoaiKH = group.First().MaLoaiKH,
+                            ThongTinGiaoHang = group
+                                .Where(row => row.MaThongTin != null) // Loại bỏ thông tin null
+                                .Select(row => new
+                                {
+                                    MaThongTin = row.MaThongTin,
+                                    SDT = row.SDTGiaoHang,
+                                    DiaChi = row.DiaChi,
+                                    MacDinh = row.MacDinh
+                                }).ToList()
+                        }).ToList<object>();
+
+                    return groupedResult;
                 }
             }
             catch (Exception ex)
@@ -284,5 +299,10 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw ex;
             }
         }
+
+
+
+
+
     }
 }
