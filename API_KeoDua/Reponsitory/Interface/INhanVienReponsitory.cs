@@ -13,5 +13,6 @@ namespace API_KeoDua.Reponsitory.Interface
         public Task DeleteEmployee (Guid MaNV);
         public Task UpdateEmployee(NhanVienTaiKhoan nhanVienTaiKhoan, Guid maNV);
         public Task<List<NhanVien>> QuickSearchNhanVien(string searchString);
-    }
+        public Task<List<NhanVien>> QuickSearchDeliveryEmployee(string searchString);
+    } 
 }

@@ -276,8 +276,8 @@ namespace API_KeoDua.Reponsitory.Implement
                 // Tạo tham số cho stored procedure
                 var parameters = new[]
                 {
-            new SqlParameter("@MaPhieuNhap", SqlDbType.UniqueIdentifier) { Value = maPhieuNhap }
-        };
+                    new SqlParameter("@MaPhieuNhap", SqlDbType.UniqueIdentifier) { Value = maPhieuNhap }
+                };
 
                 // Thực thi stored procedure xóa chi tiết phiếu nhập
                 await phieuNhapHangContext.Database.ExecuteSqlRawAsync(
@@ -294,6 +294,8 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while deleting the purchase order and its details", ex);
             }
         }
+
+        
 
 
 
