@@ -353,5 +353,112 @@ namespace API_KeoDua.Controllers
             }
         }
 
+        /// <summary>
+        /// Hàm lấy tổng số đơn hàng đã hoàn tất
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> GetTotalCompletedOrders([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End GetTotalCompletedOrders-------");
+
+                // Initialize the response model
+                ResponseModel repData = await ResponseFail();
+                int totals = await this.phieuNhapHangReponsitory.TotalCompletedRecords();
+                repData=await ResponseSucceeded();
+                repData.data = new
+                {
+                    totalPurchase = totals
+                };
+
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception and return error response
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End GetTotalCompletedOrders-------");
+            }
+        }
+
+
+        /// <summary>
+        /// Hàm lấy tổng chi từ đơn đặt hàng
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> getTotalExpenses([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End getTotalExpenses-------");
+
+                // Initialize the response model
+                ResponseModel repData = await ResponseFail();
+                decimal totals = await this.phieuNhapHangReponsitory.TotalPurchaseCompletedAmount();
+                repData = await ResponseSucceeded();
+                repData.data = new
+                {
+                    total = totals
+                };
+
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception and return error response
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End getTotalExpenses-------");
+            }
+        }
+
+        /// <summary>
+        /// Hàm lấy tổng chi từ năm truyền vào
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> getTotalExpensesByYear([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End getTotalExpensesByYear-------");
+
+                // Initialize the response model
+                ResponseModel repData = await ResponseFail();
+                int year = Convert.ToInt32(dicData["Year"].ToString());
+                decimal totals = await this.phieuNhapHangReponsitory.TotalExpensesByYear(year);
+                repData = await ResponseSucceeded();
+                repData.data = new
+                {
+                    total = totals
+                };
+
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception and return error response
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End getTotalExpensesByYear-------");
+            }
+        }
+
     }
 }
