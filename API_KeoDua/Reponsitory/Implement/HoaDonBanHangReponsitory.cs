@@ -271,7 +271,6 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while fetching saleinvoice", ex);
             }
         }
-        
 
         public async Task<List<object>> QuickSearchSaleInvoiceNewCreated(string searchString)
         {
@@ -360,6 +359,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 }
             }
         }
+       
         /// <summary>
         /// 
         /// </summary>
@@ -458,6 +458,85 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while deleting the sale invoice and its details", ex);
             }
         }
+
+        public async Task<int> TotalSalesCompletedRecords()
+        {
+            try
+            {
+                var sqlQuery = "SELECT COUNT(*) FROM tbl_HoaDonBanHang WITH (NOLOCK) WHERE TrangThai = N'Đã thanh toán';";
+
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    // Execute both queries using QueryMultipleAsync
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery))
+                    {
+                        var total = await multi.ReadFirstOrDefaultAsync<int>();
+
+                        return (total);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception and log the error
+                throw new Exception("An error occurred while fetching completed records", ex);
+            }
+        }
+
+        public async Task<decimal> TotalSalesCompletedAmount()
+        {
+            try
+            {
+                // Modify the query to calculate the sum of the total value (TongTriGia) from completed invoices
+                var sqlQuery = "SELECT SUM(TongTriGia) FROM tbl_HoaDonBanHang WITH (NOLOCK) WHERE TrangThai = N'Đã thanh toán';";
+
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    // Execute the query
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery))
+                    {
+                        // Retrieve the total amount (or 0 if no records are found)
+                        var totalAmount = await multi.ReadFirstOrDefaultAsync<decimal>();
+
+                        return totalAmount;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception and log the error
+                throw new Exception("An error occurred while fetching total completed sales amount", ex);
+            }
+        }
+
+        public async Task<decimal> TotalRevenueByYear(int year)
+        {
+            try
+            {
+                // Truy vấn SQL để tính tổng trị giá (chi) cho năm được chỉ định
+                var sqlQuery = "SELECT SUM(TongTriGia) AS Total " +
+                               "FROM tbl_HoaDonBanHang WITH (NOLOCK) " +
+                               "WHERE YEAR(NgayBan) = @Year and trangThai=N'Đã thanh toán'";
+
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    // Thực thi truy vấn SQL và lấy kết quả
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery, new { Year = year }))
+                    {
+                        var totalChi = await multi.ReadFirstOrDefaultAsync<decimal>();
+
+                        return totalChi; // Trả về tổng chi cho năm được chỉ định
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và ghi log nếu có lỗi
+                throw new Exception($"An error occurred while fetching total expenses for the year {year}", ex);
+            }
+        }
+
+
         #endregion
     }
 }
