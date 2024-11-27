@@ -2,8 +2,10 @@
 using API_KeoDua.DataView;
 using API_KeoDua.Models;
 using API_KeoDua.Reponsitory.Interface;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace API_KeoDua.Controllers
 {
@@ -192,6 +194,41 @@ namespace API_KeoDua.Controllers
             finally
             {
                 logger.Debug("-------End UpdatetCustomer-------");
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> quickSearchKhachHang([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("------- quickSearchKhachHang-------");
+                ResponseModel repData = await ResponseFail();
+
+                string searchString = dicData["SearchString"].ToString();
+
+                List<KhachHang> khachhangs = await this.khachHangReponsitory.QuickSearchKhachHang(searchString);
+
+                if (khachhangs != null && khachhangs.Any())
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { KhachHangs = khachhangs };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End quickSearchKhachHang-------");
             }
         }
     }
