@@ -235,11 +235,11 @@ namespace API_KeoDua.Reponsitory.Implement
                 var sqlWhere = new StringBuilder();
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    sqlWhere.Append(" WHERE (h.MaHangHoa LIKE @SearchString OR h.TenHangHoa LIKE @SearchString) ");
+                    sqlWhere.Append(" WHERE (h.MaHangHoa LIKE @SearchString ESCAPE '\\' OR h.TenHangHoa LIKE @SearchString ESCAPE '\\')");
                     param.Add("SearchString", "%" + searchString.Trim() + "%");
                 }
 
-                string sqlQuery = @"
+                string sqlQuery = @"string sqlQuery = @""
                     WITH LatestPrices AS (
                         SELECT 
                             MaHangHoa, 
@@ -260,7 +260,7 @@ namespace API_KeoDua.Reponsitory.Implement
                         tbl_LichSuGia g ON h.MaHangHoa = g.MaHangHoa
                     INNER JOIN 
                         LatestPrices lp ON g.MaHangHoa = lp.MaHangHoa AND g.NgayCapNhatGia = lp.NgayCapNhatGia
-                    " + sqlWhere;
+                    "" + sqlWhere;" + sqlWhere;
 
                 using (var connection = this.hangHoaContext.CreateConnection())
                 {
