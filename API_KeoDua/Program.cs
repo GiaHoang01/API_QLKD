@@ -55,6 +55,9 @@ builder.Services.AddDbContext<HangHoaContext>(options =>
 builder.Services.AddDbContext<HoaDonBanHangContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
  ));
+builder.Services.AddDbContext<CT_HoaDonBanHangContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
 builder.Services.AddDbContext<NhaCungCapContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
  ));

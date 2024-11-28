@@ -142,7 +142,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-
         public async Task<(PhieuNhapHang phieuNhap, List<CT_PhieuNhap> chiTietPhieuNhap)> GetPurchase_ByID(Guid? maPhieuNhap)
         {
             try
@@ -276,8 +275,8 @@ namespace API_KeoDua.Reponsitory.Implement
                 // Tạo tham số cho stored procedure
                 var parameters = new[]
                 {
-            new SqlParameter("@MaPhieuNhap", SqlDbType.UniqueIdentifier) { Value = maPhieuNhap }
-        };
+                    new SqlParameter("@MaPhieuNhap", SqlDbType.UniqueIdentifier) { Value = maPhieuNhap }
+                };
 
                 // Thực thi stored procedure xóa chi tiết phiếu nhập
                 await phieuNhapHangContext.Database.ExecuteSqlRawAsync(
@@ -294,10 +293,6 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while deleting the purchase order and its details", ex);
             }
         }
-
-        
-
-
 
         public async Task<bool> ConfirmPurchaseOrder(PhieuNhapHang phieuNhapHang, List<CT_PhieuNhap> cT_PhieuNhaps)
         {
@@ -484,6 +479,79 @@ namespace API_KeoDua.Reponsitory.Implement
                 await transaction.RollbackAsync();
                 Console.WriteLine($"Error occurred: {ex.Message}");
                 throw;
+            }
+        }
+
+        public async Task<int> TotalCompletedRecords()
+        {
+            try
+            {
+                var sqlQuery = "SELECT COUNT(*) FROM tbl_PhieuNhapHang WITH (NOLOCK) WHERE TrangThai = N'Hoàn tất';";
+
+                using (var connection = this.phieuNhapHangContext.CreateConnection())
+                {
+                    // Execute both queries using QueryMultipleAsync
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery))
+                    {
+                        var total = await multi.ReadFirstOrDefaultAsync<int>();
+
+                        return (total); // Returning both counts
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception and log the error
+                throw new Exception("An error occurred while fetching completed records", ex);
+            }
+        }
+
+        public async Task<decimal> TotalPurchaseCompletedAmount()
+        {
+            try
+            {
+                var sqlQuery = "SELECT SUM(TongTriGia) FROM tbl_PhieuNhapHang WITH (NOLOCK) WHERE TrangThai = N'Hoàn tất';";
+
+                using (var connection = this.phieuNhapHangContext.CreateConnection())
+                {
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery))
+                    {
+                        var totalAmount = await multi.ReadFirstOrDefaultAsync<decimal>();
+                        return totalAmount;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception and log the error
+                throw new Exception("An error occurred while fetching total completed sales amount", ex);
+            }
+        }
+
+        public async Task<decimal> TotalExpensesByYear(int year)
+        {
+            try
+            {
+                // Truy vấn SQL để tính tổng trị giá (chi) cho năm được chỉ định
+                var sqlQuery = "SELECT SUM(TongTriGia) AS Total " +
+                               "FROM tbl_PhieuNhapHang WITH (NOLOCK) " +
+                               "WHERE YEAR(NgayNhap) = @Year and trangThai=N'Hoàn tất'";
+
+                using (var connection = this.phieuNhapHangContext.CreateConnection())
+                {
+                    // Thực thi truy vấn SQL và lấy kết quả
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery, new { Year = year }))
+                    {
+                        var totalChi = await multi.ReadFirstOrDefaultAsync<decimal>();
+
+                        return totalChi; // Trả về tổng chi cho năm được chỉ định
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và ghi log nếu có lỗi
+                throw new Exception($"An error occurred while fetching total expenses for the year {year}", ex);
             }
         }
 

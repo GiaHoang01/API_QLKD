@@ -134,5 +134,31 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw ex;
             }
         }
+        public async Task<List<KhachHang>> QuickSearchKhachHang(string searchString)
+        {
+            try
+            {
+                DynamicParameters param = new DynamicParameters();
+                var sqlWhere = new StringBuilder();
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    sqlWhere.Append(" Where (MaKhachHang like @SearchString ESCAPE '\\' OR (TenKhachHang) like @SearchString ESCAPE '\\')");
+                    param.Add("SearchString", "%" + searchString + "%");
+                }
+
+                string sqlQuery = @"SELECT * FROM tbl_KhachHang WITH (NOLOCK)" + sqlWhere;
+
+                using (var connection = this.khachHangContext.CreateConnection())
+                {
+                    var resultData = (await connection.QueryAsync<KhachHang>(sqlQuery, param)).ToList();
+                    return resultData;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
