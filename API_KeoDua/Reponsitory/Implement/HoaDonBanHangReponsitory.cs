@@ -34,18 +34,7 @@ namespace API_KeoDua.Reponsitory.Implement
         public int TotalRows { get; set; }
 
         #region Xác nhận hóa đơn bán hàng
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="searchString"></param>
-        /// <param name="employeeId"></param>
-        /// <param name="cartId"></param>
-        /// <param name="customerId"></param>
-        /// <param name="maHinhThuc"></param>
-        /// <param name="startRow"></param>
-        /// <param name="maxRows"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+
         public async Task<List<HoaDonBanHangView>> GetAllSaleInVoiceWithWait(DateTime fromDate, DateTime toDate, string searchString, Guid? employeeId, Guid? cartId, Guid? customerId, string? maHinhThuc, int startRow, int maxRows)
         {
             try
@@ -118,13 +107,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="maHoaDon"></param>
-        /// <param name="maNV"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
         public async Task<bool> ConfirmSaleInvoice(Guid maHoaDon, Guid maNV)
         {
             try
@@ -156,18 +138,7 @@ namespace API_KeoDua.Reponsitory.Implement
         #endregion
 
         #region Hóa đơn bán hàng
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="searchString"></param>
-        /// <param name="employeeId"></param>
-        /// <param name="cartId"></param>
-        /// <param name="customerId"></param>
-        /// <param name="maHinhThuc"></param>
-        /// <param name="startRow"></param>
-        /// <param name="maxRows"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+
         public async Task<List<HoaDonBanHangView>> GetAllSaleInVoice(DateTime fromDate, DateTime toDate, string searchString, Guid? employeeId, Guid? cartId, Guid? customerId, string? maHinhThuc, int startRow, int maxRows)
         {
             try
@@ -274,7 +245,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
         #endregion
-
         public async Task<List<object>> QuickSearchSaleInvoiceNewCreated(string searchString)
         {
             try
@@ -324,13 +294,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hoaDonBanHang"></param>
-        /// <param name="cT_HoaDonBanHangs"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public async Task AddSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
         {
             // Sử dụng TransactionScope cho tất cả các DbContext
@@ -392,14 +355,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hoaDonBanHang"></param>
-        /// <param name="cT_HoaDonBanHangs"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public async Task<bool> UpdateSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -467,12 +422,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="maHoaDon"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public async Task<bool> DeleteSaleInvoice(Guid maHoaDon)
         {
             using var transaction = await hoaDonBanHangContext.Database.BeginTransactionAsync();
@@ -590,14 +539,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-
-        /// <summary>
-        /// Hủy hàng do khách đổi ý trên giao diện khách hàng
-        /// </summary>
-        /// <param name="maHoaDon"></param>
-        /// <param name="maNV"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
         public async Task<bool> CancelSaleInvoice(Guid maHoaDon, Guid maNV)
         {
             try

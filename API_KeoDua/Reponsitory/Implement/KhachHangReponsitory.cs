@@ -61,7 +61,6 @@ namespace API_KeoDua.Reponsitory.Implement
                 .AnyAsync(kh => kh.Sdt == phoneNumber);
         }
 
-
         public async Task<bool> AddCustomer(KhachHang khachHang)
         {
             try
@@ -134,6 +133,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw ex;
             }
         }
+
         public async Task<List<KhachHang>> QuickSearchKhachHang(string searchString)
         {
             try
