@@ -234,7 +234,7 @@ namespace API_KeoDua.Controllers
 
                 string searchString = dicData["SearchString"].ToString();
 
-                List<HangHoa> hangHoas = await this.hangHoaReponsitory.QuickSearchHangHoa(searchString);
+                List<HangHoaLichSuGia> hangHoas = await this.hangHoaReponsitory.QuickSearchHangHoa(searchString);
 
                 if (hangHoas != null && hangHoas.Any())
                 {
