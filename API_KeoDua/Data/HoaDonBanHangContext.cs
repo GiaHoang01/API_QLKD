@@ -27,6 +27,8 @@ namespace API_KeoDua.Data
 
             modelBuilder.Entity<CT_HoaDonBanHang>()
                 .ToTable("tbl_CT_HoaDonBanHang");
+
+            base.OnModelCreating(modelBuilder);
         }
         #endregion
     }

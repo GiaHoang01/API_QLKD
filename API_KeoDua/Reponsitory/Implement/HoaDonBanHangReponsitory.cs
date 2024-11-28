@@ -376,14 +376,14 @@ namespace API_KeoDua.Reponsitory.Implement
             {
                 try
                 {
-                    // Tìm phiếu nhập hiện tại
+                    // Tìm hóa đơn hiện tại
                     var existingHoaDon = await hoaDonBanHangContext.tbl_HoaDonBanHang.FindAsync(hoaDonBanHang.MaHoaDon);
                     if (existingHoaDon == null)
                     {
-                        return false; // Không tìm thấy phiếu nhập
+                        return false; // Không tìm thấy hóa đơn
                     }
 
-                    // Cập nhật thông tin phiếu nhập
+                    // Cập nhật thông tin hóa đơn
                     existingHoaDon.MaNV = hoaDonBanHang.MaNV;
                     existingHoaDon.MaKhachHang = hoaDonBanHang.MaKhachHang;
                     existingHoaDon.NgayBan = hoaDonBanHang.NgayBan;
@@ -392,17 +392,38 @@ namespace API_KeoDua.Reponsitory.Implement
                     existingHoaDon.GhiChu = hoaDonBanHang.GhiChu;
                     await hoaDonBanHangContext.SaveChangesAsync();
 
-                    string deleteQuery = @"DELETE FROM tbl_CT_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon";
-                    var parameter = new SqlParameter("@MaHoaDon", hoaDonBanHang.MaHoaDon);
-                    await cT_HoaDonBanHangContext.Database.ExecuteSqlRawAsync(deleteQuery, parameter);
+                    // Lấy danh sách chi tiết hóa đơn hiện tại từ database
+                    var existingDetails = await cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang
+                        .Where(x => x.MaHoaDon == hoaDonBanHang.MaHoaDon)
+                        .ToListAsync();
 
-                    // **Thêm chi tiết phiếu nhập mới**
+                    // Cập nhật hoặc thêm mới các chi tiết hóa đơn
                     foreach (var detail in cT_HoaDonBanHangs)
                     {
-                        detail.MaHoaDon = (Guid)hoaDonBanHang.MaHoaDon;
-                        detail.ThanhTien = detail.DonGia * detail.SoLuong;
-                        cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                        var existingDetail = existingDetails.FirstOrDefault(x => x.MaHangHoa == detail.MaHangHoa);
+                        if (existingDetail != null)
+                        {
+                            // Cập nhật bản ghi nếu đã tồn tại
+                            existingDetail.SoLuong = detail.SoLuong;
+                            existingDetail.DonGia = detail.DonGia;
+                            existingDetail.ThanhTien = detail.SoLuong * detail.DonGia;
+                        }
+                        else
+                        {
+                            // Thêm bản ghi mới nếu chưa tồn tại
+                            detail.MaHoaDon = hoaDonBanHang.MaHoaDon; // Đảm bảo MaHoaDon được gán đúng
+                            detail.ThanhTien = detail.SoLuong * detail.DonGia;
+                            cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                        }
                     }
+
+                    // Xóa các chi tiết không còn trong danh sách mới
+                    var detailsToDelete = existingDetails
+                        .Where(x => !cT_HoaDonBanHangs.Any(y => y.MaHangHoa == x.MaHangHoa))
+                        .ToList();
+
+                    cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.RemoveRange(detailsToDelete);
+
                     await cT_HoaDonBanHangContext.SaveChangesAsync();
 
                     // Hoàn tất giao dịch

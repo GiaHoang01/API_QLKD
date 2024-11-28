@@ -23,8 +23,6 @@ namespace API_KeoDua.Data
                 .HasKey(c => new { c.MaHoaDon, c.MaHangHoa });
             modelBuilder.Entity<CT_HoaDonBanHang>()
                 .ToTable("tbl_CT_HoaDonBanHang");
-            modelBuilder.Entity<CT_HoaDonBanHang>()
-                .ToTable("tbl_CT_HoaDonBanHang", t => t.HasTrigger("TRG_BeforeInsert_CT_HoaDonBanHang"));
 
         }
         #endregion
