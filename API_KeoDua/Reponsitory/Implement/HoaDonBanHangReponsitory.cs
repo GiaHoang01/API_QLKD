@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Transactions;
 
 namespace API_KeoDua.Reponsitory.Implement
 {
@@ -539,10 +540,40 @@ namespace API_KeoDua.Reponsitory.Implement
         }
 
 
-        #endregion
+        /// <summary>
+        /// Hủy hàng do khách đổi ý trên giao diện khách hàng
+        /// </summary>
+        /// <param name="maHoaDon"></param>
+        /// <param name="maNV"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<bool> CancelSaleInvoice(Guid maHoaDon, Guid maNV)
+        {
+            try
+            {
+                string sqlUpdate = @"
+         UPDATE tbl_HoaDonBanHang
+         SET TrangThai = N'Đã hủy do khách đổi ý',
+             NgayBan = GETDATE(),
+             MaNV = @MaNV
+         WHERE MaHoaDon = @MaHoaDon AND TrangThai = N'Chờ xác nhận' AND GhiChu LIKE N'%Đã hủy do khách đổi ý%'"; // Điều kiện mặc định
+                var param = new DynamicParameters();
+                param.Add("@MaHoaDon", maHoaDon);
+                param.Add("@MaNV", maNV);
 
 
-
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    int rowsAffected = await connection.ExecuteAsync(sqlUpdate, param);
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ghi log hoặc xử lý ngoại lệ
+                throw new Exception("An error occurred while fetching saleinvoice", ex);
+            }
+        }
 
     }
 }

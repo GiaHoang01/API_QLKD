@@ -29,7 +29,7 @@ namespace API_KeoDua.Controllers
             {
                 logger.Debug("-------Begin IsCheckAccount-------");
                 string nameAccount = dicData["tenTaiKhoan"].ToString();
-                string passwordAccount =dicData["matKhau"].ToString();
+                string passwordAccount = dicData["matKhau"].ToString();
                 ResponseModel repData = await ResponseFail();
 
                 Boolean isCheckAccount = await this.taiKhoanReponsitory.IsCheckAccount(nameAccount, passwordAccount);
@@ -65,15 +65,15 @@ namespace API_KeoDua.Controllers
                 ResponseModel repData = await ResponseFail();
                 string userName = dicData["UserName"].ToString();
                 string password = dicData["PassWord"].ToString();
-              
-                string tendn= await this.taiKhoanReponsitory.login(userName,password);
 
-                if (tendn!=null)
+                string tendn = await this.taiKhoanReponsitory.login(userName, password);
+
+                if (tendn != null)
                 {
                     repData = await ResponseSucceeded();
                 }
 
-                repData.data = new { TenDangNhap= tendn };
+                repData.data = new { TenDangNhap = tendn };
                 return Ok(repData);
             }
             catch (Exception ex)
@@ -87,7 +87,44 @@ namespace API_KeoDua.Controllers
             }
         }
 
+        /// <summary>
+        /// Hàm lấy tất cả các quyền của user truyền vào 
+        /// </summary>
+        /// <param name="dicData">{UserName:"string"}</param>
+        /// <returns> Quyens</returns>
+        [HttpPost]
+        public async Task<ActionResult> getPermission([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Start getPermission-------");
+                ResponseModel repData = await ResponseFail();
+                string userName = dicData["UserName"].ToString();
+
+                List<string> quyens = await this.taiKhoanReponsitory.getDataPermission(userName);
+
+                if (quyens != null)
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { Quyens = quyens };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End getPermission-------");
+            }
+        }
+
+
+
     }
 
-    
+
 }
