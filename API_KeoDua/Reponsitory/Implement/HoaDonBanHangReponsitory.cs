@@ -307,7 +307,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-
         public async Task<List<object>> QuickSearchSaleInvoiceNewCreated(string searchString)
         {
             try

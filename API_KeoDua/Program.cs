@@ -34,6 +34,10 @@ builder.Services.AddDbContext<QuyenContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
  ));
 
+builder.Services.AddDbContext<CT_HoaDonBanHangContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
+
 builder.Services.AddDbContext<NhanVienContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
  ));
