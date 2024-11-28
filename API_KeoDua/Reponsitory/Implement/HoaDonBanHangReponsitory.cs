@@ -338,18 +338,47 @@ namespace API_KeoDua.Reponsitory.Implement
             {
                 try
                 {
-                    // Thêm phiếu nhập vào bảng tbl_PhieuNhapHang
+                    // Lọc các chi tiết trùng lặp trong cT_HoaDonBanHangs
+                    var uniqueDetails = cT_HoaDonBanHangs
+                        .GroupBy(x => x.MaHangHoa)
+                        .Select(g => g.First())
+                        .ToList();
+
+                    // Thêm phiếu nhập vào bảng tbl_HoaDonBanHang
                     hoaDonBanHang.NgayBan = DateTime.Now;
                     hoaDonBanHang.TrangThai = "Mới tạo";
                     hoaDonBanHangContext.tbl_HoaDonBanHang.Add(hoaDonBanHang);
                     await hoaDonBanHangContext.SaveChangesAsync();
 
+                    var existingDetails = await cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang
+                        .Where(x => x.MaHoaDon == hoaDonBanHang.MaHoaDon)
+                        .ToListAsync();
+
                     // Thêm chi tiết phiếu nhập vào bảng tbl_CT_PhieuNhap
-                    foreach (var detail in cT_HoaDonBanHangs)
+                    foreach (var detail in uniqueDetails)
                     {
-                        detail.MaHoaDon = (Guid)hoaDonBanHang.MaHoaDon;
-                        cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                        var existingDetail = existingDetails.FirstOrDefault(x => x.MaHangHoa == detail.MaHangHoa);
+                        if (existingDetail != null)
+                        {
+                            // Cập nhật bản ghi nếu đã tồn tại
+                            existingDetail.SoLuong = detail.SoLuong;
+                            existingDetail.DonGia = detail.DonGia;
+                            existingDetail.ThanhTien = detail.SoLuong * detail.DonGia;
+                        }
+                        else
+                        {
+                            // Thêm bản ghi mới nếu chưa tồn tại
+                            detail.MaHoaDon = hoaDonBanHang.MaHoaDon; // Đảm bảo MaHoaDon được gán đúng
+                            detail.ThanhTien = detail.SoLuong * detail.DonGia;
+                            cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                        }
                     }
+
+                    var detailsToDelete = existingDetails
+                       .Where(x => !uniqueDetails.Any(y => y.MaHangHoa == x.MaHangHoa))
+                       .ToList();
+
+                    cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.RemoveRange(detailsToDelete);
                     await cT_HoaDonBanHangContext.SaveChangesAsync();
 
                     // Commit giao dịch
@@ -362,6 +391,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 }
             }
         }
+
 
         /// <summary>
         /// 

@@ -4,7 +4,7 @@ using System.Data;
 
 namespace API_KeoDua.Data
 {
-    public class HoaDonBanHangContext:DbContext
+    public class HoaDonBanHangContext : DbContext
     {
         public HoaDonBanHangContext(DbContextOptions<HoaDonBanHangContext> options) : base(options)
         {
