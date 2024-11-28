@@ -12,6 +12,5 @@ namespace API_KeoDua.Reponsitory.Interface
         public Task<KhachHang> GetCustomerByID(Guid MaKH);
         public Task<bool> DeleteCustomer(Guid MaKH);
         public Task<bool> UpdateCustomer(KhachHang kh);
-        public Task<List<KhachHang>> QuickSearchKhachHang(string searchString);
     }
 }

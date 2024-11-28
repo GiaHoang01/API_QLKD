@@ -9,6 +9,7 @@ using API_KeoDua.DataView;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace API_KeoDua.Reponsitory.Implement
 {
@@ -19,15 +20,13 @@ namespace API_KeoDua.Reponsitory.Implement
         private readonly KhachHangContext khachHangContext;
         private readonly HinhThucThanhToanContext hinhThucThanhToanContext;
         private readonly GioHangContext gioHangContext;
-        private readonly CT_HoaDonBanHangContext cT_HoaDonBanHangContext;
-        public HoaDonBanHangReponsitory(HoaDonBanHangContext hoaDonBanHangContext,NhanVienContext nhanVienContext,KhachHangContext khachHangContext,HinhThucThanhToanContext hinhThucThanhToanContext,GioHangContext gioHangContext, CT_HoaDonBanHangContext cT_HoaDonBanHangContext)
+        public HoaDonBanHangReponsitory(HoaDonBanHangContext hoaDonBanHangContext,NhanVienContext nhanVienContext,KhachHangContext khachHangContext,HinhThucThanhToanContext hinhThucThanhToanContext,GioHangContext gioHangContext)
         {
             this.hoaDonBanHangContext = hoaDonBanHangContext;
             this.nhanVienContext = nhanVienContext;
             this.khachHangContext = khachHangContext;
             this.hinhThucThanhToanContext = hinhThucThanhToanContext;
             this.gioHangContext = gioHangContext;
-            this.cT_HoaDonBanHangContext=cT_HoaDonBanHangContext ;
         }
         public int TotalRows { get; set; }
 
@@ -151,40 +150,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        /// <summary>
-        /// Hủy hàng do khách đổi ý trên giao diện khách hàng
-        /// </summary>
-        /// <param name="maHoaDon"></param>
-        /// <param name="maNV"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public async Task<bool> CancelSaleInvoice(Guid maHoaDon, Guid maNV)
-        {
-            try
-            {
-                string sqlUpdate = @"
-                UPDATE tbl_HoaDonBanHang
-                SET TrangThai = N'Đã hủy do khách đổi ý',
-                    NgayBan = GETDATE(),
-                    MaNV = @MaNV
-                WHERE MaHoaDon = @MaHoaDon AND TrangThai = N'Chờ xác nhận' AND GhiChu LIKE N'%Đã hủy do khách đổi ý%'"; // Điều kiện mặc định
-                var param = new DynamicParameters();
-                param.Add("@MaHoaDon", maHoaDon);
-                param.Add("@MaNV", maNV);
-
-
-                using (var connection = this.hoaDonBanHangContext.CreateConnection())
-                {
-                    int rowsAffected = await connection.ExecuteAsync(sqlUpdate, param);
-                    return rowsAffected > 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                // Ghi log hoặc xử lý ngoại lệ
-                throw new Exception("An error occurred while fetching saleinvoice", ex);
-            }
-        }
         #endregion
 
         #region Hóa đơn bán hàng
@@ -204,7 +169,7 @@ namespace API_KeoDua.Reponsitory.Implement
         {
             try
             {
-                string sqlWhere = " WHERE h.MaKhachHang=k.MaKhachHang AND h.MaNV=n.MaNV AND NgayBan >= @FromDate AND NgayBan <= @ToDate"; // Điều kiện mặc định
+                string sqlWhere = " WHERE TrangThai <> N'Chờ xác nhận' AND h.MaKhachHang=k.MaKhachHang AND h.MaNV=n.MaNV AND NgayBan >= @FromDate AND NgayBan <= @ToDate"; // Điều kiện mặc định
                 var param = new DynamicParameters();
                 param.Add("@FromDate", fromDate);
                 param.Add("@ToDate", toDate);
@@ -270,42 +235,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while fetching saleinvoice", ex);
             }
         }
-
-        public async Task<(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)> GetInvoice_ByID(Guid? maHoaDon)
-        {
-            try
-            {
-                // Query cho bảng HoaDonBanHang
-                var sqlHoaDon = @"SELECT * FROM tbl_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon;";
-
-                // Query cho bảng CT_HoaDonBanHang và bảng liên quan
-                var sqlChiTietHoaDon = @"
-                SELECT * FROM  tbl_CT_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon;";
-
-                // Biến lưu trữ kết quả
-                HoaDonBanHang hoaDonBanHang;
-                List<CT_HoaDonBanHang> cT_HoaDonBanHangs;
-
-                // Truy vấn bảng tbl_PhieuNhapHang từ PhieuNhapHangContext
-                using (var connection1 = this.hoaDonBanHangContext.CreateConnection())
-                {
-                    hoaDonBanHang = await connection1.QueryFirstOrDefaultAsync<HoaDonBanHang>(sqlHoaDon, new { MaHoaDon = maHoaDon });
-                }
-
-                // Truy vấn bảng tbl_CT_PhieuNhap từ CT_PhieuNhapContext
-                using (var connection2 = this.cT_HoaDonBanHangContext.CreateConnection())
-                {
-                    cT_HoaDonBanHangs = (await connection2.QueryAsync<CT_HoaDonBanHang>(sqlChiTietHoaDon, new { MaHoaDon = maHoaDon })).ToList();
-                }
-
-                return (hoaDonBanHang, cT_HoaDonBanHangs);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while fetching the sale order details.", ex);
-            }
-        }
-
+        #endregion
 
         public async Task<List<object>> QuickSearchSaleInvoiceNewCreated(string searchString)
         {
@@ -369,5 +299,10 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw ex;
             }
         }
+
+
+
+
+
     }
 }

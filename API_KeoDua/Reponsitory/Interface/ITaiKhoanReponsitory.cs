@@ -8,6 +8,5 @@ namespace API_KeoDua.Reponsitory.Interface
 
         public Task<bool> IsCheckAccount(string username, string password);
         public Task<string> login(string user, string pass);
-        public Task<List<string>> getDataPermission(string userName);
     }
 }
