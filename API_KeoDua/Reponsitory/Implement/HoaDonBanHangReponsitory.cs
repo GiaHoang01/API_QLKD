@@ -393,14 +393,9 @@ namespace API_KeoDua.Reponsitory.Implement
         }
 
 
-
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="hoaDonBanHang"></param>
-        /// <param name="cT_HoaDonBanHangs"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         /// <param name="hoaDonBanHang"></param>
         /// <param name="cT_HoaDonBanHangs"></param>
         /// <returns></returns>
