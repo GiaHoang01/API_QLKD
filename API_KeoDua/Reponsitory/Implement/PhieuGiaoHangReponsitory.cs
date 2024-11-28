@@ -238,7 +238,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 await this.phieuGiaoHangContext.SaveChangesAsync();
                 return true;
             }
-            catch(Exception ex) { throw ex; }
+            catch (Exception ex) { throw ex; }
         }
 
         public async Task<bool> AddShippingNote(PhieuGiaoHang phieuGiaoHang)
@@ -249,7 +249,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 await this.phieuGiaoHangContext.SaveChangesAsync();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }

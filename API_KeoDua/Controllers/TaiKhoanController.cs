@@ -29,7 +29,7 @@ namespace API_KeoDua.Controllers
             {
                 logger.Debug("-------Begin IsCheckAccount-------");
                 string nameAccount = dicData["tenTaiKhoan"].ToString();
-                string passwordAccount =dicData["matKhau"].ToString();
+                string passwordAccount = dicData["matKhau"].ToString();
                 ResponseModel repData = await ResponseFail();
 
                 Boolean isCheckAccount = await this.taiKhoanReponsitory.IsCheckAccount(nameAccount, passwordAccount);
@@ -65,15 +65,15 @@ namespace API_KeoDua.Controllers
                 ResponseModel repData = await ResponseFail();
                 string userName = dicData["UserName"].ToString();
                 string password = dicData["PassWord"].ToString();
-              
-                string tendn= await this.taiKhoanReponsitory.login(userName,password);
 
-                if (tendn!=null)
+                string tendn = await this.taiKhoanReponsitory.login(userName, password);
+
+                if (tendn != null)
                 {
                     repData = await ResponseSucceeded();
                 }
 
-                repData.data = new { TenDangNhap= tendn };
+                repData.data = new { TenDangNhap = tendn };
                 return Ok(repData);
             }
             catch (Exception ex)

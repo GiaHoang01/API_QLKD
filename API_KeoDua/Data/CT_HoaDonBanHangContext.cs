@@ -17,6 +17,10 @@ namespace API_KeoDua.Data
             return new SqlConnection(Database.GetConnectionString());
         }
 
+        public IDbConnection CreateConnection()
+        {
+            return new SqlConnection(Database.GetConnectionString());
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CT_HoaDonBanHang>()

@@ -90,7 +90,6 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while fetching products", ex);
             }
         }
-
         public async Task AddProduct(HangHoa newProduct, decimal giaBan, string? ghiChu)
         {
             using var transaction = await hangHoaContext.Database.BeginTransactionAsync();

@@ -267,9 +267,9 @@ namespace API_KeoDua.Reponsitory.Implement
                 {
                     return false;
                 }
-                if (phieuNhapHang.TrangThai !="Mới tạo")
+                if (phieuNhapHang.TrangThai != "Mới tạo")
                 {
-                    return false; 
+                    return false;
                 }
 
                 // Tạo tham số cho stored procedure

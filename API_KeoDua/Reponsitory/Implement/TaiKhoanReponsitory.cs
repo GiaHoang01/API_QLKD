@@ -14,7 +14,7 @@ namespace API_KeoDua.Reponsitory.Implement
         private readonly NhanVienContext _nhanVienContext;
         private readonly NhomQuyenContext nhomQuyenContext;
         private readonly QuyenContext quyenContext;
-        public TaiKhoanReponsitory(TaiKhoanContext context, NhanVienContext nhanVienContext,NhomQuyenContext nhomQuyenContext,QuyenContext quyenContext)
+        public TaiKhoanReponsitory(TaiKhoanContext context, NhanVienContext nhanVienContext, NhomQuyenContext nhomQuyenContext, QuyenContext quyenContext)
         {
             _context = context;
             _nhanVienContext = nhanVienContext;
@@ -101,8 +101,6 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception($"An error occurred while fetching permissions for user: {userName}", ex);
             }
         }
-
-
 
     }
 }

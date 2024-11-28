@@ -129,9 +129,9 @@ namespace API_KeoDua.Controllers
                 ResponseModel repData = await ResponseFail();
 
                 Guid? maPhieuGiao = dicData.ContainsKey("MaPhieuGiao") && !string.IsNullOrEmpty(dicData["MaPhieuGiao"]?.ToString()) ? Guid.Parse(dicData["MaPhieuGiao"].ToString()) : (Guid?)null;
-                int status  = Convert.ToInt32(dicData["Status"].ToString());
+                int status = Convert.ToInt32(dicData["Status"].ToString());
 
-                if(status == 1)//Thêm mới
+                if (status == 1)//Thêm mới
                 {
                     PhieuGiaoHang phieuGiao = new PhieuGiaoHang();
                     phieuGiao.MaPhieuGiao = Guid.NewGuid();
@@ -153,7 +153,7 @@ namespace API_KeoDua.Controllers
                         repData = await ResponseSucceeded();
                         repData.data = new { PhieuGiaoHang = phieuGiao };
                     }
-                }  
+                }
                 return Ok(repData);
             }
             catch (Exception ex)
@@ -194,7 +194,7 @@ namespace API_KeoDua.Controllers
                 {
                     await this.phieuGiaoHangReponsitory.UpdateShippingNote(phieuGiaoHang);
                 }
-                
+
                 repData = await ResponseSucceeded();
                 repData.data = new { };
                 return Ok(repData);
