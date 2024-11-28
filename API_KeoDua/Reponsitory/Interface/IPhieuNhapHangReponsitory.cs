@@ -15,9 +15,6 @@ namespace API_KeoDua.Reponsitory.Interface
 		public Task<bool> ConfirmPurchaseOrder(PhieuNhapHang phieuNhapHang, List<CT_PhieuNhap> cT_PhieuNhaps);
 		public Task<Guid> CreateNewPurchaseOrder(Guid maPhieuNhap);
 		public Task<List<PhieuNhapHang>> GetAllPurchaseRequest_NoSubmit(DateTime fromDate, DateTime toDate, string searchString, int startRow, int maxRows);
-		public Task<int> TotalCompletedRecords();
-		public Task<decimal> TotalPurchaseCompletedAmount();
-		public Task<decimal> TotalExpensesByYear(int year);
     }
 
 }

@@ -11,7 +11,7 @@ namespace API_KeoDua.Reponsitory.Interface
         public Task<bool> UpdateProduct(HangHoa updatedProduct, decimal giaBan, string? ghiChu);
         public Task DeleteProduct(Guid MaHangHoa);
         public Task<List<LichSuGia>> GetPriceHistoryProduct(Guid MaHangHoa);
-        public Task<List<HangHoaLichSuGia>> QuickSearchHangHoa(string searchString);
+        public Task<List<HangHoa>> QuickSearchHangHoa(string searchString);
         public Task<string> getTenHangHoa_withByMaHangHoa(Guid maHangHoa);
     }
 }

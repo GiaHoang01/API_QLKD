@@ -10,7 +10,7 @@ namespace API_KeoDua.Data
         public Guid MaHoaDon { get; set; }
 
         public DateTime NgayBan { get; set; }
-        public DateTime? NgayThanhToan { get; set; } 
+        public DateTime NgayThanhToan { get; set; } 
 
         [MaxLength(50)]
         public string TrangThai { get; set; }
