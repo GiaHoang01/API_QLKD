@@ -18,10 +18,5 @@ namespace API_KeoDua.Data
 
         public decimal ThanhTien { get; set; }
 
-        [ForeignKey("MaHoaDon")]
-        public virtual HoaDonBanHang HoaDonBanHang { get; set; }
-
-        [ForeignKey("MaHangHoa")]
-        public virtual HangHoa HangHoa { get; set; }
     }
 }

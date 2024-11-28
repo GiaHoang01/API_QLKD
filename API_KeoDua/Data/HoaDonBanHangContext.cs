@@ -21,6 +21,12 @@ namespace API_KeoDua.Data
         {
             modelBuilder.Entity<HoaDonBanHang>()
                 .ToTable("tbl_HoaDonBanHang");
+
+            modelBuilder.Entity<CT_HoaDonBanHang>()
+               .HasKey(c => new { c.MaHoaDon, c.MaHangHoa }); // Khóa chính hợp thành
+
+            modelBuilder.Entity<CT_HoaDonBanHang>()
+                .ToTable("tbl_CT_HoaDonBanHang");
         }
         #endregion
     }
