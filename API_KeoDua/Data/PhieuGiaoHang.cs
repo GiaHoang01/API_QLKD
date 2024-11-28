@@ -16,8 +16,8 @@ namespace API_KeoDua.Data
         public string TrangThai { get; set; }
 
         public Guid MaHoaDon { get; set; }
-        public Guid? MaNV { get; set; }
-        public Guid? MaThongTin { get; set; }
+        public Guid MaNV { get; set; }
+
 
         [ForeignKey("MaHoaDon")]
         public virtual HoaDonBanHang HoaDonBanHang { get; set; }

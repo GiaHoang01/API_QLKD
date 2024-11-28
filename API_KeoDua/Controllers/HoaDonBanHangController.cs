@@ -66,7 +66,7 @@ namespace API_KeoDua.Controllers
                 int startRow = (pageIndex - 1) * pageSize;
                 int maxRows = pageSize;
 
-                List<HoaDonBanHangView> saleInvoiceList = await this.hoaDonBanHangReponsitory.GetAllSaleInVoiceWithWait(fromDate,toDate,searchString,employeeId,cartId,customerId,maHinhThuc, startRow, maxRows);
+                List<HoaDonBanHangView> saleInvoiceList = await this.hoaDonBanHangReponsitory.GetAllSaleInVoiceWithWait(fromDate, toDate, searchString, employeeId, cartId, customerId, maHinhThuc, startRow, maxRows);
 
                 if (saleInvoiceList != null && saleInvoiceList.Any())
                 {
@@ -101,13 +101,13 @@ namespace API_KeoDua.Controllers
                 ResponseModel repData = await ResponseFail();
                 Guid saleId = Guid.Parse(dicData["MaHoaDon"].ToString());
                 Guid employeeId = Guid.Parse(dicData["MaNV"].ToString());
-                if (await(this.hoaDonBanHangReponsitory.ConfirmSaleInvoice(saleId,employeeId)))
+                if (await (this.hoaDonBanHangReponsitory.ConfirmSaleInvoice(saleId, employeeId)))
                 {
                     repData = await ResponseSucceeded();
                 }
 
                 repData.data = new { };
-                if(repData.status==1)
+                if (repData.status == 1)
                 {
                     repData.message = "Đã cập nhật thành công";
                 }
@@ -154,11 +154,11 @@ namespace API_KeoDua.Controllers
                 Guid? cartId = string.IsNullOrWhiteSpace(dicData["MaGioHang"]?.ToString())
                  ? null
                  : Guid.Parse(dicData["MaGioHang"].ToString());
-                string? maHinhThuc =string.IsNullOrWhiteSpace(dicData["MaHinhThuc"].ToString())?null: dicData["MaHinhThuc"].ToString();
+                string? maHinhThuc = string.IsNullOrWhiteSpace(dicData["MaHinhThuc"].ToString()) ? null : dicData["MaHinhThuc"].ToString();
                 int startRow = (pageIndex - 1) * pageSize;
                 int maxRows = pageSize;
 
-                List<HoaDonBanHangView> saleInvoiceList = await this.hoaDonBanHangReponsitory.GetAllSaleInVoice(fromDate,toDate,searchString,employeeId,cartId,customerId,maHinhThuc, startRow, maxRows);
+                List<HoaDonBanHangView> saleInvoiceList = await this.hoaDonBanHangReponsitory.GetAllSaleInVoice(fromDate, toDate, searchString, employeeId, cartId, customerId, maHinhThuc, startRow, maxRows);
 
                 if (saleInvoiceList != null && saleInvoiceList.Any())
                 {

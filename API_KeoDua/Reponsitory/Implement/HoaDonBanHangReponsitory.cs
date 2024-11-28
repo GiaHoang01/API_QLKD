@@ -10,23 +10,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Transactions;
 
 namespace API_KeoDua.Reponsitory.Implement
 {
-    public class HoaDonBanHangReponsitory:IHoaDonBanHangReponsitory
+    public class HoaDonBanHangReponsitory : IHoaDonBanHangReponsitory
     {
         private readonly HoaDonBanHangContext hoaDonBanHangContext;
         private readonly NhanVienContext nhanVienContext;
         private readonly KhachHangContext khachHangContext;
         private readonly HinhThucThanhToanContext hinhThucThanhToanContext;
         private readonly GioHangContext gioHangContext;
-        public HoaDonBanHangReponsitory(HoaDonBanHangContext hoaDonBanHangContext,NhanVienContext nhanVienContext,KhachHangContext khachHangContext,HinhThucThanhToanContext hinhThucThanhToanContext,GioHangContext gioHangContext)
+        private readonly CT_HoaDonBanHangContext cT_HoaDonBanHangContext;
+        public HoaDonBanHangReponsitory(HoaDonBanHangContext hoaDonBanHangContext, NhanVienContext nhanVienContext, KhachHangContext khachHangContext, HinhThucThanhToanContext hinhThucThanhToanContext, GioHangContext gioHangContext, CT_HoaDonBanHangContext cT_HoaDonBanHangContext)
         {
             this.hoaDonBanHangContext = hoaDonBanHangContext;
             this.nhanVienContext = nhanVienContext;
             this.khachHangContext = khachHangContext;
             this.hinhThucThanhToanContext = hinhThucThanhToanContext;
             this.gioHangContext = gioHangContext;
+            this.cT_HoaDonBanHangContext = cT_HoaDonBanHangContext;
         }
         public int TotalRows { get; set; }
 
@@ -43,7 +46,7 @@ namespace API_KeoDua.Reponsitory.Implement
         /// <param name="maxRows"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<List<HoaDonBanHangView>> GetAllSaleInVoiceWithWait(DateTime fromDate, DateTime toDate, string searchString, Guid?employeeId,Guid?cartId,Guid? customerId,string? maHinhThuc, int startRow, int maxRows)
+        public async Task<List<HoaDonBanHangView>> GetAllSaleInVoiceWithWait(DateTime fromDate, DateTime toDate, string searchString, Guid? employeeId, Guid? cartId, Guid? customerId, string? maHinhThuc, int startRow, int maxRows)
         {
             try
             {
@@ -66,7 +69,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 }
 
                 // Lọc theo CartID (nếu có)
-                if (cartId!=null)
+                if (cartId != null)
                 {
                     sqlWhere += " AND h.MaGioHang = @MaGioHang";
                     param.Add("@MaGioHang", cartId);
@@ -122,8 +125,8 @@ namespace API_KeoDua.Reponsitory.Implement
         /// <param name="maNV"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<bool> ConfirmSaleInvoice(Guid maHoaDon,Guid maNV)
-        { 
+        public async Task<bool> ConfirmSaleInvoice(Guid maHoaDon, Guid maNV)
+        {
             try
             {
                 string sqlUpdate = @"
@@ -135,7 +138,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 var param = new DynamicParameters();
                 param.Add("@MaHoaDon", maHoaDon);
                 param.Add("@MaNV", maNV);
-               
+
 
                 using (var connection = this.hoaDonBanHangContext.CreateConnection())
                 {
@@ -182,14 +185,14 @@ namespace API_KeoDua.Reponsitory.Implement
                 }
 
                 // Lọc theo EmployeeID (nếu có)
-                if (employeeId!=null)
+                if (employeeId != null)
                 {
                     sqlWhere += " AND h.MaNV = @MaNV";
                     param.Add("@MaNV", employeeId);
                 }
 
                 // Lọc theo CartID (nếu có)
-                if (cartId!=null)
+                if (cartId != null)
                 {
                     sqlWhere += " AND h.MaGioHang = @MaGioHang";
                     param.Add("@MaGioHang", cartId);
@@ -246,52 +249,38 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    sqlWhere.Append(" AND h.MaHoaDon like @SearchString ESCAPE '\\' ");
+                    sqlWhere.Append(" AND MaHoaDon like @SearchString ESCAPE '\\' ");
                     param.Add("SearchString", $"%{searchString}%");
                 }
 
                 string sqlQuery = @"
-            SELECT 
-                h.MaHoaDon, h.NgayBan, h.TrangThai, h.TongTriGia, h.GhiChu, h.MaHinhThuc,
-                k.MaKhachHang, k.TenKhachHang, k.Email, k.SDT, k.GioiTinh, k.MaLoaiKH,
-                t.MaThongTin, t.SDT AS SDTGiaoHang, t.DiaChi, t.MacDinh
-            FROM tbl_HoaDonBanHang h
-            INNER JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
-            LEFT JOIN tbl_ThongTinGiaoHang t ON k.MaKhachHang = t.MaKhachHang
-            WHERE h.TrangThai = N'Mới tạo' " + sqlWhere;
+                                    SELECT 
+                                        h.*, 
+                                        k.* 
+                                    FROM tbl_HoaDonBanHang h
+                                    INNER JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
+                                    WHERE h.TrangThai = N'Mới tạo' " + sqlWhere;
 
                 using (var connection = this.hoaDonBanHangContext.CreateConnection())
                 {
                     var resultData = await connection.QueryAsync(sqlQuery, param);
+                    var response = resultData.Select(row => new
+                    {
+                        MaHoaDon = row.MaHoaDon,
+                        NgayBan = row.NgayBan,
+                        TrangThai = row.TrangThai,
+                        TongTriGia = row.TongTriGia,
+                        GhiChu = row.GhiChu,
+                        MaKhachHang = row.MaKhachHang,
+                        TenKhachHang = row.TenKhachHang,
+                        Email = row.Email,
+                        SDT = row.SDT,
+                        GioiTinh = row.GioiTinh,
+                        MaLoaiKH = row.MaLoaiKH,
+                    }).ToList<object>();
 
-                    var groupedResult = resultData
-                        .GroupBy(row => row.MaHoaDon)
-                        .Select(group => new
-                        {
-                            MaHoaDon = group.First().MaHoaDon,
-                            NgayBan = group.First().NgayBan,
-                            TrangThai = group.First().TrangThai,
-                            TongTriGia = group.First().TongTriGia,
-                            GhiChu = group.First().GhiChu,
-                            MaHinhThuc = group.First().MaHinhThuc,
-                            MaKhachHang = group.First().MaKhachHang,
-                            TenKhachHang = group.First().TenKhachHang,
-                            Email = group.First().Email,
-                            SDT = group.First().SDT,
-                            GioiTinh = group.First().GioiTinh,
-                            MaLoaiKH = group.First().MaLoaiKH,
-                            ThongTinGiaoHang = group
-                                .Where(row => row.MaThongTin != null) // Loại bỏ thông tin null
-                                .Select(row => new
-                                {
-                                    MaThongTin = row.MaThongTin,
-                                    SDT = row.SDTGiaoHang,
-                                    DiaChi = row.DiaChi,
-                                    MacDinh = row.MacDinh
-                                }).ToList()
-                        }).ToList<object>();
+                    return response;
 
-                    return groupedResult;
                 }
             }
             catch (Exception ex)
@@ -300,9 +289,222 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hoaDonBanHang"></param>
+        /// <param name="cT_HoaDonBanHangs"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public async Task AddSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
+        {
+            // Sử dụng TransactionScope cho tất cả các DbContext
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    // Thêm phiếu nhập vào bảng tbl_PhieuNhapHang
+                    hoaDonBanHang.NgayBan = DateTime.Now;
+                    hoaDonBanHang.TrangThai = "Mới tạo";
+                    hoaDonBanHangContext.tbl_HoaDonBanHang.Add(hoaDonBanHang);
+                    await hoaDonBanHangContext.SaveChangesAsync();
+
+                    // Thêm chi tiết phiếu nhập vào bảng tbl_CT_PhieuNhap
+                    foreach (var detail in cT_HoaDonBanHangs)
+                    {
+                        detail.MaHoaDon = (Guid)hoaDonBanHang.MaHoaDon;
+                        cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                    }
+                    await cT_HoaDonBanHangContext.SaveChangesAsync();
+
+                    // Commit giao dịch
+                    transaction.Complete();
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi và rollback nếu có
+                    throw new InvalidOperationException("Có lỗi xảy ra khi thêm dữ liệu.", ex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hoaDonBanHang"></param>
+        /// <param name="cT_HoaDonBanHangs"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public async Task<bool> UpdateSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
+        {
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    // Tìm phiếu nhập hiện tại
+                    var existingHoaDon = await hoaDonBanHangContext.tbl_HoaDonBanHang.FindAsync(hoaDonBanHang.MaHoaDon);
+                    if (existingHoaDon == null)
+                    {
+                        return false; // Không tìm thấy phiếu nhập
+                    }
+
+                    // Cập nhật thông tin phiếu nhập
+                    existingHoaDon.MaNV = hoaDonBanHang.MaNV;
+                    existingHoaDon.MaKhachHang = hoaDonBanHang.MaKhachHang;
+                    existingHoaDon.NgayBan = hoaDonBanHang.NgayBan;
+                    existingHoaDon.NgayThanhToan = hoaDonBanHang.NgayThanhToan;
+                    existingHoaDon.MaHinhThuc = hoaDonBanHang.MaHinhThuc;
+                    existingHoaDon.GhiChu = hoaDonBanHang.GhiChu;
+                    await hoaDonBanHangContext.SaveChangesAsync();
+
+                    string deleteQuery = @"DELETE FROM tbl_CT_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon";
+                    var parameter = new SqlParameter("@MaHoaDon", hoaDonBanHang.MaHoaDon);
+                    await cT_HoaDonBanHangContext.Database.ExecuteSqlRawAsync(deleteQuery, parameter);
+
+                    // **Thêm chi tiết phiếu nhập mới**
+                    foreach (var detail in cT_HoaDonBanHangs)
+                    {
+                        detail.MaHoaDon = (Guid)hoaDonBanHang.MaHoaDon;
+                        detail.ThanhTien = detail.DonGia * detail.SoLuong;
+                        cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                    }
+                    await cT_HoaDonBanHangContext.SaveChangesAsync();
+
+                    // Hoàn tất giao dịch
+                    scope.Complete();
+                    return true; // Cập nhật thành công
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Có lỗi xảy ra khi cập nhật dữ liệu.", ex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maHoaDon"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public async Task<bool> DeleteSaleInvoice(Guid maHoaDon)
+        {
+            using var transaction = await hoaDonBanHangContext.Database.BeginTransactionAsync();
+            try
+            {
+                // Kiểm tra trạng thái của hóa đơn trước khi xóa
+                var hoaDon = await hoaDonBanHangContext.tbl_HoaDonBanHang
+                    .FirstOrDefaultAsync(p => p.MaHoaDon == maHoaDon);
+
+                if (hoaDon == null)
+                {
+                    return false;
+                }
+                if (hoaDon.TrangThai != "Mới tạo" && hoaDon.TrangThai != "Chờ xác nhận")
+                {
+                    return false;
+                }
+
+                // Tạo tham số cho stored procedure
+                var parameters = new[]
+                {
+                    new SqlParameter("@MaHoaDon", SqlDbType.UniqueIdentifier) { Value = maHoaDon }
+                };
+
+                // Thực thi stored procedure xóa chi tiết phiếu nhập
+                await hoaDonBanHangContext.Database.ExecuteSqlRawAsync(
+                    "EXEC DeleteSaleInvoice @MaHoaDon", parameters);
+
+                // Commit transaction sau khi thực hiện thành công
+                await transaction.CommitAsync();
+                return true; // Nếu xóa thành công, trả về true
+            }
+            catch (Exception ex)
+            {
+                // Nếu có lỗi, rollback transaction
+                await transaction.RollbackAsync();
+                throw new Exception("An error occurred while deleting the sale invoice and its details", ex);
+            }
+        }
+
+        public async Task<int> TotalSalesCompletedRecords()
+        {
+            try
+            {
+                var sqlQuery = "SELECT COUNT(*) FROM tbl_HoaDonBanHang WITH (NOLOCK) WHERE TrangThai = N'Đã thanh toán';";
+
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    // Execute both queries using QueryMultipleAsync
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery))
+                    {
+                        var total = await multi.ReadFirstOrDefaultAsync<int>();
+
+                        return (total);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception and log the error
+                throw new Exception("An error occurred while fetching completed records", ex);
+            }
+        }
+
+        public async Task<decimal> TotalSalesCompletedAmount()
+        {
+            try
+            {
+                // Modify the query to calculate the sum of the total value (TongTriGia) from completed invoices
+                var sqlQuery = "SELECT SUM(TongTriGia) FROM tbl_HoaDonBanHang WITH (NOLOCK) WHERE TrangThai = N'Đã thanh toán';";
+
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    // Execute the query
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery))
+                    {
+                        // Retrieve the total amount (or 0 if no records are found)
+                        var totalAmount = await multi.ReadFirstOrDefaultAsync<decimal>();
+
+                        return totalAmount;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception and log the error
+                throw new Exception("An error occurred while fetching total completed sales amount", ex);
+            }
+        }
+
+        public async Task<decimal> TotalRevenueByYear(int year)
+        {
+            try
+            {
+                // Truy vấn SQL để tính tổng trị giá (chi) cho năm được chỉ định
+                var sqlQuery = "SELECT SUM(TongTriGia) AS Total " +
+                               "FROM tbl_HoaDonBanHang WITH (NOLOCK) " +
+                               "WHERE YEAR(NgayBan) = @Year and trangThai=N'Đã thanh toán'";
+
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    // Thực thi truy vấn SQL và lấy kết quả
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery, new { Year = year }))
+                    {
+                        var totalChi = await multi.ReadFirstOrDefaultAsync<decimal>();
+
+                        return totalChi; // Trả về tổng chi cho năm được chỉ định
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và ghi log nếu có lỗi
+                throw new Exception($"An error occurred while fetching total expenses for the year {year}", ex);
+            }
+        }
 
 
-
-
+        #endregion
     }
 }
