@@ -30,16 +30,5 @@ namespace API_KeoDua.Data
         [MaxLength(10)]
         public string? MaHinhThuc { get; set; }
 
-        [ForeignKey("MaHinhThuc")]
-        public virtual HinhThucThanhToan HinhThucThanhToan { get; set; }
-
-        [ForeignKey("MaGioHang")]
-        public virtual GioHang GioHang { get; set; }
-
-        [ForeignKey("MaKhachHang")]
-        public virtual KhachHang KhachHang { get; set; }
-
-        [ForeignKey("MaNV")]
-        public virtual NhanVien NhanVien { get; set; }
     }
 }
