@@ -10,7 +10,7 @@ namespace API_KeoDua.Data
         public Guid MaHoaDon { get; set; }
 
         public DateTime NgayBan { get; set; }
-        public DateTime? NgayThanhToan { get; set; } 
+        public DateTime? NgayThanhToan { get; set; }
 
         [MaxLength(50)]
         public string TrangThai { get; set; }
@@ -30,16 +30,5 @@ namespace API_KeoDua.Data
         [MaxLength(10)]
         public string? MaHinhThuc { get; set; }
 
-        [ForeignKey("MaHinhThuc")]
-        public virtual HinhThucThanhToan HinhThucThanhToan { get; set; }
-
-        [ForeignKey("MaGioHang")]
-        public virtual GioHang GioHang { get; set; }
-
-        [ForeignKey("MaKhachHang")]
-        public virtual KhachHang KhachHang { get; set; }
-
-        [ForeignKey("MaNV")]
-        public virtual NhanVien NhanVien { get; set; }
     }
 }

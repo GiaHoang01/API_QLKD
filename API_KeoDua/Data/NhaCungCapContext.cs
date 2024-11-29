@@ -11,7 +11,7 @@ namespace API_KeoDua.Data
 
         }
         #region DBSet
-        public DbSet<LoaiKhachHang> tbl_LoaiKhachHang { get; set; }
+        public DbSet<NhaCungCap> tbl_NhaCungCap { get; set; }
 
         public IDbConnection CreateConnection()
         {
@@ -20,8 +20,8 @@ namespace API_KeoDua.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<LoaiKhachHang>()
-                .ToTable("tbl_LoaiKhachHang");
+            modelBuilder.Entity<NhaCungCap>()
+                .ToTable("tbl_NhaCungCap");
         }
         #endregion
     }

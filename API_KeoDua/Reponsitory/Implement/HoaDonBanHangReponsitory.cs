@@ -34,18 +34,7 @@ namespace API_KeoDua.Reponsitory.Implement
         public int TotalRows { get; set; }
 
         #region Xác nhận hóa đơn bán hàng
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="searchString"></param>
-        /// <param name="employeeId"></param>
-        /// <param name="cartId"></param>
-        /// <param name="customerId"></param>
-        /// <param name="maHinhThuc"></param>
-        /// <param name="startRow"></param>
-        /// <param name="maxRows"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+
         public async Task<List<HoaDonBanHangView>> GetAllSaleInVoiceWithWait(DateTime fromDate, DateTime toDate, string searchString, Guid? employeeId, Guid? cartId, Guid? customerId, string? maHinhThuc, int startRow, int maxRows)
         {
             try
@@ -118,13 +107,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="maHoaDon"></param>
-        /// <param name="maNV"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
         public async Task<bool> ConfirmSaleInvoice(Guid maHoaDon, Guid maNV)
         {
             try
@@ -156,18 +138,7 @@ namespace API_KeoDua.Reponsitory.Implement
         #endregion
 
         #region Hóa đơn bán hàng
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="searchString"></param>
-        /// <param name="employeeId"></param>
-        /// <param name="cartId"></param>
-        /// <param name="customerId"></param>
-        /// <param name="maHinhThuc"></param>
-        /// <param name="startRow"></param>
-        /// <param name="maxRows"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+
         public async Task<List<HoaDonBanHangView>> GetAllSaleInVoice(DateTime fromDate, DateTime toDate, string searchString, Guid? employeeId, Guid? cartId, Guid? customerId, string? maHinhThuc, int startRow, int maxRows)
         {
             try
@@ -274,7 +245,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
         #endregion
-
         public async Task<List<object>> QuickSearchSaleInvoiceNewCreated(string searchString)
         {
             try
@@ -339,13 +309,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hoaDonBanHang"></param>
-        /// <param name="cT_HoaDonBanHangs"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public async Task AddSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
         {
             // Sử dụng TransactionScope cho tất cả các DbContext
@@ -353,18 +316,47 @@ namespace API_KeoDua.Reponsitory.Implement
             {
                 try
                 {
-                    // Thêm phiếu nhập vào bảng tbl_PhieuNhapHang
+                    // Lọc các chi tiết trùng lặp trong cT_HoaDonBanHangs
+                    var uniqueDetails = cT_HoaDonBanHangs
+                        .GroupBy(x => x.MaHangHoa)
+                        .Select(g => g.First())
+                        .ToList();
+
+                    // Thêm phiếu nhập vào bảng tbl_HoaDonBanHang
                     hoaDonBanHang.NgayBan = DateTime.Now;
                     hoaDonBanHang.TrangThai = "Mới tạo";
                     hoaDonBanHangContext.tbl_HoaDonBanHang.Add(hoaDonBanHang);
                     await hoaDonBanHangContext.SaveChangesAsync();
 
+                    var existingDetails = await cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang
+                        .Where(x => x.MaHoaDon == hoaDonBanHang.MaHoaDon)
+                        .ToListAsync();
+
                     // Thêm chi tiết phiếu nhập vào bảng tbl_CT_PhieuNhap
-                    foreach (var detail in cT_HoaDonBanHangs)
+                    foreach (var detail in uniqueDetails)
                     {
-                        detail.MaHoaDon = (Guid)hoaDonBanHang.MaHoaDon;
-                        cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                        var existingDetail = existingDetails.FirstOrDefault(x => x.MaHangHoa == detail.MaHangHoa);
+                        if (existingDetail != null)
+                        {
+                            // Cập nhật bản ghi nếu đã tồn tại
+                            existingDetail.SoLuong = detail.SoLuong;
+                            existingDetail.DonGia = detail.DonGia;
+                            existingDetail.ThanhTien = detail.SoLuong * detail.DonGia;
+                        }
+                        else
+                        {
+                            // Thêm bản ghi mới nếu chưa tồn tại
+                            detail.MaHoaDon = hoaDonBanHang.MaHoaDon; // Đảm bảo MaHoaDon được gán đúng
+                            detail.ThanhTien = detail.SoLuong * detail.DonGia;
+                            cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                        }
                     }
+
+                    var detailsToDelete = existingDetails
+                       .Where(x => !uniqueDetails.Any(y => y.MaHangHoa == x.MaHangHoa))
+                       .ToList();
+
+                    cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.RemoveRange(detailsToDelete);
                     await cT_HoaDonBanHangContext.SaveChangesAsync();
 
                     // Commit giao dịch
@@ -378,27 +370,20 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hoaDonBanHang"></param>
-        /// <param name="cT_HoaDonBanHangs"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public async Task<bool> UpdateSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 try
                 {
-                    // Tìm phiếu nhập hiện tại
+                    // Tìm hóa đơn hiện tại
                     var existingHoaDon = await hoaDonBanHangContext.tbl_HoaDonBanHang.FindAsync(hoaDonBanHang.MaHoaDon);
                     if (existingHoaDon == null)
                     {
-                        return false; // Không tìm thấy phiếu nhập
+                        return false; // Không tìm thấy hóa đơn
                     }
 
-                    // Cập nhật thông tin phiếu nhập
+                    // Cập nhật thông tin hóa đơn
                     existingHoaDon.MaNV = hoaDonBanHang.MaNV;
                     existingHoaDon.MaKhachHang = hoaDonBanHang.MaKhachHang;
                     existingHoaDon.NgayBan = hoaDonBanHang.NgayBan;
@@ -407,17 +392,38 @@ namespace API_KeoDua.Reponsitory.Implement
                     existingHoaDon.GhiChu = hoaDonBanHang.GhiChu;
                     await hoaDonBanHangContext.SaveChangesAsync();
 
-                    string deleteQuery = @"DELETE FROM tbl_CT_HoaDonBanHang WHERE MaHoaDon = @MaHoaDon";
-                    var parameter = new SqlParameter("@MaHoaDon", hoaDonBanHang.MaHoaDon);
-                    await cT_HoaDonBanHangContext.Database.ExecuteSqlRawAsync(deleteQuery, parameter);
+                    // Lấy danh sách chi tiết hóa đơn hiện tại từ database
+                    var existingDetails = await cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang
+                        .Where(x => x.MaHoaDon == hoaDonBanHang.MaHoaDon)
+                        .ToListAsync();
 
-                    // **Thêm chi tiết phiếu nhập mới**
+                    // Cập nhật hoặc thêm mới các chi tiết hóa đơn
                     foreach (var detail in cT_HoaDonBanHangs)
                     {
-                        detail.MaHoaDon = (Guid)hoaDonBanHang.MaHoaDon;
-                        detail.ThanhTien = detail.DonGia * detail.SoLuong;
-                        cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                        var existingDetail = existingDetails.FirstOrDefault(x => x.MaHangHoa == detail.MaHangHoa);
+                        if (existingDetail != null)
+                        {
+                            // Cập nhật bản ghi nếu đã tồn tại
+                            existingDetail.SoLuong = detail.SoLuong;
+                            existingDetail.DonGia = detail.DonGia;
+                            existingDetail.ThanhTien = detail.SoLuong * detail.DonGia;
+                        }
+                        else
+                        {
+                            // Thêm bản ghi mới nếu chưa tồn tại
+                            detail.MaHoaDon = hoaDonBanHang.MaHoaDon; // Đảm bảo MaHoaDon được gán đúng
+                            detail.ThanhTien = detail.SoLuong * detail.DonGia;
+                            cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.Add(detail);
+                        }
                     }
+
+                    // Xóa các chi tiết không còn trong danh sách mới
+                    var detailsToDelete = existingDetails
+                        .Where(x => !cT_HoaDonBanHangs.Any(y => y.MaHangHoa == x.MaHangHoa))
+                        .ToList();
+
+                    cT_HoaDonBanHangContext.tbl_CT_HoaDonBanHang.RemoveRange(detailsToDelete);
+
                     await cT_HoaDonBanHangContext.SaveChangesAsync();
 
                     // Hoàn tất giao dịch
@@ -431,12 +437,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="maHoaDon"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public async Task<bool> DeleteSaleInvoice(Guid maHoaDon)
         {
             using var transaction = await hoaDonBanHangContext.Database.BeginTransactionAsync();
@@ -554,14 +554,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-
-        /// <summary>
-        /// Hủy hàng do khách đổi ý trên giao diện khách hàng
-        /// </summary>
-        /// <param name="maHoaDon"></param>
-        /// <param name="maNV"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
         public async Task<bool> CancelSaleInvoice(Guid maHoaDon, Guid maNV)
         {
             try

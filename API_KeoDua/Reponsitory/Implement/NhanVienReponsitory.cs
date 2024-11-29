@@ -242,5 +242,27 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw ex;
             }
         }
+
+        public async Task<List<string>> GetEmployeeNames()
+        {
+            try
+            {
+                string sqlQuery = "SELECT TenNV FROM tbl_NhanVien ORDER BY TenNV";
+
+                using (var connection = this.nhanVienContext.CreateConnection())
+                {
+                    // Thực thi truy vấn và trả về danh sách tên nhân viên
+                    var result = (await connection.QueryAsync<string>(sqlQuery)).ToList();
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và ghi log
+                throw new Exception("An error occurred while fetching employee names.", ex);
+            }
+        }
+
+
     }
 }

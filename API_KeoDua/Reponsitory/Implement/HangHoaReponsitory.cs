@@ -239,7 +239,7 @@ namespace API_KeoDua.Reponsitory.Implement
                     param.Add("SearchString", "%" + searchString.Trim() + "%");
                 }
 
-                string sqlQuery = @"string sqlQuery = @""
+                string sqlQuery = @"
                     WITH LatestPrices AS (
                         SELECT 
                             MaHangHoa, 
@@ -260,7 +260,7 @@ namespace API_KeoDua.Reponsitory.Implement
                         tbl_LichSuGia g ON h.MaHangHoa = g.MaHangHoa
                     INNER JOIN 
                         LatestPrices lp ON g.MaHangHoa = lp.MaHangHoa AND g.NgayCapNhatGia = lp.NgayCapNhatGia
-                    "" + sqlWhere;" + sqlWhere;
+                    " + sqlWhere;
 
                 using (var connection = this.hangHoaContext.CreateConnection())
                 {

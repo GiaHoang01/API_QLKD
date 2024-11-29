@@ -68,6 +68,42 @@ namespace API_KeoDua.Controllers
         }
 
         /// <summary>
+        /// Hàm lấy danh sách tất cả các tên nhân viên
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns>Employees</returns>
+        [HttpPost]
+        public async Task<ActionResult> getAllNameEmployees([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End getAllNameEmployees-------");
+                ResponseModel repData = await ResponseFail();
+
+
+                List<string> nameEmployees = await this.nhanVienReponsitory.GetEmployeeNames();
+
+                if (nameEmployees != null && nameEmployees.Any())
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { NameEmployees = nameEmployees };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End getAllNameEmployees-------");
+            }
+        }
+
+
+        /// <summary>
         /// Hàm thêm nhân viên và đăng kí tài khoản
         /// </summary>
         /// <param name="dicData">{}</param>

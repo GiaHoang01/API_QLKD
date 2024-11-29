@@ -53,5 +53,66 @@ namespace API_KeoDua.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Hàm lấy danh sách tất cả các nhóm quyền theo tên nhan viên
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns>Employees</returns>
+        [HttpPost]
+        public async Task<ActionResult> GetNhomQuyenByTenNV([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End GetNhomQuyenByTenNV-------");
+                ResponseModel repData = await ResponseFail();
+
+                string tenNV = dicData["TenNV"].ToString();
+                List<NhomQuyen> nhomQuyens = await this.nhomQuyenRepository.GetNhomQuyenByTenNV(tenNV);
+                repData = await ResponseSucceeded();
+                repData.data = new { nhomQuyens = nhomQuyens };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End getAllNameEmployees-------");
+            }
+        }
+
+        /// <summary>
+        /// Hàm lấy danh sách tất cả các quyền dựa vào ten nhan vien
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns>Employees</returns>
+        [HttpPost]
+        public async Task<ActionResult> GetQuyenByTenNV([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End GetQuyenByTenNV-------");
+                ResponseModel repData = await ResponseFail();
+
+                string tenNV = dicData["TenNV"].ToString();
+                List<Quyen> quyens = await this.nhomQuyenRepository.GetQuyenByTenNV(tenNV);
+                repData = await ResponseSucceeded();
+                repData.data = new { quyens = quyens };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End GetQuyenByTenNV-------");
+            }
+        }
+
     }
 }
