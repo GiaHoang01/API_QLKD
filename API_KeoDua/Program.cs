@@ -81,6 +81,9 @@ builder.Services.AddDbContext<HinhThucThanhToanContext>(options =>
 builder.Services.AddDbContext<PhieuGiaoHangContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
  ));
+builder.Services.AddDbContext<PhieuHuyDonConText>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
 // Add Repositories
 builder.Services.AddScoped<ITaiKhoanReponsitory, TaiKhoanReponsitory>();
 builder.Services.AddScoped<INhanVienReponsitory, NhanVienReponsitory>();
@@ -94,11 +97,11 @@ builder.Services.AddScoped<INhaCungCapReponsitory, NhaCungCapReponsitory>();
 builder.Services.AddScoped<IHinhThucThanhToanReponsitory, HinhThucThanhToanReponsitory>();
 builder.Services.AddScoped<IHoaDonBanHangReponsitory, HoaDonBanHangReponsitory>();
 builder.Services.AddScoped<IPhieuGiaoHangReponsitory, PhieuGiaoHangReponsitory>();
+builder.Services.AddScoped<IPhieuHuyDonReponsitory, PhieuHuyDonReponsitory>();
 builder.Services.AddScoped<IVnPayService, VnPAYService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
 
 // Use CORS

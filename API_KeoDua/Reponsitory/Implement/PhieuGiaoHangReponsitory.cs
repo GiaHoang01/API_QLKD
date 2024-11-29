@@ -12,12 +12,12 @@ namespace API_KeoDua.Reponsitory.Implement
     public class PhieuGiaoHangReponsitory : IPhieuGiaoHangReponsitory
     {
         private readonly PhieuGiaoHangContext phieuGiaoHangContext;
-        private readonly CT_PhieuNhapContext ct_PhieuNhapContext;
+        //private readonly CT_PhieuNhapContext ct_PhieuNhapContext;
 
-        public PhieuGiaoHangReponsitory(PhieuGiaoHangContext phieuGiaoHangContext, CT_PhieuNhapContext ct_PhieuNhapContext)
+        public PhieuGiaoHangReponsitory(PhieuGiaoHangContext phieuGiaoHangContext)//, CT_PhieuNhapContext ct_PhieuNhapContext)
         {
             this.phieuGiaoHangContext = phieuGiaoHangContext;
-            this.ct_PhieuNhapContext = ct_PhieuNhapContext;
+            //this.ct_PhieuNhapContext = ct_PhieuNhapContext;
         }
 
         public int TotalRows { get; set; }
@@ -47,21 +47,21 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 // Tạo câu truy vấn với các điều kiện WHERE và phân trang
                 string sqlQuery = $@"
-            SELECT COUNT(1) 
-            FROM tbl_PhieuGiaoHang p
-            JOIN tbl_HoaDonBanHang h ON p.MaHoaDon = h.MaHoaDon
-            JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
-            LEFT JOIN tbl_NhanVien n ON p.MaNV = n.MaNV
-            {sqlWhere};
+                        SELECT COUNT(1) 
+                        FROM tbl_PhieuGiaoHang p
+                        JOIN tbl_HoaDonBanHang h ON p.MaHoaDon = h.MaHoaDon
+                        JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
+                        LEFT JOIN tbl_NhanVien n ON p.MaNV = n.MaNV
+                        {sqlWhere};
 
-            SELECT p.*, k.TenKhachHang, n.TenNV 
-            FROM tbl_PhieuGiaoHang p
-            JOIN tbl_HoaDonBanHang h ON p.MaHoaDon = h.MaHoaDon
-            JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
-            LEFT JOIN tbl_NhanVien n ON p.MaNV = n.MaNV
-            {sqlWhere}
-            ORDER BY p.NgayTao ASC
-            OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
+                        SELECT p.*, k.TenKhachHang, n.TenNV 
+                        FROM tbl_PhieuGiaoHang p
+                        JOIN tbl_HoaDonBanHang h ON p.MaHoaDon = h.MaHoaDon
+                        JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
+                        LEFT JOIN tbl_NhanVien n ON p.MaNV = n.MaNV
+                        {sqlWhere}
+                        ORDER BY p.NgayTao ASC
+                        OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
 
                 using (var connection = this.phieuGiaoHangContext.CreateConnection())
                 {
@@ -117,21 +117,21 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 // Tạo câu truy vấn với các điều kiện WHERE và phân trang
                 string sqlQuery = $@"
-    SELECT COUNT(1) 
-    FROM tbl_PhieuGiaoHang p
-    JOIN tbl_HoaDonBanHang h ON p.MaHoaDon = h.MaHoaDon
-    JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
-    LEFT JOIN tbl_NhanVien n ON p.MaNV = n.MaNV
-    {sqlWhere};
+                    SELECT COUNT(1) 
+                    FROM tbl_PhieuGiaoHang p
+                    JOIN tbl_HoaDonBanHang h ON p.MaHoaDon = h.MaHoaDon
+                    JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
+                    LEFT JOIN tbl_NhanVien n ON p.MaNV = n.MaNV
+                    {sqlWhere};
 
-    SELECT p.*, k.TenKhachHang
-    FROM tbl_PhieuGiaoHang p
-    JOIN tbl_HoaDonBanHang h ON p.MaHoaDon = h.MaHoaDon
-    JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
-    LEFT JOIN tbl_NhanVien n ON p.MaNV = n.MaNV
-    {sqlWhere}
-    ORDER BY p.NgayTao ASC
-    OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
+                    SELECT p.*, k.TenKhachHang
+                    FROM tbl_PhieuGiaoHang p
+                    JOIN tbl_HoaDonBanHang h ON p.MaHoaDon = h.MaHoaDon
+                    JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
+                    LEFT JOIN tbl_NhanVien n ON p.MaNV = n.MaNV
+                    {sqlWhere}
+                    ORDER BY p.NgayTao ASC
+                    OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
 
                 using (var connection = this.phieuGiaoHangContext.CreateConnection())
                 {
@@ -171,19 +171,39 @@ namespace API_KeoDua.Reponsitory.Implement
                 var param = new DynamicParameters();
                 param.Add("@MaPhieuGiao", maPhieuGiao);
 
+                //string sqlQuery = $@"
+                //                    SELECT 
+                //                        p.*, 
+                //                        n.TenNV, n.MaNV,
+                //                        h.MaHoaDon, h.NgayBan, h.TongTriGia, h.GhiChu, h.MaHinhThuc,
+                //                        k.MaKhachHang, k.TenKhachHang, k.MaLoaiKH,
+                //                        t.MaThongTin, t.SoNha, t.SDT, t.MaPhuong, t.MaQuan, t.ThanhPho, t.DiaChi, t.MacDinh
+                //                    FROM tbl_PhieuGiaoHang p
+                //                    LEFT JOIN tbl_HoaDonBanHang h ON p.MaHoaDon = h.MaHoaDon
+                //                    LEFT JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
+                //                    LEFT JOIN tbl_NhanVien n ON p.MaNV = n.MaNV
+                //                    LEFT JOIN tbl_ThongTinGiaoHang t ON k.MaKhachHang = t.MaKhachHang
+                //                    {sqlWhere} ORDER BY t.MacDinh DESC";
+
                 string sqlQuery = $@"
-                                    SELECT 
-                                        p.*, 
-                                        n.TenNV, n.MaNV,
-                                        h.MaHoaDon, h.NgayBan, h.TongTriGia, h.GhiChu, h.MaHinhThuc,
-                                        k.MaKhachHang, k.TenKhachHang, k.MaLoaiKH,
-                                        t.MaThongTin, t.SoNha, t.SDT, t.MaPhuong, t.MaQuan, t.ThanhPho, t.DiaChi, t.MacDinh
-                                    FROM tbl_PhieuGiaoHang p
-                                    LEFT JOIN tbl_HoaDonBanHang h ON p.MaHoaDon = h.MaHoaDon
-                                    LEFT JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
-                                    LEFT JOIN tbl_NhanVien n ON p.MaNV = n.MaNV
-                                    LEFT JOIN tbl_ThongTinGiaoHang t ON k.MaKhachHang = t.MaKhachHang
-                                    {sqlWhere} ORDER BY t.MacDinh DESC";
+                    SELECT 
+                        p.MaPhieuGiao, p.NgayGiao, p.TrangThai, p.NgayTao, p.MaThongTin as MaThongTinHienTai,
+                        n.TenNV, n.MaNV,
+                        h.MaHoaDon, h.NgayBan, h.TongTriGia, h.GhiChu, h.MaHinhThuc,
+                        k.MaKhachHang, k.TenKhachHang, k.MaLoaiKH,
+                        t.MaThongTin, t.SoNha, t.SDT, t.MaPhuong, t.MaQuan, t.ThanhPho, t.DiaChi, t.MacDinh
+                    FROM tbl_PhieuGiaoHang p
+                    LEFT JOIN tbl_HoaDonBanHang h ON p.MaHoaDon = h.MaHoaDon
+                    LEFT JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
+                    LEFT JOIN tbl_NhanVien n ON p.MaNV = n.MaNV
+                    LEFT JOIN tbl_ThongTinGiaoHang t ON k.MaKhachHang = t.MaKhachHang
+                    {sqlWhere}
+                    ORDER BY 
+                        CASE 
+                            WHEN p.MaThongTin IS NULL THEN t.MacDinh -- Ưu tiên MacDinh khi MaThongTin là NULL
+                            ELSE NULL -- Không ưu tiên sắp xếp theo MacDinh khi có MaThongTin
+                        END DESC,
+                        t.MaThongTin; -- Thứ tự mặc định để đảm bảo ổn định";
 
                 using (var connection = this.phieuGiaoHangContext.CreateConnection())
                 {
@@ -210,6 +230,7 @@ namespace API_KeoDua.Reponsitory.Implement
                                 MaKhachHang = g.First().MaKhachHang,
                                 TenKhachHang = g.First().TenKhachHang,
                                 SDT = g.First().SDT,
+                                MaThongTinHienTai = g.First().MaThongTinHienTai,
                                 ThongTinGiaoHang = g.Select(i => new
                                 {
                                     i.MaThongTin,
@@ -230,16 +251,35 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        public async Task<bool> UpdateShippingNote(PhieuGiaoHang phieuGiaoHang)
+        //public async Task<bool> UpdateShippingNote(PhieuGiaoHang phieuGiaoHang)
+        //{
+        //    try
+        //    {
+        //        this.phieuGiaoHangContext.Entry(phieuGiaoHang).State = EntityState.Modified;
+        //        await this.phieuGiaoHangContext.SaveChangesAsync();
+        //        return true;
+        //    }
+        //    catch (Exception ex) { throw ex; }
+        //}
+
+        public async Task<bool> UpdateShippingNote(Guid maPhieuGiao, Guid? maThongTin)
         {
             try
             {
-                this.phieuGiaoHangContext.Entry(phieuGiaoHang).State = EntityState.Modified;
-                await this.phieuGiaoHangContext.SaveChangesAsync();
-                return true;
+                string sqlQuery = "UPDATE tbl_PhieuGiaoHang SET MaThongTin = @MaThongTin WHERE MaPhieuGiao = @MaPhieuGiao";
+
+                int rowsAffected = await this.phieuGiaoHangContext.Database.ExecuteSqlRawAsync(sqlQuery,
+                    new SqlParameter("@MaThongTin", maThongTin ?? (object)DBNull.Value),
+                    new SqlParameter("@MaPhieuGiao", maPhieuGiao));
+
+                return rowsAffected > 0;
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating shipping note", ex);
+            }
         }
+
 
         public async Task<bool> AddShippingNote(PhieuGiaoHang phieuGiaoHang)
         {
@@ -284,6 +324,108 @@ namespace API_KeoDua.Reponsitory.Implement
                     return true;
                 }
                 return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> ChangeShippingNoteStatus(Guid maPhieuGiao, Guid? maNhanVien, int status)
+        {  //status {0: Tạo mới, 1: Đang giao, 2: Hoàn tất, 3: Không hoàn tất}
+            try
+            {
+                // Tìm đối tượng PhieuGiaoHang trong cơ sở dữ liệu
+                var phieuGiaoHang = await this.phieuGiaoHangContext.tbl_PhieuGiaoHang
+                    .FirstOrDefaultAsync(p => p.MaPhieuGiao == maPhieuGiao);
+
+                if (phieuGiaoHang == null)
+                {
+                    throw new Exception("Phiếu giao hàng không tồn tại.");
+                }
+
+                // Xử lý thay đổi trạng thái dựa trên giá trị status
+                switch (status)
+                {
+                    case 0: // Tạo mới
+                        phieuGiaoHang.TrangThai = "Đang giao";
+                        if (maNhanVien.HasValue)
+                        {
+                            phieuGiaoHang.MaNV = maNhanVien; // Gán mã nhân viên nếu có
+                        }
+                        break;
+
+                    case 1: // Đang giao - Hoàng tất
+                        phieuGiaoHang.TrangThai = "Hoàn tất";
+                        break;
+
+                    case 2: // Đang giao - Không hoàn tất
+                        phieuGiaoHang.TrangThai = "Chưa hoàn tất";
+                        break;
+
+                    default:
+                        throw new Exception("Trạng thái không hợp lệ.");
+                }
+
+                // Cập nhật trạng thái trong cơ sở dữ liệu
+                this.phieuGiaoHangContext.Entry(phieuGiaoHang).State = EntityState.Modified;
+                await this.phieuGiaoHangContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Ghi log hoặc xử lý lỗi nếu cần
+                throw ex;
+            }
+        }
+
+        public async Task<List<object>> QuickSearchShippingNoteIncpmplete(string searchString)
+        {
+            try
+            {
+                DynamicParameters param = new DynamicParameters();
+                var sqlWhere = new StringBuilder();
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    sqlWhere.Append(" AND p.MaPhieuGiao like @SearchString ESCAPE '\\' ");
+                    param.Add("SearchString", $"%{searchString}%");
+                }
+
+                string sqlQuery = $@"
+                   SELECT 
+                    pg.MaPhieuGiao, pg.NgayGiao, pg.TrangThai AS TrangThaiPhieuGiao,
+                    ph.MaPhieuHuy, ph.NgayHuy, ph.LyDo,
+                    k.MaKhachHang, k.TenKhachHang, k.SDT,
+                    tt.MaThongTin, tt.SDT AS SDTGiaoHang, tt.DiaChi
+                FROM tbl_PhieuGiaoHang pg
+                LEFT JOIN tbl_PhieuHuyDon ph ON pg.MaPhieuGiao = ph.MaPhieuGiao
+                INNER JOIN tbl_ThongTinGiaoHang tt ON pg.MaThongTin = tt.MaThongTin
+                INNER JOIN tbl_KhachHang k ON tt.MaKhachHang = k.MaKhachHang
+                WHERE pg.TrangThai = N'Chưa hoàn tất'{sqlWhere}";
+
+                using (var connection = this.phieuGiaoHangContext.CreateConnection())
+                {
+                    var resultData = await connection.QueryAsync(sqlQuery, param);
+                    var groupedResult = resultData
+                        .GroupBy(row => row.MaHoaDon)
+                        .Select(group => new
+                        {
+                            MaPhieuGiao = group.First().MaPhieuGiao,
+                            NgayGiao = group.First().NgayGiao,
+                            MaKhachHang = group.First(). MaKhachHang,
+                            TenKhachHang = group.First().TenKhachHang,
+                            SDT = group.First().SDT,
+                            MaThongTin = group.First().MaThongTin,
+                            SDTGiaoHang = group.First().SDTGiaoHang,
+                            DiaChi = group.First().DiaChi,
+                            
+                        }).ToList<object>();
+
+                    return groupedResult;
+
+                }
             }
             catch (Exception ex)
             {
