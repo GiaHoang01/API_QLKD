@@ -14,10 +14,10 @@ namespace API_KeoDua.Data
         [MaxLength(255)]
         public string LyDo { get; set; }
 
-        public Guid MaHoaDon { get; set; }
+        public Guid MaPhieuGiao { get; set; }
 
 
-        [ForeignKey("MaHoaDon")]
-        public virtual HoaDonBanHang HoaDonBanHang { get; set; }
+        [ForeignKey("MaPhieuGiao")]
+        public virtual PhieuGiaoHang PhieuGiaoHang { get; set; }
     }
 }
