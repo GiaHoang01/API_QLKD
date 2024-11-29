@@ -505,5 +505,43 @@ namespace API_KeoDua.Controllers
         }
 
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> ThanhToan([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End getTotalRevenueByYear-------");
+
+                // Initialize the response model
+                ResponseModel repData = await ResponseFail();
+                int year = Convert.ToInt32(dicData["Year"].ToString());
+                decimal totals = await this.hoaDonBanHangReponsitory.TotalRevenueByYear(year);
+                repData = await ResponseSucceeded();
+                repData.data = new
+                {
+                    total = totals
+                };
+
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception and return error response
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End getTotalRevenueByYear-------");
+            }
+        }
+
+
     }
 }
