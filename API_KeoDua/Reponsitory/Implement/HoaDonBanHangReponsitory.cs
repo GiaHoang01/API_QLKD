@@ -34,18 +34,7 @@ namespace API_KeoDua.Reponsitory.Implement
         public int TotalRows { get; set; }
 
         #region Xác nhận hóa đơn bán hàng
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="searchString"></param>
-        /// <param name="employeeId"></param>
-        /// <param name="cartId"></param>
-        /// <param name="customerId"></param>
-        /// <param name="maHinhThuc"></param>
-        /// <param name="startRow"></param>
-        /// <param name="maxRows"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+
         public async Task<List<HoaDonBanHangView>> GetAllSaleInVoiceWithWait(DateTime fromDate, DateTime toDate, string searchString, Guid? employeeId, Guid? cartId, Guid? customerId, string? maHinhThuc, int startRow, int maxRows)
         {
             try
@@ -118,13 +107,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="maHoaDon"></param>
-        /// <param name="maNV"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
         public async Task<bool> ConfirmSaleInvoice(Guid maHoaDon, Guid maNV)
         {
             try
@@ -156,18 +138,7 @@ namespace API_KeoDua.Reponsitory.Implement
         #endregion
 
         #region Hóa đơn bán hàng
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="searchString"></param>
-        /// <param name="employeeId"></param>
-        /// <param name="cartId"></param>
-        /// <param name="customerId"></param>
-        /// <param name="maHinhThuc"></param>
-        /// <param name="startRow"></param>
-        /// <param name="maxRows"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+
         public async Task<List<HoaDonBanHangView>> GetAllSaleInVoice(DateTime fromDate, DateTime toDate, string searchString, Guid? employeeId, Guid? cartId, Guid? customerId, string? maHinhThuc, int startRow, int maxRows)
         {
             try
@@ -274,7 +245,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
         #endregion
-
         public async Task<List<object>> QuickSearchSaleInvoiceNewCreated(string searchString)
         {
             try
@@ -284,37 +254,52 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    sqlWhere.Append(" AND MaHoaDon like @SearchString ESCAPE '\\' ");
+                    sqlWhere.Append(" AND h.MaHoaDon like @SearchString ESCAPE '\\' ");
                     param.Add("SearchString", $"%{searchString}%");
                 }
 
-                string sqlQuery = @"
-                                    SELECT 
-                                        h.*, 
-                                        k.* 
-                                    FROM tbl_HoaDonBanHang h
-                                    INNER JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
-                                    WHERE h.TrangThai = N'Mới tạo' " + sqlWhere;
+                string sqlQuery = $@"
+                    SELECT 
+                        h.MaHoaDon, h.NgayBan, h.TrangThai, h.TongTriGia, h.GhiChu, h.MaHinhThuc,
+                        k.MaKhachHang, k.TenKhachHang, k.Email, k.SDT, k.GioiTinh, k.MaLoaiKH,
+                        t.MaThongTin, t.SDT AS SDTGiaoHang, t.DiaChi, t.MacDinh
+                    FROM tbl_HoaDonBanHang h
+                    INNER JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang
+                    LEFT JOIN tbl_ThongTinGiaoHang t ON k.MaKhachHang = t.MaKhachHang
+                    WHERE h.TrangThai = N'Mới tạo' {sqlWhere}
+                    ORDER BY t.MacDinh DESC";
 
                 using (var connection = this.hoaDonBanHangContext.CreateConnection())
                 {
                     var resultData = await connection.QueryAsync(sqlQuery, param);
-                    var response = resultData.Select(row => new
-                    {
-                        MaHoaDon = row.MaHoaDon,
-                        NgayBan = row.NgayBan,
-                        TrangThai = row.TrangThai,
-                        TongTriGia = row.TongTriGia,
-                        GhiChu = row.GhiChu,
-                        MaKhachHang = row.MaKhachHang,
-                        TenKhachHang = row.TenKhachHang,
-                        Email = row.Email,
-                        SDT = row.SDT,
-                        GioiTinh = row.GioiTinh,
-                        MaLoaiKH = row.MaLoaiKH,
-                    }).ToList<object>();
+                    var groupedResult = resultData
+                        .GroupBy(row => row.MaHoaDon)
+                        .Select(group => new
+                        {
+                            MaHoaDon = group.First().MaHoaDon,
+                            NgayBan = group.First().NgayBan,
+                            TrangThai = group.First().TrangThai,
+                            TongTriGia = group.First().TongTriGia,
+                            GhiChu = group.First().GhiChu,
+                            MaHinhThuc = group.First().MaHinhThuc,
+                            MaKhachHang = group.First().MaKhachHang,
+                            TenKhachHang = group.First().TenKhachHang,
+                            Email = group.First().Email,
+                            SDT = group.First().SDT,
+                            GioiTinh = group.First().GioiTinh,
+                            MaLoaiKH = group.First().MaLoaiKH,
+                            ThongTinGiaoHang = group
+                                .Where(row => row.MaThongTin != null) // Loại bỏ thông tin null
+                                .Select(row => new
+                                {
+                                    MaThongTin = row.MaThongTin,
+                                    SDT = row.SDTGiaoHang,
+                                    DiaChi = row.DiaChi,
+                                    MacDinh = row.MacDinh
+                                }).ToList()
+                        }).ToList<object>();
 
-                    return response;
+                    return groupedResult;
 
                 }
             }
@@ -324,13 +309,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hoaDonBanHang"></param>
-        /// <param name="cT_HoaDonBanHangs"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public async Task AddSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
         {
             // Sử dụng TransactionScope cho tất cả các DbContext
@@ -392,14 +370,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hoaDonBanHang"></param>
-        /// <param name="cT_HoaDonBanHangs"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public async Task<bool> UpdateSaleInvoice(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -467,12 +437,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="maHoaDon"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public async Task<bool> DeleteSaleInvoice(Guid maHoaDon)
         {
             using var transaction = await hoaDonBanHangContext.Database.BeginTransactionAsync();
@@ -590,14 +554,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-
-        /// <summary>
-        /// Hủy hàng do khách đổi ý trên giao diện khách hàng
-        /// </summary>
-        /// <param name="maHoaDon"></param>
-        /// <param name="maNV"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
         public async Task<bool> CancelSaleInvoice(Guid maHoaDon, Guid maNV)
         {
             try

@@ -114,7 +114,6 @@ namespace API_KeoDua.Controllers
             }
         }
 
-
         /// <summary>
         /// Hàm lấy thông tin chi tiết phiếu giao hàng
         /// </summary>
@@ -138,6 +137,7 @@ namespace API_KeoDua.Controllers
                     phieuGiao.TrangThai = "Mới tạo";
                     phieuGiao.NgayTao = DateTime.Now;
                     phieuGiao.NgayGiao = DateTime.Now;
+                    phieuGiao.MaThongTin = null;
                     repData = await ResponseSucceeded();
                     repData.data = new { PhieuGiaoHang = phieuGiao };
                 }
@@ -177,7 +177,7 @@ namespace API_KeoDua.Controllers
         {
             try
             {
-                logger.Debug("-------End SaveShippingNote-------");
+                logger.Debug("-------Start SaveShippingNote-------");
                 ResponseModel repData = await ResponseFail();
 
                 PhieuGiaoHang phieuGiaoHang = JsonConvert.DeserializeObject<PhieuGiaoHang>(dicData["PhieuGiaoHang"].ToString());
@@ -185,18 +185,17 @@ namespace API_KeoDua.Controllers
                 int status = Convert.ToInt32(dicData["Status"].ToString());
                 if (status == 1)
                 {
-                    //phieuGiaoHang.MaPhieuGiao = Guid.NewGuid();
                     phieuGiaoHang.NgayTao = DateTime.Now;
                     phieuGiaoHang.MaThongTin = maThongTin;
                     await this.phieuGiaoHangReponsitory.AddShippingNote(phieuGiaoHang);
                 }
                 else
                 {
-                    await this.phieuGiaoHangReponsitory.UpdateShippingNote(phieuGiaoHang);
+                    await this.phieuGiaoHangReponsitory.UpdateShippingNote(phieuGiaoHang.MaPhieuGiao, maThongTin);
                 }
 
                 repData = await ResponseSucceeded();
-                repData.data = new { };
+                repData.data = new { maThongTin = maThongTin, status = 2 };
                 return Ok(repData);
             }
             catch (Exception ex)
@@ -241,5 +240,91 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------End DeleteShippingNote-------");
             }
         }
+
+        /// <summary>
+        /// Chuyển trạng thái phiếu giao hàng
+        /// </summary>
+        /// <param name="dicData">{MaPhieuGiao: Guid, TrangThai: string, Status: int}</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> ChangeShippingNoteStatus([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Start ChangeShippingNoteStatus-------");
+
+                // Khởi tạo dữ liệu phản hồi mặc định
+                ResponseModel repData = await ResponseFail();
+
+                // Lấy thông tin từ dicData
+                Guid? maPhieuGiao = dicData.ContainsKey("MaPhieuGiao") && !string.IsNullOrEmpty(dicData["MaPhieuGiao"]?.ToString())
+                    ? Guid.Parse(dicData["MaPhieuGiao"].ToString())
+                    : (Guid?)null;
+
+                Guid? maNhanVien = !string.IsNullOrEmpty(dicData["MaNhanVien"]?.ToString())
+                    ? Guid.Parse(dicData["MaNhanVien"].ToString())
+                    : (Guid?)null;
+
+                int trangThai = Convert.ToInt32(dicData["TrangThai"].ToString());
+
+
+                // Gọi repository để cập nhật trạng thái
+                bool isUpdated = await this.phieuGiaoHangReponsitory.ChangeShippingNoteStatus(maPhieuGiao.Value, maNhanVien, trangThai);
+
+                // Cập nhật phản hồi thành công
+                if (isUpdated)
+                {
+                    repData = await ResponseSucceeded();
+                    repData.data = new { maPhieuGiao = maPhieuGiao, status = trangThai, trangThaiMoi = trangThai };
+                }
+
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End ChangeShippingNoteStatus-------");
+            }
+        }
+
+        /// <summary>
+        /// QuickSearch phiếu giao hàng trạng thái Chưa hoàn tất
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> quickSearchShippingNoteIncpmplete([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Begin quickSearchShippingNoteIncpmplete-------");
+                ResponseModel repData = await ResponseFail();
+
+                string searchString = dicData["SearchString"].ToString();
+
+                var resultData = await this.phieuGiaoHangReponsitory.QuickSearchShippingNoteIncpmplete(searchString);
+
+                if (resultData != null && resultData.Any())
+                {
+                    repData = await ResponseSucceeded();
+                    repData.data = new { HoaDonKhachHang = resultData }; // Trả dữ liệu kết hợp
+                }
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End quickSearchShippingNoteIncpmplete-------");
+            }
+        }
+
     }
 }
