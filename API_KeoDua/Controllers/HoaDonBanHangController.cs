@@ -226,7 +226,6 @@ namespace API_KeoDua.Controllers
         /// </summary>
         /// <param name="dicData"></param>
         /// <returns></returns>
-
         [HttpPost]
         public async Task<ActionResult> getSaleInvoice_ByID([FromBody] Dictionary<string, object> dicData)
         {
@@ -503,8 +502,6 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------End getTotalRevenueByYear-------");
             }
         }
-
-
 
         /// <summary>
         /// 

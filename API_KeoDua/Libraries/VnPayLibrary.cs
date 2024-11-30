@@ -126,6 +126,7 @@ namespace API_KeoDua.Libraries
             var myChecksum = HmacSha512(secretKey, rspRaw);
             return myChecksum.Equals(inputHash, StringComparison.InvariantCultureIgnoreCase);
         }
+
         private string HmacSha512(string key, string inputData)
         {
             var hash = new StringBuilder();

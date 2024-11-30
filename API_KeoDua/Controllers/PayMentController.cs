@@ -1,40 +1,68 @@
-﻿using API_KeoDua.Models.VnPAY;
+﻿using API_KeoDua.Data;
+using API_KeoDua.Models;
+using API_KeoDua.Models.VnPAY;
 using API_KeoDua.Services.VnPAY;
 using Microsoft.AspNetCore.Mvc;
-
+using API_KeoDua.Reponsitory.Interface;
+using API_KeoDua.DataView;
+using Newtonsoft.Json;
+using API_KeoDua.Libraries;
 namespace API_KeoDua.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PaymentController : ControllerBase
+    public class PaymentController : BaseController
     {
         private readonly IVnPayService _vnPayService;
+        private readonly IConfiguration _configuration;
 
-        public PaymentController(IVnPayService vnPayService)
+        public PaymentController(IVnPayService vnPayService, IConfiguration configuration)
         {
             _vnPayService = vnPayService;
+            _configuration = configuration;
         }
 
-        // API endpoint to create payment URL
-        [HttpPost("create-payment-url")]
-        public IActionResult CreatePaymentUrlVnpay([FromBody] PaymentInformationModel model)
+        [HttpPost]
+        public async Task<ActionResult> CreatePaymentUrlVnpay([FromBody] PaymentInformationModel paymentInformation)
         {
-            // Create the payment URL using the service
-            var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
+            try
+            {
+                Logger.Debug("-------End CreatePaymentUrlVnpay-------");
+                ResponseModel repData = await ResponseFail();
+                var url = _vnPayService.CreatePaymentUrl(paymentInformation, HttpContext);
 
-            // Redirect to the payment URL
-            return Ok(new { paymentUrl = url });
+                repData = await ResponseSucceeded();
+                repData.data = new { url=url };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End CreatePaymentUrlVnpay-------");
+            }
         }
 
-        // API endpoint to handle the payment callback
-        [HttpGet("payment-callback")]
+        [HttpGet("PaymentCallbackVnpay")]
         public IActionResult PaymentCallbackVnpay()
         {
-            // Process the callback and get the payment result
-            var response = _vnPayService.PaymentExecute(Request.Query);
+            var queryString = Request.Query;
 
-            // Return the response from VnPay
-            return Ok(response);
+            // Lấy HashSecret từ _configuration
+            var hashSecret = _configuration["Vnpay:HashSecret"];
+
+
+            // Kiểm tra mã ResponseCode và TransactionStatus
+            if (queryString["vnp_ResponseCode"] != "00" || queryString["vnp_TransactionStatus"] != "00")
+            {
+                return BadRequest("Giao dịch thất bại.");
+            }
+
+            return Ok("Giao dịch thành công.");
         }
+
     }
 }
