@@ -124,7 +124,7 @@ namespace API_KeoDua.Controllers
         {
             try
             {
-                logger.Debug("-------End GetShippingNoteByID-------");
+                logger.Debug("-------Start GetShippingNoteByID-------");
                 ResponseModel repData = await ResponseFail();
 
                 Guid? maPhieuGiao = dicData.ContainsKey("MaPhieuGiao") && !string.IsNullOrEmpty(dicData["MaPhieuGiao"]?.ToString()) ? Guid.Parse(dicData["MaPhieuGiao"].ToString()) : (Guid?)null;
@@ -195,7 +195,7 @@ namespace API_KeoDua.Controllers
                 }
 
                 repData = await ResponseSucceeded();
-                repData.data = new { maThongTin = maThongTin, status = 2 };
+                repData.data = new { maPhieuGiao = phieuGiaoHang.MaPhieuGiao, status = 2 };
                 return Ok(repData);
             }
             catch (Exception ex)

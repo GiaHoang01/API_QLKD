@@ -380,7 +380,7 @@ namespace API_KeoDua.Controllers
 
                 var resultData = await this.hoaDonBanHangReponsitory.QuickSearchSaleInvoiceNewCreated(searchString);
 
-                if (resultData != null && resultData.Any())
+                if (resultData != null)
                 {
                     repData = await ResponseSucceeded();
                     repData.data = new { HoaDonKhachHang = resultData }; // Trả dữ liệu kết hợp

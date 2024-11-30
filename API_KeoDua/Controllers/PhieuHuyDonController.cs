@@ -89,7 +89,7 @@ namespace API_KeoDua.Controllers
                 }
                 else
                 {
-                    PhieuHuyDon phieuHuy = await this.phieuHuyDonReponsitory.GetAllShippingNoteCancelByID(maPhieuGiao);
+                    dynamic phieuHuy = await this.phieuHuyDonReponsitory.GetShippingNoteCancelByID(maPhieuGiao);
                     if (phieuHuy == null)
                     {
                         repData = await ResponseFail();
@@ -113,5 +113,78 @@ namespace API_KeoDua.Controllers
             }
         }
 
+        /// <summary>
+        /// Lưu phiếu giao hàng
+        /// </summary>
+        /// <param name="dicData">{MaPhieuGiao: Guid}</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> SaveShippingNoteCancel([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Start SaveShippingNoteCancel-------");
+                ResponseModel repData = await ResponseFail();
+
+                PhieuHuyDon phieuHuyDon = JsonConvert.DeserializeObject<PhieuHuyDon>(dicData["PhieuHuyDon"].ToString());
+                //int status = Convert.ToInt32(dicData["Status"].ToString());
+                //if (status == 1)
+                //{
+                //    phieuHuyDon.NgayHuy = DateTime.Now;
+                //    phieuHuyDon.MaPhieuGiao = maPhieuGiao;
+                //    await this.phieuHuyDonReponsitory.AddShippingNoteCancel(phieuHuyDon);
+                //}
+                //else
+                //{
+                //    await this.phieuHuyDonReponsitory.UpdateShippingNoteCancel(phieuHuyDon.MaPhieuHuy, maPhieuGiao);
+                //}
+                phieuHuyDon.NgayHuy = DateTime.Now;
+                await this.phieuHuyDonReponsitory.AddShippingNoteCancel(phieuHuyDon);
+                repData = await ResponseSucceeded();
+                repData.data = new { status = 2 };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End SaveShippingNoteCancel-------");
+            }
+        }
+
+        /// <summary>
+        /// Xóa phiếu giao hàng
+        /// </summary>
+        /// <param name="dicData">{MaPhieuGiao: Guid}</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> DeleteShippingNoteCancel([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End DeleteShippingNoteCancel-------");
+                ResponseModel repData = await ResponseFail();
+
+                Guid maPhieuHuy = (dicData["MaPhieuHuy"] == null || string.IsNullOrEmpty(dicData["MaPhieuHuy"].ToString())) ? Guid.Empty : Guid.Parse(dicData["MaPhieuHuy"].ToString());
+
+                await this.phieuHuyDonReponsitory.DeleteShippingNoteCancel(maPhieuHuy);
+
+                repData = await ResponseSucceeded();
+                repData.data = new { };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End DeleteShippingNoteCancel-------");
+            }
+        }
     }
 }
