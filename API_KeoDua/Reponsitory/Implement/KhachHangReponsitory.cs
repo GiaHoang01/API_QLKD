@@ -80,25 +80,92 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        public async Task<KhachHang> GetCustomerByID(Guid MaKH)
+        public async Task<object> GetCustomerByID(Guid MaKH)
         {
             try
             {
-                DynamicParameters param = new DynamicParameters();
-                var sqlQuery = @"SELECT * FROM tbl_KhachHang WHERE MaKhachHang = @MaKH";
-                param.Add("@MaKH", MaKH);
+                var sqlQuery = @"
+            SELECT 
+                kh.MaKhachHang,
+                kh.TenKhachHang,
+                kh.GioiTinh,
+                kh.Email,
+                kh.TenTaiKhoan,
+                kh.MaLoaiKH,
+                kh.Sdt AS SDTKH,
+                tt.MaThongTin,
+                tt.DiaChi,
+                tt.MacDinh,
+                tt.SDT AS SDTThongTin
+            FROM tbl_KhachHang kh
+            LEFT JOIN tbl_ThongTinGiaoHang tt 
+            ON kh.MaKhachHang = tt.MaKhachHang
+            WHERE kh.MaKhachHang = @MaKH";
 
                 using (var connection = this.khachHangContext.CreateConnection())
                 {
-                    var result = await connection.QueryFirstOrDefaultAsync<KhachHang>(sqlQuery, param);
-                    return result;
+                    var result = await connection.QueryAsync(sqlQuery, new { MaKH });
+
+                    // Nhóm dữ liệu theo MaKhachHang
+                    var customer = result
+                        .GroupBy(r => r.MaKhachHang)
+                        .Select(g => new
+                        {
+                            // Lấy thông tin khách hàng từ g.First()
+                            MaKhachHang = g.Key,
+                            TenKhachHang = g.First().TenKhachHang,
+                            GioiTinh = g.First().GioiTinh,
+                            Email = g.First().Email,
+                            TenTaiKhoan = g.First().TenTaiKhoan,
+                            MaLoaiKH = g.First().MaLoaiKH,
+                            SDT = g.First().SDTKH,
+                            // Lấy danh sách thông tin giao hàng
+                            ShippingInfos = g
+                                .Where(x => x.MaThongTin != null)
+                                .Select(x => new
+                                {
+                                    MaThongTin = x.MaThongTin,
+                                    DiaChi = x.DiaChi,
+                                    MacDinh = x.MacDinh,
+                                    SDT = x.SDTThongTin
+                                }).ToList()
+                        }).FirstOrDefault();
+
+                    return customer;
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Have an error when get info customer", ex);
+                throw new Exception("Error when fetching customer info", ex);
             }
         }
+
+        public async Task<bool> CheckCustomerCode(Guid maKH)
+        {
+            try
+            {
+                var sqlQuery = @"
+                    SELECT COUNT(1)
+                    FROM [dtb_QuanLyKeoDua].[dbo].[tbl_HoaDonBanHang]
+                    WHERE MaKhachHang = @MaKH";
+
+                using (var connection = this.khachHangContext.CreateConnection())
+                {
+                    var result = await connection.ExecuteScalarAsync<int>(sqlQuery, new { MaKH = maKH });
+                    if (result > 0)
+                    {
+                        return false; // Không thể xóa khách hàng này vì có liên kết với hóa đơn
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi
+                throw new Exception("Error occurred while checking customer code", ex);
+            }
+        }
+
 
         public async Task<bool> DeleteCustomer (Guid MaKH)
         {

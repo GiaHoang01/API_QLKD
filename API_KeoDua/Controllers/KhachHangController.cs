@@ -77,14 +77,19 @@ namespace API_KeoDua.Controllers
                 ResponseModel repData = await ResponseFail();
 
                 Guid maKH = Guid.Parse(dicData["MaKH"].ToString());
-                KhachHang khachHang = await this.khachHangReponsitory.GetCustomerByID(maKH);
+                var customer = await this.khachHangReponsitory.GetCustomerByID(maKH);
 
-                if (khachHang != null)
+                // Nếu không tìm thấy khách hàng
+                if (customer == null)
                 {
-                    repData = await ResponseSucceeded();
+                    repData.message = "Customer not found.";
+                    return Ok(repData);
                 }
 
-                repData.data = new { KhachHang = khachHang };
+                // Cập nhật phản hồi thành công
+                repData = await ResponseSucceeded();
+                repData.data = customer;
+
                 return Ok(repData);
             }
             catch (Exception ex)
