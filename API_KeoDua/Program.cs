@@ -6,6 +6,7 @@ using log4net.Config;
 using log4net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using API_KeoDua.Services.VnPAY;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -108,6 +109,12 @@ builder.Services.AddScoped<IPhieuGiaoHangReponsitory, PhieuGiaoHangReponsitory>(
 builder.Services.AddScoped<IChuongTrinhKhuyenMaiReponsitory, ChuongTrinhKhuyenMaiReponsitory>();
 builder.Services.AddScoped<IChiTietCT_KhuyenMaiReponsitory, ChiTietCT_KhuyenMaiReponsitory>();
 builder.Services.AddScoped<IPhieuHuyDonReponsitory, PhieuHuyDonReponsitory>();
+builder.Services.AddScoped<IVnPayService, VnPAYService>();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
 var app = builder.Build();
 
 // Use CORS

@@ -74,7 +74,7 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        public async Task<PhieuHuyDon> GetAllShippingNoteCancelByID(Guid? maPhieuHuy)
+        public async Task<object> GetShippingNoteCancelByID(Guid? maPhieuHuy)
         {
             try
             {
@@ -88,17 +88,39 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 // Câu lệnh SQL để lấy dữ liệu
                 string sqlQuery = $@"
-                    SELECT * 
-                    FROM tbl_PhieuHuyDon 
-                    {sqlWhere}";
+                SELECT p.*, 
+                       pg.NgayGiao, pg.MaNV,
+                       nv.TenNV,
+                       kh.MaKhachHang, kh.TenKhachHang
+                FROM tbl_PhieuHuyDon p
+                INNER JOIN tbl_PhieuGiaoHang pg ON p.MaPhieuGiao = pg.MaPhieuGiao
+                INNER JOIN tbl_ThongTinGiaoHang tgh ON pg.MaThongTin = tgh.MaThongTin
+                INNER JOIN tbl_KhachHang kh ON tgh.MaKhachHang = kh.MaKhachHang
+                LEFT JOIN tbl_NhanVien nv ON pg.MaNV = nv.MaNV
+                {sqlWhere}";
 
                 using (var connection = this.phieuHuyDonConText.CreateConnection())
                 {
-                    // Sử dụng QuerySingleOrDefaultAsync để lấy một bản ghi duy nhất
-                    var result = await connection.QuerySingleOrDefaultAsync<PhieuHuyDon>(sqlQuery, param);
+                    // Thực hiện truy vấn
+                    var result = await connection.QueryAsync<dynamic>(sqlQuery, param);
 
-                    // Trả về kết quả tìm được (hoặc null nếu không tìm thấy)
-                    return result;
+                    // Nhóm kết quả theo MaPhieuGiao và chọn các trường cần thiết
+                    var groupedResult = result
+                        .GroupBy(r => r.MaPhieuGiao)
+                        .Select(g => new
+                        {
+                            MaPhieuHuy = g.First().MaPhieuHuy,
+                            NgayHuy = g.First().NgayHuy,
+                            LyDo = g.First().LyDo,
+                            MaPhieuGiao = g.First(). MaPhieuGiao,
+                            NgayGiao = g.First().NgayGiao,
+                            MaNV = g.First().MaNV,
+                            TenNV = g.First().TenNV,
+                            MaKhachHang = g.First().MaKhachHang,
+                            TenKhachHang = g.First().TenKhachHang
+                        }).FirstOrDefault();
+
+                    return groupedResult;
                 }
             }
             catch (Exception ex)
@@ -107,6 +129,66 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while fetching shipping note by ID", ex);
             }
         }
+
+        public async Task<bool> UpdateShippingNoteCancel(Guid maPhieuHuy, Guid? maPhieuGiao)
+        {
+            try
+            {
+                string sqlQuery = "UPDATE tbl_PhieuHuyDon SET MaPhieuGiao = @MaPhieuGiao WHERE MaPhieuHuy = @MaPhieuHuy";
+
+                int rowsAffected = await this.phieuHuyDonConText.Database.ExecuteSqlRawAsync(sqlQuery,
+                    new SqlParameter("@MaPhieuGiao", maPhieuGiao ?? (object)DBNull.Value),
+                    new SqlParameter("@MaPhieuHuy", maPhieuHuy));
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating shipping note", ex);
+            }
+        }
+
+        public async Task<bool> AddShippingNoteCancel(PhieuHuyDon phieuHuyDon)
+        {
+            try
+            {
+                await this.phieuHuyDonConText.tbl_PhieuHuyDon.AddAsync(phieuHuyDon);
+                await this.phieuHuyDonConText.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> DeleteShippingNoteCancel(Guid maPhieuHuy)
+        {
+            try
+            {
+                // Đảm bảo rằng bạn sử dụng đúng tham số SqlParameter
+                var sqlQuery = "DELETE FROM tbl_PhieuHuyDon WHERE MaPhieuHuy = @maPhieuHuy";
+
+                // Khai báo tham số SqlParameter cho đúng
+                var result = await this.phieuHuyDonConText.Database.ExecuteSqlRawAsync(
+                    sqlQuery,
+                    new SqlParameter("@maPhieuHuy", maPhieuHuy) // Chắc chắn tham số này đúng
+                );
+
+                // Kiểm tra số lượng bản ghi bị xóa
+                if (result > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while deleting the shipping note cancel", ex);
+            }
+        }
+
+
 
 
     }
