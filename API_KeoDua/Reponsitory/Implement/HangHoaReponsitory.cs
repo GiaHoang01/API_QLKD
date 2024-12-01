@@ -301,6 +301,35 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("Có lỗi xảy ra khi lấy tên hàng hóa.", ex);
             }
         }
+        public async Task<decimal> getGiaBan_withByMaHangHoa(Guid maHangHoa)
+        {
+            try
+            {
+                string sqlQuery = @"SELECT 
+                    g.GiaBan
+                FROM tbl_HangHoa h
+                INNER JOIN (
+                    SELECT MaHangHoa, MAX(NgayCapNhatGia) AS MaxNgayCapNhatGia
+                    FROM tbl_LichSuGia
+                    GROUP BY MaHangHoa
+                ) gMax
+                ON h.MaHangHoa = gMax.MaHangHoa
+                INNER JOIN tbl_LichSuGia g
+                ON g.MaHangHoa = gMax.MaHangHoa AND g.NgayCapNhatGia = gMax.MaxNgayCapNhatGia WHERE h.MaHangHoa = @MaHangHoa";
+                var param = new DynamicParameters();
+                param.Add("@MaHangHoa", maHangHoa);
 
+                using (var connection = this.hangHoaContext.CreateConnection())
+                {
+                    decimal giaBan= await connection.QueryFirstOrDefaultAsync<decimal>(sqlQuery, param);
+                    return giaBan;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log hoặc xử lý ngoại lệ
+                throw new Exception("Có lỗi xảy ra khi lấy tên hàng hóa.", ex);
+            }
+        }
     }
 }

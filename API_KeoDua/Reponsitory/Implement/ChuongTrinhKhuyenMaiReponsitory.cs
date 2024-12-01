@@ -75,7 +75,7 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
         
-        public async Task<(ChuongTrinhKhuyenMai chuongTrinhKhuyenMai, List<ChiTietCT_KhuyenMai> chiTietKhuyenMaiList)> GetPromotion_ByID(Guid? maKhuyenMai)
+        public async Task<(ChuongTrinhKhuyenMai chuongTrinhKhuyenMai, List<ChiTietCT_KhuyenMai> chiTietKhuyenMai)> GetPromotion_ByID(Guid? maKhuyenMai)
         {
             try
             {
@@ -165,7 +165,6 @@ namespace API_KeoDua.Reponsitory.Implement
                     foreach (var detail in chiTietKhuyenMaiList)
                     {
                         detail.MaKhuyenMai = (Guid)chuongTrinhKhuyenMai.MaKhuyenMai;
-                        detail.NgayBD = DateTime.Today;
                         chiTietCT_KhuyenMaiContext.tbl_ChiTietCT_KhuyenMai.Add(detail);
                     }
                     await chiTietCT_KhuyenMaiContext.SaveChangesAsync();
@@ -203,7 +202,7 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 // Thực thi stored procedure xóa chi tiết phiếu nhập
                 await chuongTrinhKhuyenMaiContext.Database.ExecuteSqlRawAsync(
-                    "EXEC DeletePurchaseOrderRequest @MaKhuyenMai", parameters);
+                    "EXEC DeletePromotion @MaKhuyenMai", parameters);
 
                 // Commit transaction sau khi thực hiện thành công
                 await transaction.CommitAsync();

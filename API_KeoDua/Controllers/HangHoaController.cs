@@ -284,6 +284,34 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------Begin getTenHangHoa_withByMaHangHoa-------");
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> getGiaBan_withByMaHangHoa([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Begin getGiaBan_withByMaHangHoa-------");
 
+                ResponseModel repData = await ResponseFail();
+                Guid maHangHoa = Guid.Parse(dicData["MaHangHoa"].ToString());
+                decimal giaBan = await this.hangHoaReponsitory.getGiaBan_withByMaHangHoa(maHangHoa);
+                repData = await ResponseSucceeded();
+                repData.data = new { GiaBan = giaBan };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------Begin getGiaBan_withByMaHangHoa-------");
+            }
+        }
     }
 }
