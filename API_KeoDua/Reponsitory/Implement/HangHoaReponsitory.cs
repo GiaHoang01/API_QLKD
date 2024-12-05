@@ -39,35 +39,29 @@ namespace API_KeoDua.Reponsitory.Implement
                 string sqlQuery = $@"
                 SELECT COUNT(1) 
                 FROM tbl_HangHoa h
-                INNER JOIN (
-                    SELECT MaHangHoa, MAX(NgayCapNhatGia) AS MaxNgayCapNhatGia
-                    FROM tbl_LichSuGia
-                    GROUP BY MaHangHoa
-                ) gMax
-                ON h.MaHangHoa = gMax.MaHangHoa
-                INNER JOIN tbl_LichSuGia g
-                ON g.MaHangHoa = gMax.MaHangHoa AND g.NgayCapNhatGia = gMax.MaxNgayCapNhatGia
                 WHERE 1=1 {sqlWhere};
 
-                SELECT 
+                WITH LatestPrice AS (
+                    SELECT 
+                        g.MaHangHoa, 
+                        g.GiaBan, 
+                        g.NgayCapNhatGia, 
+                        g.GhiChu,
+                        ROW_NUMBER() OVER (PARTITION BY g.MaHangHoa ORDER BY g.NgayCapNhatGia DESC) AS RowNum
+                    FROM tbl_LichSuGia g
+                )
+                SELECT DISTINCT
                     h.MaHangHoa,
                     h.TenHangHoa,
                     h.HinhAnh,
-                    g.GiaBan,
+                    lp.GiaBan,
                     h.MoTa,
                     h.MaLoai,
-                    g.NgayCapNhatGia,
-                    g.GhiChu
+                    lp.NgayCapNhatGia,
+                    lp.GhiChu
                 FROM tbl_HangHoa h
-                INNER JOIN (
-                    SELECT MaHangHoa, MAX(NgayCapNhatGia) AS MaxNgayCapNhatGia
-                    FROM tbl_LichSuGia
-                    GROUP BY MaHangHoa
-                ) gMax
-                ON h.MaHangHoa = gMax.MaHangHoa
-                INNER JOIN tbl_LichSuGia g
-                ON g.MaHangHoa = gMax.MaHangHoa AND g.NgayCapNhatGia = gMax.MaxNgayCapNhatGia
-                WHERE 1=1 {sqlWhere}
+                INNER JOIN LatestPrice lp ON h.MaHangHoa = lp.MaHangHoa
+                WHERE lp.RowNum = 1 AND 1=1  {sqlWhere}
                 ORDER BY h.TenHangHoa ASC
                 OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
 
@@ -90,6 +84,99 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while fetching products", ex);
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <param name="startRow"></param>
+        /// <param name="maxRows"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<List<HangHoaLichSuGia>> GetAllProductInStock(string searchString, int startRow, int maxRows)
+        {
+            try
+            {
+                string sqlWhere = "";
+                var param = new DynamicParameters();
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    sqlWhere += " AND h.TenHangHoa COLLATE SQL_Latin1_General_CP1_CI_AS LIKE @SearchString";
+                    param.Add("@SearchString", $"%{searchString}%");
+                }
+
+                // Sử dụng GROUP BY để loại bỏ trùng lặp
+                string sqlQuery = $@"
+                SELECT DISTINCT COUNT(1) 
+                FROM tbl_HangHoa h
+                WHERE 1=1 {sqlWhere};
+
+                WITH LatestPrice AS (
+                    SELECT 
+                        g.MaHangHoa, 
+                        g.GiaBan, 
+                        g.NgayCapNhatGia, 
+                        g.GhiChu,
+                        ROW_NUMBER() OVER (PARTITION BY g.MaHangHoa ORDER BY g.NgayCapNhatGia DESC) AS RowNum
+                    FROM tbl_LichSuGia g
+                )
+                SELECT DISTINCT
+                    h.MaHangHoa,
+                    h.TenHangHoa,
+                    h.HinhAnh,
+                    lp.GiaBan,
+                    h.MoTa,
+                    h.MaLoai,
+                    lp.NgayCapNhatGia,
+                    lp.GhiChu
+                FROM tbl_HangHoa h
+                INNER JOIN LatestPrice lp ON h.MaHangHoa = lp.MaHangHoa
+                WHERE lp.RowNum = 1 AND 1=1 {sqlWhere}
+                ORDER BY h.TenHangHoa ASC
+                OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
+
+                param.Add("@StartRow", startRow);
+                param.Add("@MaxRows", maxRows);
+
+                using (var connection = this.hangHoaContext.CreateConnection())
+                {
+                    using (var multi = await connection.QueryMultipleAsync(sqlQuery, param))
+                    {
+                        // Lấy tổng số hàng từ truy vấn đầu tiên
+                        this.TotalRows = (await multi.ReadAsync<int>()).Single();
+                        // Lấy danh sách hàng hóa từ truy vấn thứ hai
+                        var hangHoaList = (await multi.ReadAsync<HangHoaLichSuGia>()).ToList();
+
+                        // Lấy số lượng tồn bằng cách gọi stored procedure
+                        foreach (var hangHoa in hangHoaList)
+                        {
+                            var soLuongTonParam = new DynamicParameters();
+                            soLuongTonParam.Add("@MaHangHoa", hangHoa.MaHangHoa);
+                            soLuongTonParam.Add("@SoLuongTon", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                            await connection.ExecuteAsync("sp_GetSoLuongTon", soLuongTonParam, commandType: CommandType.StoredProcedure);
+
+                            // Gán số lượng tồn vào đối tượng hàng hóa
+                            hangHoa.SoLuongTon = soLuongTonParam.Get<int>("@SoLuongTon");
+                        }
+
+                        return hangHoaList;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while fetching products", ex);
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newProduct"></param>
+        /// <param name="giaBan"></param>
+        /// <param name="ghiChu"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task AddProduct(HangHoa newProduct, decimal giaBan, string? ghiChu)
         {
             using var transaction = await hangHoaContext.Database.BeginTransactionAsync();

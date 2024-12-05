@@ -7,6 +7,7 @@ namespace API_KeoDua.Reponsitory.Interface
     {
         public int TotalRows { get; set; }
         public Task<List<HangHoaLichSuGia>> GetAllProduct(string searchString, int startRow, int maxRows);
+        public Task<List<HangHoaLichSuGia>> GetAllProductInStock(string searchString, int startRow, int maxRows);
         public Task AddProduct(HangHoa newProduct, decimal giaBan, string? ghiChu);
         public Task<bool> UpdateProduct(HangHoa updatedProduct, decimal giaBan, string? ghiChu);
         public Task DeleteProduct(Guid MaHangHoa);
