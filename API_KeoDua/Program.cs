@@ -57,6 +57,9 @@ builder.Services.AddDbContext<CT_PhieuNhapContext>(options =>
 builder.Services.AddDbContext<HangHoaContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
  ));
+    builder.Services.AddDbContext<BackupRestoreContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
 builder.Services.AddDbContext<HoaDonBanHangContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
  ));

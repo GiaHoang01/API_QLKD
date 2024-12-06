@@ -40,7 +40,6 @@ namespace API_KeoDua.Reponsitory.Implement
                     return null;
                 }
 
-                // Fetch employee info from database using NhânViênContext
                 var employee = await _nhanVienContext.tbl_NhanVien
                     .FirstOrDefaultAsync(nv => nv.TenTaiKhoan == account.TenTaiKhoan);
 

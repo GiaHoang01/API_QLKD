@@ -18,6 +18,7 @@ namespace API_KeoDua.Reponsitory.Interface
         public Task<int> TotalCompletedRecords();
         public Task<decimal> TotalPurchaseCompletedAmount();
         public Task<decimal> TotalExpensesByYear(int year);
+        public Task<bool> updateStatusConfirm(PhieuNhapHang phieuNhapHang);
     }
 
 }

@@ -388,7 +388,6 @@ namespace API_KeoDua.Controllers
             }
         }
 
-
         /// <summary>
         /// Hàm lấy tổng chi từ đơn đặt hàng
         /// </summary>
@@ -457,6 +456,33 @@ namespace API_KeoDua.Controllers
             finally
             {
                 logger.Debug("-------End getTotalExpensesByYear-------");
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveChangeStatusPurchaseOrder([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Start SaveChangeStatusPurchaseOrder-------");
+                ResponseModel repData = await ResponseFail();
+                PhieuNhapHang phieuNhapHang = JsonConvert.DeserializeObject<PhieuNhapHang>(dicData["PurchaseOrder"].ToString());
+                await this.phieuNhapHangReponsitory.updateStatusConfirm(phieuNhapHang);
+                repData = await ResponseSucceeded();
+                repData.data = new { };
+
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và trả về thông báo lỗi
+                logger.Error("Error in SavePurchaseOrder", ex);
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End SaveChangeStatusPurchaseOrder-------");
             }
         }
 
