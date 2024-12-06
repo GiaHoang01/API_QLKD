@@ -191,7 +191,7 @@ namespace API_KeoDua.Reponsitory.Implement
                         n.TenNV, n.MaNV,
                         h.MaHoaDon, h.NgayBan, h.TongTriGia, h.GhiChu, h.MaHinhThuc,
                         k.MaKhachHang, k.TenKhachHang, k.MaLoaiKH,
-                        t.MaThongTin, t.SoNha, t.SDT, t.MaPhuong, t.MaQuan, t.ThanhPho, t.DiaChi, t.MacDinh
+                        t.MaThongTin, t.SoNha, t.SDT, t.ThanhPho, t.DiaChi, t.MacDinh
                     FROM tbl_PhieuGiaoHang p
                     LEFT JOIN tbl_HoaDonBanHang h ON p.MaHoaDon = h.MaHoaDon
                     LEFT JOIN tbl_KhachHang k ON h.MaKhachHang = k.MaKhachHang

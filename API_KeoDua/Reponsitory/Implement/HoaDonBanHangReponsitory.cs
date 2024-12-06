@@ -559,16 +559,45 @@ namespace API_KeoDua.Reponsitory.Implement
             try
             {
                 string sqlUpdate = @"
-         UPDATE tbl_HoaDonBanHang
-         SET TrangThai = N'Đã hủy do khách đổi ý',
-             NgayBan = GETDATE(),
-             MaNV = @MaNV
-         WHERE MaHoaDon = @MaHoaDon AND TrangThai = N'Chờ xác nhận' AND GhiChu LIKE N'%Đã hủy do khách đổi ý%'"; // Điều kiện mặc định
+                 UPDATE tbl_HoaDonBanHang
+                 SET TrangThai = N'Đã hủy do khách đổi ý',
+                     NgayBan = GETDATE(),
+                     MaNV = @MaNV
+                 WHERE MaHoaDon = @MaHoaDon AND TrangThai = N'Chờ xác nhận' AND GhiChu LIKE N'%Đã hủy do khách đổi ý%'"; // Điều kiện mặc định
                 var param = new DynamicParameters();
                 param.Add("@MaHoaDon", maHoaDon);
                 param.Add("@MaNV", maNV);
 
 
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    int rowsAffected = await connection.ExecuteAsync(sqlUpdate, param);
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ghi log hoặc xử lý ngoại lệ
+                throw new Exception("An error occurred while fetching saleinvoice", ex);
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maHoaDon"></param>
+        /// <param name="maNV"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<bool> ConfirmSaleInvoiceFinish(Guid maHoaDon)
+        {
+            try
+            {
+                string sqlUpdate = @"
+                UPDATE tbl_HoaDonBanHang
+                SET TrangThai = N'Hoàn thành',
+                WHERE MaHoaDon = @MaHoaDon AND TrangThai = N'Đang giao';"; // Điều kiện mặc định
+                var param = new DynamicParameters();
+                param.Add("@MaHoaDon", maHoaDon);
                 using (var connection = this.hoaDonBanHangContext.CreateConnection())
                 {
                     int rowsAffected = await connection.ExecuteAsync(sqlUpdate, param);

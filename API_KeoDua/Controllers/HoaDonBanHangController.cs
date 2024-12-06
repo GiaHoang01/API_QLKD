@@ -361,7 +361,45 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------End DeletePurchaseOrder_Request-------");
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> ConfirmSaleInvoiceFinish([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Begin ConfirmSaleInvoiceFinish-------");
+                ResponseModel repData = await ResponseFail();
+                Guid saleId = Guid.Parse(dicData["MaHoaDon"].ToString());
+                if (await (this.hoaDonBanHangReponsitory.ConfirmSaleInvoiceFinish(saleId)))
+                {
+                    repData = await ResponseSucceeded();
+                }
 
+                repData.data = new { };
+                if (repData.status == 1)
+                {
+                    repData.message = "Đã cập nhật thành công";
+                }
+                else
+                {
+                    repData.message = "Đã cập nhật thất bại hoặc đã cập nhật rồi";
+                }
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End ConfirmSaleInvoiceFinish-------");
+            }
+        }
         /// <summary>
         /// QuickSearch hóa đơn mới tạo
         /// </summary>
@@ -379,7 +417,7 @@ namespace API_KeoDua.Controllers
 
                 var resultData = await this.hoaDonBanHangReponsitory.QuickSearchSaleInvoiceNewCreated(searchString);
 
-                if (resultData != null && resultData.Any())
+                if (resultData != null)
                 {
                     repData = await ResponseSucceeded();
                     repData.data = new { HoaDonKhachHang = resultData }; // Trả dữ liệu kết hợp
