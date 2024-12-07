@@ -83,15 +83,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 };
 
 
-                string storedProcedure = nhanVienTaiKhoan.MaNhomQuyen switch
-                {
-                    "NQ00000001" => "EXEC AddAccountQuanLi @Username, @Password, @Email, @TenNhanVien, @SoDT, @DiaChi, @GioiTinh, @NgaySinh",
-                    "NQ00000002" => "EXEC AddAccountNhanVienGiaoHang @Username, @Password, @Email, @TenNhanVien, @SoDT, @DiaChi, @GioiTinh, @NgaySinh",
-                    "NQ00000003" => "EXEC AddAccountNhanVienKho @Username, @Password, @Email, @TenNhanVien, @SoDT, @DiaChi, @GioiTinh, @NgaySinh",
-                    "NQ00000004" => "EXEC AddAccountNhanVienBanHang @Username, @Password, @Email, @TenNhanVien, @SoDT, @DiaChi, @GioiTinh, @NgaySinh",
-                    _ => throw new ArgumentException("Invalid role (MaNhomQuyen)."),
-                };
-
+                string storedProcedure = "EXEC AddAccount @Username, @Password, @Email, @TenNhanVien, @SoDT, @DiaChi, @GioiTinh, @NgaySinh";
                 // Execute the stored procedure
                 await nhanVienContext.Database.ExecuteSqlRawAsync(storedProcedure, parameters);
 
