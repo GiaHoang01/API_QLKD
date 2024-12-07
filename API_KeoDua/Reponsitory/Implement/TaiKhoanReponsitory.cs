@@ -4,21 +4,23 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
-
+using API_KeoDua.Services;
 namespace API_KeoDua.Reponsitory.Implement
 {
     public class TaiKhoanReponsitory : ITaiKhoanReponsitory
     {
+        private readonly IConnectionManager _connectionManager;
         private readonly TaiKhoanContext _context;
         private readonly NhanVienContext _nhanVienContext;
         private readonly NhomQuyenContext nhomQuyenContext;
         private readonly QuyenContext quyenContext;
-        public TaiKhoanReponsitory(TaiKhoanContext context, NhanVienContext nhanVienContext, NhomQuyenContext nhomQuyenContext, QuyenContext quyenContext)
+        public TaiKhoanReponsitory(TaiKhoanContext context, NhanVienContext nhanVienContext, NhomQuyenContext nhomQuyenContext, QuyenContext quyenContext, IConnectionManager connectionManager)
         {
             _context = context;
             _nhanVienContext = nhanVienContext;
             this.nhomQuyenContext = nhomQuyenContext;
             this.quyenContext = quyenContext;
+            _connectionManager = connectionManager;
         }
         public int TotalRows { get; set; }
 
@@ -42,7 +44,7 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 var employee = await _nhanVienContext.tbl_NhanVien
                     .FirstOrDefaultAsync(nv => nv.TenTaiKhoan == account.TenTaiKhoan);
-
+               
                 return employee?.TenNV ?? null;
             }
             catch (Exception ex)

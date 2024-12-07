@@ -3,6 +3,7 @@ using API_KeoDua.Data;
 using API_KeoDua.Models;
 using API_KeoDua.Reponsitory.Interface;
 using API_KeoDua;
+using API_KeoDua.Services;
 
 namespace API_KeoDua.Controllers
 {
@@ -12,10 +13,13 @@ namespace API_KeoDua.Controllers
     {
         private readonly TaiKhoanContext _context;
         private readonly ITaiKhoanReponsitory taiKhoanReponsitory;
-        public TaiKhoanController(TaiKhoanContext context, ITaiKhoanReponsitory taiKhoanReponsitory)
+        private readonly IConnectionManager _connectionManager;
+
+        public TaiKhoanController(TaiKhoanContext context, ITaiKhoanReponsitory taiKhoanReponsitory, IConnectionManager connectionManager)
         {
             _context = context;
             this.taiKhoanReponsitory = taiKhoanReponsitory;
+            _connectionManager = connectionManager;
         }
         /// <summary>
         /// Hàm kiem tra tất cả các tài khoản co ton tai khong
@@ -65,7 +69,7 @@ namespace API_KeoDua.Controllers
                 ResponseModel repData = await ResponseFail();
                 string userName = dicData["UserName"].ToString();
                 string password = dicData["PassWord"].ToString();
-
+                _connectionManager.SetConnectionString(userName, password);
                 string tendn = await this.taiKhoanReponsitory.login(userName, password);
 
                 if (tendn != null)
