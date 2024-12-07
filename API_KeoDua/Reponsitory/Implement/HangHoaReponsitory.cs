@@ -318,6 +318,7 @@ namespace API_KeoDua.Reponsitory.Implement
         {
             try
             {
+                
                 DynamicParameters param = new DynamicParameters();
                 var sqlWhere = new StringBuilder();
                 if (!string.IsNullOrEmpty(searchString))
@@ -351,8 +352,21 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 using (var connection = this.hangHoaContext.CreateConnection())
                 {
-                    var resultData = (await connection.QueryAsync<HangHoaLichSuGia>(sqlQuery, param)).ToList();
-                    return resultData;
+                    var hangHoaList = (await connection.QueryAsync<HangHoaLichSuGia>(sqlQuery, param)).ToList();
+
+                    foreach (var hangHoa in hangHoaList)
+                    {
+                        var soLuongTonParam = new DynamicParameters();
+                        soLuongTonParam.Add("@MaHangHoa", hangHoa.MaHangHoa);
+                        soLuongTonParam.Add("@SoLuongTon", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                        await connection.ExecuteAsync("sp_GetSoLuongTon", soLuongTonParam, commandType: CommandType.StoredProcedure);
+
+                        // Gán số lượng tồn vào đối tượng hàng hóa
+                        hangHoa.SoLuongTon = soLuongTonParam.Get<int>("@SoLuongTon");
+                    }
+
+                    return hangHoaList;
                 }
             }
             catch (Exception ex)

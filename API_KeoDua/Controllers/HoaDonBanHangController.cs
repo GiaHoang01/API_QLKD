@@ -401,6 +401,45 @@ namespace API_KeoDua.Controllers
             }
         }
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> ConfirmCancelSaleInvoice([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Begin ConfirmCancelSaleInvoice-------");
+                ResponseModel repData = await ResponseFail();
+                Guid saleId = Guid.Parse(dicData["MaHoaDon"].ToString());
+                if (await (this.hoaDonBanHangReponsitory.ConfirmCancelSaleInvoice(saleId)))
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { };
+                if (repData.status == 1)
+                {
+                    repData.message = "Đã cập nhật thành công";
+                }
+                else
+                {
+                    repData.message = "Đã cập nhật thất bại hoặc đã cập nhật rồi";
+                }
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End ConfirmCancelSaleInvoice-------");
+            }
+        }
+        /// <summary>
         /// QuickSearch hóa đơn mới tạo
         /// </summary>
         /// <param name="dicData"></param>
