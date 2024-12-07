@@ -1,9 +1,8 @@
 ﻿using API_KeoDua.Data;
-using API_KeoDua.Models;
 using API_KeoDua.Reponsitory.Interface;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace API_KeoDua.Reponsitory.Implement
@@ -34,7 +33,8 @@ namespace API_KeoDua.Reponsitory.Implement
             try
             {
                 // Kiểm tra tài khoản trong context mới
-                var account = await _context.TaiKhoan.FirstOrDefaultAsync(acc => acc.TenTaiKhoan == user && acc.MatKhau == pass);
+                pass=ComputeMd5Hash(pass);
+                var account = await _context.TaiKhoan.FirstOrDefaultAsync(acc => acc.TenTaiKhoan == user && acc.MatKhau== pass);
                 if (account == null)
                 {
                     return null;
@@ -100,6 +100,45 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception($"An error occurred while fetching permissions for user: {userName}", ex);
             }
         }
+
+        public async Task<List<string>> GetAccountName()
+        {
+            try
+            {
+                string sqlQuery = "SELECT TenTaiKhoan FROM tbl_TaiKhoan ORDER BY TenTaiKhoan";
+
+                using (var connection = this._context.CreateConnection())
+                {
+                    // Thực thi truy vấn và trả về danh sách tên nhân viên
+                    var result = (await connection.QueryAsync<string>(sqlQuery)).ToList();
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ và ghi log
+                throw new Exception("An error occurred while fetching employee names.", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// Tạo hash bằng thuật toán MD5.
+        /// </summary>
+        public static string ComputeMd5Hash(string rawData)
+        {
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+
 
     }
 }

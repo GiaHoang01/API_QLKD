@@ -2,6 +2,7 @@
 using API_KeoDua.Reponsitory.Interface;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Security.Policy;
 using System.Text;
 namespace API_KeoDua.Reponsitory.Implement
@@ -46,7 +47,7 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        public async Task<List<NhomQuyen>> GetNhomQuyenByTenNV(string tenNV)
+        public async Task<List<NhomQuyen>> GetNhomQuyen()
         {
             try
             {
@@ -54,19 +55,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 string sqlQuery;
 
                 // Kiểm tra nếu tenNV là null hoặc rỗng
-                if (string.IsNullOrEmpty(tenNV))
-                {
-                    sqlQuery = @" SELECT MaNhomQuyen, TenNhomQuyen FROM tbl_NhomQuyen nq WITH (NOLOCK)";
-                }
-                else
-                {
-                    sqlQuery = @"SELECT nq.MaNhomQuyen,  nq.TenNhomQuyen
-                    FROM tbl_NhomQuyen nq
-                    JOIN tbl_TaiKhoan tk ON tk.MaNhomQuyen = nq.MaNhomQuyen
-                    JOIN tbl_NhanVien nv ON tk.TenTaiKhoan = nv.TenTaiKhoan
-                    WHERE nv.TenNV = @TenNV";
-                    param.Add("@TenNV", tenNV);
-                }
+                sqlQuery = @" SELECT MaNhomQuyen, TenNhomQuyen FROM tbl_NhomQuyen nq WITH (NOLOCK)";
 
                 using (var connection = this.nhomQuyenContext.CreateConnection())
                 {
@@ -80,32 +69,33 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        public async Task<List<Quyen>> GetQuyenByTenNV(string tenNV)
+        public async Task<List<Quyen>> GetQuyenByTenNhomQuyen(string TenNQ)
         {
             try
             {
                 DynamicParameters param = new DynamicParameters();
                 string sqlQuery;
 
-                // Nếu TenNV là null hoặc rỗng, lấy tất cả quyền
-                if (string.IsNullOrEmpty(tenNV))
+
+                if (string.IsNullOrEmpty(TenNQ))
                 {
-                    sqlQuery = @"SELECT MaQuyen, TenQuyen FROM tbl_Quyen q WITH (NOLOCK)";
+                    // Nếu TenNQ trống thì select tất cả các quyền
+                    sqlQuery = @"
+                SELECT q.MaQuyen, q.TenQuyen
+                FROM tbl_Quyen q";
                 }
                 else
                 {
-                    // Truy vấn lấy quyền theo tên nhân viên (TenNV)
+                    // Nếu TenNQ có giá trị, select quyền theo tên nhóm quyền
                     sqlQuery = @"
-                    SELECT q.MaQuyen, q.TenQuyen
-                    FROM tbl_Quyen q
-                    JOIN tbl_CapQuyen cq ON q.MaQuyen = cq.MaQuyen
-                    JOIN tbl_NhomQuyen nq ON cq.MaNhomQuyen = nq.MaNhomQuyen
-                    JOIN tbl_TaiKhoan tk ON nq.MaNhomQuyen = tk.MaNhomQuyen
-                    JOIN tbl_NhanVien nv ON tk.TenTaiKhoan = nv.TenTaiKhoan
-                    WHERE nv.TenNV = @TenNV";
-
-                    param.Add("@TenNV", tenNV);
+                SELECT q.MaQuyen, q.TenQuyen
+                FROM tbl_Quyen q
+                JOIN tbl_CapQuyen cq ON q.MaQuyen = cq.MaQuyen
+                JOIN tbl_NhomQuyen nq ON cq.MaNhomQuyen = nq.MaNhomQuyen
+                WHERE nq.TenNhomQuyen = @TenNQ";
+                    param.Add("@TenNQ", TenNQ);  // Thêm tham số TenNQ vào DynamicParameters
                 }
+
 
                 using (var connection = this.quyenContext.CreateConnection())
                 {
@@ -116,6 +106,31 @@ namespace API_KeoDua.Reponsitory.Implement
             catch (Exception ex)
             {
                 throw new InvalidOperationException("Có lỗi xảy ra khi lấy danh sách quyền.", ex);
+            }
+        }
+
+        public async Task UpdateRole(string tenTaiKhoan, string tenNhomQuyen)
+        {
+            try
+            {
+                // Tạo đối tượng DynamicParameters để truyền tham số cho stored procedure
+                DynamicParameters param = new DynamicParameters();
+                param.Add("@RoleNames", tenNhomQuyen);  // Thêm tham số @RoleNames
+                param.Add("@UserName", tenTaiKhoan);    // Thêm tham số @UserName
+
+                string sqlQuery = "[dbo].[ManagePermissionsBasedOnRoles]";  // Stored procedure cần gọi
+
+                // Sử dụng Dapper để thực thi stored procedure
+                using (var connection = this.quyenContext.CreateConnection())
+                {
+                    // Thực thi stored procedure với các tham số đã truyền vào
+                    await connection.ExecuteAsync(sqlQuery, param, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi nếu có
+                throw new InvalidOperationException("Có lỗi xảy ra khi thực thi stored procedure.", ex);
             }
         }
 

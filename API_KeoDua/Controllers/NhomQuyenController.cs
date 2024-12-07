@@ -60,15 +60,14 @@ namespace API_KeoDua.Controllers
         /// <param name="dicData"></param>
         /// <returns>Employees</returns>
         [HttpPost]
-        public async Task<ActionResult> GetNhomQuyenByTenNV([FromBody] Dictionary<string, object> dicData)
+        public async Task<ActionResult> GetNhomQuyen([FromBody] Dictionary<string, object> dicData)
         {
             try
             {
-                logger.Debug("-------End GetNhomQuyenByTenNV-------");
+                logger.Debug("-------End GetNhomQuyen-------");
                 ResponseModel repData = await ResponseFail();
 
-                string tenNV = dicData["TenNV"].ToString();
-                List<NhomQuyen> nhomQuyens = await this.nhomQuyenRepository.GetNhomQuyenByTenNV(tenNV);
+                List<NhomQuyen> nhomQuyens = await this.nhomQuyenRepository.GetNhomQuyen();
                 repData = await ResponseSucceeded();
                 repData.data = new { nhomQuyens = nhomQuyens };
                 return Ok(repData);
@@ -80,7 +79,7 @@ namespace API_KeoDua.Controllers
             }
             finally
             {
-                logger.Debug("-------End getAllNameEmployees-------");
+                logger.Debug("-------End GetNhomQuyen-------");
             }
         }
 
@@ -90,15 +89,15 @@ namespace API_KeoDua.Controllers
         /// <param name="dicData"></param>
         /// <returns>Employees</returns>
         [HttpPost]
-        public async Task<ActionResult> GetQuyenByTenNV([FromBody] Dictionary<string, object> dicData)
+        public async Task<ActionResult> GetQuyenByTenNhomQuyen([FromBody] Dictionary<string, object> dicData)
         {
             try
             {
-                logger.Debug("-------End GetQuyenByTenNV-------");
+                logger.Debug("-------End GetQuyenByTenNhomQuyen-------");
                 ResponseModel repData = await ResponseFail();
 
-                string tenNV = dicData["TenNV"].ToString();
-                List<Quyen> quyens = await this.nhomQuyenRepository.GetQuyenByTenNV(tenNV);
+                string TenNQ = dicData["TenNQ"].ToString();
+                List<Quyen> quyens = await this.nhomQuyenRepository.GetQuyenByTenNhomQuyen(TenNQ);
                 repData = await ResponseSucceeded();
                 repData.data = new { quyens = quyens };
                 return Ok(repData);
@@ -110,7 +109,38 @@ namespace API_KeoDua.Controllers
             }
             finally
             {
-                logger.Debug("-------End GetQuyenByTenNV-------");
+                logger.Debug("-------End GetQuyenByTenNhomQuyen-------");
+            }
+        }
+
+        /// <summary>
+        /// Hàm update quyen
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns>Employees</returns>
+        [HttpPost]
+        public async Task<ActionResult> UpdateRole([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End UpdateRole-------");
+                ResponseModel repData = await ResponseFail();
+
+                string tenNhomQuyen = dicData["TenNhomQuyen"].ToString();
+                string tenTaiKhoan = dicData["TenTaiKhoan"].ToString();
+                await this.nhomQuyenRepository.UpdateRole(tenTaiKhoan,tenNhomQuyen);
+                repData = await ResponseSucceeded();
+                repData.data = new { };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End UpdateRole-------");
             }
         }
 
