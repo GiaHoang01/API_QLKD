@@ -113,7 +113,8 @@ builder.Services.AddDbContext<PhieuHuyDonConText>((serviceProvider, options) =>
     options.UseSqlServer(serviceProvider.GetRequiredService<IConnectionManager>().ConnectionString));
 builder.Services.AddDbContext<ChiTietCT_KhuyenMaiContext>((serviceProvider, options) =>
     options.UseSqlServer(serviceProvider.GetRequiredService<IConnectionManager>().ConnectionString));
-
+builder.Services.AddDbContext<ThongTinGiaoHangContext>((serviceProvider, options) =>
+    options.UseSqlServer(serviceProvider.GetRequiredService<IConnectionManager>().ConnectionString));
 // Configure controllers and Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
