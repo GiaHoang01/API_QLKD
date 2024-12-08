@@ -481,7 +481,7 @@ namespace API_KeoDua.Reponsitory.Implement
         {
             try
             {
-                var sqlQuery = "SELECT COUNT(*) FROM tbl_HoaDonBanHang WITH (NOLOCK) WHERE TrangThai = N'Đã thanh toán';";
+                var sqlQuery = "SELECT COUNT(*) FROM tbl_HoaDonBanHang WITH (NOLOCK) WHERE GhiChu Like N'%Đã thanh toán%';";
 
                 using (var connection = this.hoaDonBanHangContext.CreateConnection())
                 {
@@ -506,7 +506,7 @@ namespace API_KeoDua.Reponsitory.Implement
             try
             {
                 // Modify the query to calculate the sum of the total value (TongTriGia) from completed invoices
-                var sqlQuery = "SELECT SUM(TongTriGia) FROM tbl_HoaDonBanHang WITH (NOLOCK) WHERE TrangThai = N'Đã thanh toán';";
+                var sqlQuery = "SELECT SUM(TongTriGia) FROM tbl_HoaDonBanHang WITH (NOLOCK) WHERE GhiChu LIKE N'%Đã thanh toán%'";
 
                 using (var connection = this.hoaDonBanHangContext.CreateConnection())
                 {
