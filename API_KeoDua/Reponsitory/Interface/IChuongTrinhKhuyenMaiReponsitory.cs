@@ -11,5 +11,6 @@ namespace API_KeoDua.Reponsitory.Interface
         public Task AddPromotion(ChuongTrinhKhuyenMai chuongTrinhKhuyenMai, List<ChiTietCT_KhuyenMai> chiTietKhuyenMaiList);
         public Task<bool> UpdatePromotion(ChuongTrinhKhuyenMai chuongTrinhKhuyenMai, List<ChiTietCT_KhuyenMai> chiTietKhuyenMaiList);
         public Task<bool> DeletePromotion(Guid maKhuyenMai);
+        public Task<decimal> GetTiLeKhuyenMai(Guid maHangHoa);
     }
 }
