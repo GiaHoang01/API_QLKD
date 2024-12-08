@@ -84,6 +84,9 @@ builder.Services.AddDbContext<PhieuGiaoHangContext>(options =>
 builder.Services.AddDbContext<PhieuHuyDonConText>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
  ));
+builder.Services.AddDbContext<ThongTinGiaoHangContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectString")
+ ));
 // Add Repositories
 builder.Services.AddScoped<ITaiKhoanReponsitory, TaiKhoanReponsitory>();
 builder.Services.AddScoped<INhanVienReponsitory, NhanVienReponsitory>();
@@ -98,6 +101,7 @@ builder.Services.AddScoped<IHinhThucThanhToanReponsitory, HinhThucThanhToanRepon
 builder.Services.AddScoped<IHoaDonBanHangReponsitory, HoaDonBanHangReponsitory>();
 builder.Services.AddScoped<IPhieuGiaoHangReponsitory, PhieuGiaoHangReponsitory>();
 builder.Services.AddScoped<IPhieuHuyDonReponsitory, PhieuHuyDonReponsitory>();
+builder.Services.AddScoped<IThongTinGiaoHangReponsitory, ThongTinGiaoHangReponsitory>();
 builder.Services.AddScoped<IVnPayService, VnPAYService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

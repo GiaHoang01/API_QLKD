@@ -12,11 +12,13 @@ namespace API_KeoDua.Reponsitory.Implement
     public class PhieuGiaoHangReponsitory : IPhieuGiaoHangReponsitory
     {
         private readonly PhieuGiaoHangContext phieuGiaoHangContext;
+        private readonly HoaDonBanHangContext hoaDonBanHangContext;
         //private readonly CT_PhieuNhapContext ct_PhieuNhapContext;
 
-        public PhieuGiaoHangReponsitory(PhieuGiaoHangContext phieuGiaoHangContext)//, CT_PhieuNhapContext ct_PhieuNhapContext)
+        public PhieuGiaoHangReponsitory(PhieuGiaoHangContext phieuGiaoHangContext, HoaDonBanHangContext hoaDonBanHangContext)//, CT_PhieuNhapContext ct_PhieuNhapContext)
         {
             this.phieuGiaoHangContext = phieuGiaoHangContext;
+            this.hoaDonBanHangContext = hoaDonBanHangContext;
             //this.ct_PhieuNhapContext = ct_PhieuNhapContext;
         }
 
@@ -295,22 +297,6 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
-        //public async Task<bool> DeleteShippingNote(Guid maPhieuGiao)
-        //{
-        //    try
-        //    {
-        //        var phieuGiaoHang = await this.phieuGiaoHangContext.tbl_PhieuGiaoHang.FirstOrDefaultAsync(x => x.MaPhieuGiao == maPhieuGiao);
-        //        if(phieuGiaoHang == null) { return false; }
-        //        this.phieuGiaoHangContext.tbl_PhieuGiaoHang.Remove(phieuGiaoHang);
-        //        await this.phieuGiaoHangContext.SaveChangesAsync();
-        //        return true;
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
-
         public async Task<bool> DeleteShippingNote(Guid maPhieuGiao)
         {
             try
@@ -339,6 +325,8 @@ namespace API_KeoDua.Reponsitory.Implement
                 var phieuGiaoHang = await this.phieuGiaoHangContext.tbl_PhieuGiaoHang
                     .FirstOrDefaultAsync(p => p.MaPhieuGiao == maPhieuGiao);
 
+                var hoaDonBanHang = await this.hoaDonBanHangContext.tbl_HoaDonBanHang
+                    .FirstOrDefaultAsync(p => p.MaHoaDon == phieuGiaoHang.MaHoaDon);
                 if (phieuGiaoHang == null)
                 {
                     throw new Exception("Phiếu giao hàng không tồn tại.");
@@ -349,6 +337,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 {
                     case 0: // Tạo mới
                         phieuGiaoHang.TrangThai = "Đang giao";
+                        hoaDonBanHang.TrangThai = "Đang giao";
                         if (maNhanVien.HasValue)
                         {
                             phieuGiaoHang.MaNV = maNhanVien; // Gán mã nhân viên nếu có

@@ -17,11 +17,17 @@ namespace API_KeoDua.Data
 
         [MaxLength(20)]
         public string Quan { get; set; }
+        [MaxLength(20)]
+        public string ThanhPho { get; set; }
+        [MaxLength(200)]
+        public string? DiaChi { get; set; }
 
         [MaxLength(10)]
         public string SDT { get; set; }
 
         public Guid MaKhachHang { get; set; }
+
+        public bool MacDinh { get; set; }
 
 
         [ForeignKey("MaKhachHang")]

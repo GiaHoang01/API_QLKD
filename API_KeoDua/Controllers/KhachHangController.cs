@@ -113,7 +113,7 @@ namespace API_KeoDua.Controllers
         {
             try
             {
-                logger.Debug("-------End AddCustomer-------");
+                logger.Debug("-------Start AddCustomer-------");
                 ResponseModel repData = await ResponseFail();
 
                 KhachHang khachHang = JsonConvert.DeserializeObject<KhachHang>(dicData["KhachHang"].ToString());
@@ -128,7 +128,7 @@ namespace API_KeoDua.Controllers
 
                 await this.khachHangReponsitory.AddCustomer(khachHang);
                 repData = await ResponseSucceeded();
-                repData.data = new { };
+                repData.data = new { maKhachHang = khachHang.MaKhachHang };
                 return Ok(repData);
             }
             catch (Exception ex)

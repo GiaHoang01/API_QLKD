@@ -34,9 +34,14 @@ namespace API_KeoDua.Reponsitory.Implement
                 }
 
                 string sqlQuery = $@"
-                                    SELECT COUNT(1) FROM tbl_KhachHang WITH (NOLOCK) {sqlWhere};
-                                    SELECT * FROM tbl_KhachHang WITH (NOLOCK) {sqlWhere}
-                                    ORDER BY TenKhachHang ASC OFFSET @StartRow ROWS FETCH NEXT @MaxRow ROWS ONLY";
+                                SELECT COUNT(1) FROM tbl_KhachHang WITH (NOLOCK) {sqlWhere};
+                                SELECT * FROM tbl_KhachHang WITH (NOLOCK) {sqlWhere}
+                                ORDER BY 
+                                    REVERSE(SUBSTRING(REVERSE(TenKhachHang), 
+                                                      1, 
+                                                      CHARINDEX(' ', REVERSE(TenKhachHang) + ' ') - 1)) ASC
+                                OFFSET @StartRow ROWS FETCH NEXT @MaxRow ROWS ONLY";
+
                 param.Add("@StartRow", startRow);
                 param.Add("@MaxRow", maxRow);
 
@@ -57,9 +62,17 @@ namespace API_KeoDua.Reponsitory.Implement
 
         public async Task<bool> IsPhoneNumberExists(string phoneNumber)
         {
+            if (string.IsNullOrEmpty(phoneNumber))
+            {
+                // Nếu phoneNumber là null hoặc rỗng, không cần kiểm tra, trả về false
+                return false;
+            }
+
+            // Thực hiện kiểm tra trong cơ sở dữ liệu nếu phoneNumber không null
             return await this.khachHangContext.tbl_KhachHang
                 .AnyAsync(kh => kh.Sdt == phoneNumber);
         }
+
 
         public async Task<bool> AddCustomer(KhachHang khachHang)
         {
@@ -167,23 +180,33 @@ namespace API_KeoDua.Reponsitory.Implement
         }
 
 
-        public async Task<bool> DeleteCustomer (Guid MaKH)
+        public async Task<bool> DeleteCustomer(Guid MaKH)
         {
             try
             {
-                var khachHang = await khachHangContext.tbl_KhachHang.FirstOrDefaultAsync(kh => kh.MaKhachHang == MaKH);
-                if (khachHang == null)
+                // Kiểm tra xem mã khách hàng có bị liên kết với hóa đơn hay không
+                bool canDelete = await CheckCustomerCode(MaKH);
+                if (!canDelete)
                 {
+                    // Nếu không thể xóa (tức là có liên kết với hóa đơn), trả về false
                     return false;
                 }
 
-                khachHangContext.tbl_KhachHang.Remove(khachHang);
-                await khachHangContext.SaveChangesAsync();
-                return true;
+                // Sử dụng Dapper để thực hiện câu lệnh DELETE
+                var query = "DELETE FROM tbl_KhachHang WHERE MaKhachHang = @MaKH";
+
+                // Thực thi câu lệnh DELETE với Dapper
+                using (var connection = this.khachHangContext.CreateConnection())
+                {
+                    var affectedRows = await connection.ExecuteAsync(query, new { MaKH });
+
+                    // Kiểm tra nếu có bản ghi bị xóa (affectedRows > 0)
+                    return affectedRows > 0;
+                }
             }
             catch (Exception ex)
             {
-                throw new Exception($"Lỗi khi xóa nhân viên: {ex.Message}", ex);
+                throw new Exception($"Lỗi khi xóa khách hàng: {ex.Message}", ex);
             }
         }
 
