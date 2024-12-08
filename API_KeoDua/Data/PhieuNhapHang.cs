@@ -25,5 +25,9 @@ namespace API_KeoDua.Data
         public Guid? MaNV { get; set; }
 
         public Guid? MaNCC { get; set; }
+        [NotMapped]
+        public string? TenNV { get; set; }
+        [NotMapped]
+        public string? TenNCC { get; set; }
     }
 }

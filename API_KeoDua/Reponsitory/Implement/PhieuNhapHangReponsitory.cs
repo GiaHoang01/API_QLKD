@@ -44,7 +44,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 }
 
                 string sqlQuery = $@"SELECT COUNT(1) AS TotalRows FROM tbl_PhieuNhapHang WITH (NOLOCK) {sqlWhere};
-                                     SELECT * FROM tbl_PhieuNhapHang WITH (NOLOCK) {sqlWhere} ORDER BY MaPhieuNhap ASC
+                                     SELECT  nh.MaPhieuNhap,nh.TrangThai,nh.TongTriGia,nh.GhiChu,nv.TenNV,ncc.TenNCC,nh.NgayDat,nh.NgayNhap,nh.GhiChu FROM tbl_PhieuNhapHang nh join tbl_NhanVien nv on nh.MaNV=NV.MaNV JOIN tbl_NhaCungCap ncc on nh.MaNCC=ncc.MaNCC {sqlWhere} ORDER BY MaPhieuNhap ASC
                                      OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
                 param.Add("@StartRow", startRow);
                 param.Add("@MaxRows", maxRows);
@@ -84,7 +84,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 }
 
                 string sqlQuery = $@"SELECT COUNT(1) AS TotalRows FROM tbl_PhieuNhapHang WITH (NOLOCK) Where TrangThai=N'Mới tạo' {sqlWhere};
-                                     SELECT * FROM tbl_PhieuNhapHang WITH (NOLOCK) Where TrangThai=N'Mới tạo' {sqlWhere} ORDER BY MaPhieuNhap ASC OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
+                                     SELECT  nh.MaPhieuNhap,nh.TrangThai,nh.TongTriGia,nh.GhiChu,nv.TenNV,ncc.TenNCC,nh.NgayDat,nh.NgayNhap,nh.GhiChu FROM tbl_PhieuNhapHang nh join tbl_NhanVien nv on nh.MaNV=NV.MaNV JOIN tbl_NhaCungCap ncc on nh.MaNCC=ncc.MaNCC Where TrangThai=N'Mới tạo' {sqlWhere} ORDER BY MaPhieuNhap ASC OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
                 param.Add("@StartRow", startRow);
                 param.Add("@MaxRows", maxRows);
                 using (var connection = this.phieuNhapHangContext.CreateConnection())
@@ -123,7 +123,7 @@ namespace API_KeoDua.Reponsitory.Implement
                 }
 
                 string sqlQuery = $@"SELECT COUNT(1) AS TotalRows FROM tbl_PhieuNhapHang WITH (NOLOCK) Where TrangThai!=N'Hoàn tất' {sqlWhere};
-                                     SELECT * FROM tbl_PhieuNhapHang WITH (NOLOCK) Where TrangThai!=N'Hoàn tất' {sqlWhere} ORDER BY MaPhieuNhap ASC OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
+                                     SELECT  nh.MaPhieuNhap,nh.TrangThai,nh.TongTriGia,nh.GhiChu,nv.TenNV,ncc.TenNCC,nh.NgayDat,nh.NgayNhap,nh.GhiChu FROM tbl_PhieuNhapHang nh join tbl_NhanVien nv on nh.MaNV=NV.MaNV JOIN tbl_NhaCungCap ncc on nh.MaNCC=ncc.MaNCC Where TrangThai!=N'Hoàn tất' and TrangThai!=N'Mới tạo'{sqlWhere} ORDER BY MaPhieuNhap ASC OFFSET @StartRow ROWS FETCH NEXT @MaxRows ROWS ONLY;";
                 param.Add("@StartRow", startRow);
                 param.Add("@MaxRows", maxRows);
                 using (var connection = this.phieuNhapHangContext.CreateConnection())
@@ -552,6 +552,35 @@ namespace API_KeoDua.Reponsitory.Implement
             {
                 // Xử lý ngoại lệ và ghi log nếu có lỗi
                 throw new Exception($"An error occurred while fetching total expenses for the year {year}", ex);
+            }
+        }
+
+        public async Task<bool> updateStatusConfirm(PhieuNhapHang phieuNhapHang)
+        {
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    // Tìm phiếu nhập hiện tại
+                    var existingPhieuNhapHang = await phieuNhapHangContext.tbl_PhieuNhapHang.FindAsync(phieuNhapHang.MaPhieuNhap);
+                    if (existingPhieuNhapHang == null)
+                    {
+                        return false;
+                    }
+
+
+                    // Cập nhật thông tin phiếu nhập
+                    existingPhieuNhapHang.TrangThai = "Chờ xác nhận";
+                    await phieuNhapHangContext.SaveChangesAsync();
+
+                    // Hoàn tất giao dịch
+                    scope.Complete();
+                    return true; // Cập nhật thành công
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Có lỗi xảy ra khi cập nhật dữ liệu.", ex);
+                }
             }
         }
 

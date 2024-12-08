@@ -13,7 +13,7 @@ namespace API_KeoDua.Data
         public string TenCTKhuyenMai { get; set; }
 
         [MaxLength(255)]
-        public string GhiChu { get; set; }
+        public string? GhiChu { get; set; }
 
     }
 }

@@ -72,6 +72,46 @@ namespace API_KeoDua.Controllers
         /// <param name="dicData"></param>
         /// <returns></returns>
         [HttpPost]
+        public async Task<ActionResult> getAllProductInStock([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End getAllProduct-------");
+                ResponseModel repData = await ResponseFail();
+
+                int pageIndex = Convert.ToInt32(dicData["PageIndex"].ToString());
+                int pageSize = Convert.ToInt32(dicData["PageSize"].ToString());
+                string searchString = dicData["SearchString"].ToString();
+
+                int startRow = (pageIndex - 1) * pageSize;
+                int maxRows = pageSize;
+
+                List<HangHoaLichSuGia> productList = await this.hangHoaReponsitory.GetAllProductInStock(searchString, startRow, maxRows);
+
+                if (productList != null && productList.Any())
+                {
+                    repData = await ResponseSucceeded();
+                }
+
+                repData.data = new { TotalRows = this.hangHoaReponsitory.TotalRows, ProductList = productList };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End getAllProduct-------");
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
         public async Task<ActionResult> AddProduct([FromBody] Dictionary<string, object> dicData)
         {
             try
@@ -284,6 +324,34 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------Begin getTenHangHoa_withByMaHangHoa-------");
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> getGiaBan_withByMaHangHoa([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Begin getGiaBan_withByMaHangHoa-------");
 
+                ResponseModel repData = await ResponseFail();
+                Guid maHangHoa = Guid.Parse(dicData["MaHangHoa"].ToString());
+                decimal giaBan = await this.hangHoaReponsitory.getGiaBan_withByMaHangHoa(maHangHoa);
+                repData = await ResponseSucceeded();
+                repData.data = new { GiaBan = giaBan };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------Begin getGiaBan_withByMaHangHoa-------");
+            }
+        }
     }
 }
