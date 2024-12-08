@@ -10,5 +10,6 @@ namespace API_KeoDua.Reponsitory.Interface
         public Task<string> login(string user, string pass);
         public Task<List<string>> getDataPermission(string userName);
         public Task<List<string>> GetAccountName();
+        public Task<bool> ChangePasswordAsync(string username, string newPassword);
     }
 }

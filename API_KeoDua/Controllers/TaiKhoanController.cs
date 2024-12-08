@@ -77,7 +77,7 @@ namespace API_KeoDua.Controllers
                     repData = await ResponseSucceeded();
                 }
 
-                repData.data = new { TenDangNhap = tendn };
+                repData.data = new { TenDangNhap = tendn,UserName=userName };
                 return Ok(repData);
             }
             catch (Exception ex)
@@ -158,6 +158,43 @@ namespace API_KeoDua.Controllers
             finally
             {
                 logger.Debug("-------End getAllNameEmployees-------");
+            }
+        }
+
+
+        /// <summary>
+        /// Hàm đổi mật khẩu
+        /// </summary>
+        /// <param name="dicData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> resetPass([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------End resetPass-------");
+                ResponseModel repData = await ResponseFail();
+                string userName = dicData["UserName"].ToString();
+                string passwordnew = dicData["PassWordNew"].ToString();
+                bool isCheck=await this.taiKhoanReponsitory.ChangePasswordAsync(userName, passwordnew);
+                if (!isCheck)
+                {
+                    repData.message = "thay đổi mật khẩu thất bại";
+                    repData.data = new { };
+                    return Ok(repData);
+                }
+                repData = await ResponseSucceeded();
+                repData.data = new { };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------End resetPass-------");
             }
         }
 

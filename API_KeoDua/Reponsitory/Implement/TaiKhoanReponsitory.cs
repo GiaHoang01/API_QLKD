@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 using API_KeoDua.Services;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Microsoft.Data.SqlClient;
+using System.Data;
 namespace API_KeoDua.Reponsitory.Implement
 {
     public class TaiKhoanReponsitory : ITaiKhoanReponsitory
@@ -35,8 +38,8 @@ namespace API_KeoDua.Reponsitory.Implement
             try
             {
                 // Kiểm tra tài khoản trong context mới
-                pass=ComputeMd5Hash(pass);
-                var account = await _context.TaiKhoan.FirstOrDefaultAsync(acc => acc.TenTaiKhoan == user && acc.MatKhau== pass);
+                pass = ComputeMd5Hash(pass);
+                var account = await _context.TaiKhoan.FirstOrDefaultAsync(acc => acc.TenTaiKhoan == user && acc.MatKhau == pass);
                 if (account == null)
                 {
                     return null;
@@ -44,7 +47,7 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 var employee = await _nhanVienContext.tbl_NhanVien
                     .FirstOrDefaultAsync(nv => nv.TenTaiKhoan == account.TenTaiKhoan);
-               
+
                 return employee?.TenNV ?? null;
             }
             catch (Exception ex)
@@ -123,6 +126,66 @@ namespace API_KeoDua.Reponsitory.Implement
             }
         }
 
+        /// <summary>
+        /// Đổi mật khẩu cho người dùng.
+        /// </summary>
+        public async Task<bool> ChangePasswordAsync(string username, string newPassword)
+        {
+            try
+            {
+                // 1. Hash mật khẩu mới
+                string hashedPassword = ComputeMd5Hash(newPassword);
+
+                // 2. Cập nhật mật khẩu trong bảng tbl_TaiKhoan
+                var userAccount = await _context.TaiKhoan.FirstOrDefaultAsync(u => u.TenTaiKhoan == username);
+                if (userAccount == null)
+                {
+                    Console.WriteLine("Tài khoản không tồn tại trong cơ sở dữ liệu.");
+                    return false;
+                }
+
+                userAccount.MatKhau = hashedPassword;
+                await _context.SaveChangesAsync();
+
+                Console.WriteLine("Đã cập nhật mật khẩu trong cơ sở dữ liệu thành công.");
+
+                // 3. Cập nhật mật khẩu cho SQL Server Login
+                using (var connection = (SqlConnection)this._context.CreateConnection())
+                {
+                    // Mở kết nối
+                    if (connection.State == System.Data.ConnectionState.Closed)
+                    {
+                        await connection.OpenAsync();
+                    }
+
+                    // Tạo câu lệnh SQL động
+                    string sqlQuery = $"ALTER LOGIN [{username}] WITH PASSWORD = '{newPassword}'";
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sqlQuery;
+                        command.CommandType = System.Data.CommandType.Text;
+
+                        // Thực thi câu lệnh
+                        await command.ExecuteNonQueryAsync();
+                        Console.WriteLine($"Đã đổi mật khẩu SQL Login thành công cho người dùng: {username}");
+                    }
+                }
+
+
+                return true;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"Lỗi SQL: {ex.Message}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi hệ thống: {ex.Message}");
+                return false;
+            }
+        }
 
         /// <summary>
         /// Tạo hash bằng thuật toán MD5.
@@ -140,7 +203,6 @@ namespace API_KeoDua.Reponsitory.Implement
                 return builder.ToString();
             }
         }
-
 
     }
 }
