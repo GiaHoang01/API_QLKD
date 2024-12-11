@@ -19,5 +19,6 @@ namespace API_KeoDua.Reponsitory.Interface
         public Task<decimal> TotalRevenueByYear(int year);
         public Task<(HoaDonBanHang hoaDonBanHang, List<CT_HoaDonBanHang> cT_HoaDonBanHangs)> GetInvoice_ByID(Guid? maHoaDon);
         public Task<bool> ConfirmSaleInvoiceFinish(Guid maHoaDon);
+        public Task<bool> ConfirmCancelSaleInvoice(Guid maHoaDon);
     }
 }

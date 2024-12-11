@@ -318,6 +318,7 @@ namespace API_KeoDua.Reponsitory.Implement
         {
             try
             {
+                
                 DynamicParameters param = new DynamicParameters();
                 var sqlWhere = new StringBuilder();
                 if (!string.IsNullOrEmpty(searchString))
@@ -351,8 +352,21 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 using (var connection = this.hangHoaContext.CreateConnection())
                 {
-                    var resultData = (await connection.QueryAsync<HangHoaLichSuGia>(sqlQuery, param)).ToList();
-                    return resultData;
+                    var hangHoaList = (await connection.QueryAsync<HangHoaLichSuGia>(sqlQuery, param)).ToList();
+
+                    foreach (var hangHoa in hangHoaList)
+                    {
+                        var soLuongTonParam = new DynamicParameters();
+                        soLuongTonParam.Add("@MaHangHoa", hangHoa.MaHangHoa);
+                        soLuongTonParam.Add("@SoLuongTon", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                        await connection.ExecuteAsync("sp_GetSoLuongTon", soLuongTonParam, commandType: CommandType.StoredProcedure);
+
+                        // Gán số lượng tồn vào đối tượng hàng hóa
+                        hangHoa.SoLuongTon = soLuongTonParam.Get<int>("@SoLuongTon");
+                    }
+
+                    return hangHoaList;
                 }
             }
             catch (Exception ex)
@@ -418,5 +432,47 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("Có lỗi xảy ra khi lấy tên hàng hóa.", ex);
             }
         }
+        public async Task<int> GetSoLuongTon(Guid maHangHoa)
+        {
+            try
+            {
+                string sqlQuery = @"
+                    DECLARE @SoLuongNhap INT;
+                    DECLARE @SoLuongBan INT;
+                    DECLARE @SoLuongHoan INT;
+
+                    SELECT @SoLuongNhap = ISNULL(SUM(SoLuong), 0)
+                    FROM tbl_CT_PhieuNhap
+                    WHERE MaHangHoa = @MaHangHoa;
+
+                    SELECT @SoLuongBan = ISNULL(SUM(SoLuong), 0)
+                    FROM tbl_CT_HoaDonBanHang c
+                    INNER JOIN tbl_HoaDonBanHang h ON c.MaHoaDon = h.MaHoaDon
+                    WHERE c.MaHangHoa = @MaHangHoa AND h.TrangThai NOT LIKE N'%Đã hủy%';
+
+                    SELECT @SoLuongHoan = ISNULL(SUM(SoLuong), 0)
+                    FROM tbl_CT_HoaDonBanHang c
+                    INNER JOIN tbl_HoaDonBanHang h ON c.MaHoaDon = h.MaHoaDon
+                    WHERE c.MaHangHoa = @MaHangHoa AND h.TrangThai LIKE N'%Đã hủy%';
+
+                    SELECT (@SoLuongNhap - @SoLuongBan) + @SoLuongHoan AS SoLuongTon;
+                ";
+
+                var param = new DynamicParameters();
+                param.Add("@MaHangHoa", maHangHoa);
+
+                using (var connection = this.hangHoaContext.CreateConnection())
+                {
+                    var soLuongTon = await connection.QueryFirstOrDefaultAsync<int>(sqlQuery, param);
+                    return soLuongTon;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log hoặc xử lý ngoại lệ
+                throw new Exception("Có lỗi xảy ra khi lấy số lượng tồn.", ex);
+            }
+        }
+
     }
 }

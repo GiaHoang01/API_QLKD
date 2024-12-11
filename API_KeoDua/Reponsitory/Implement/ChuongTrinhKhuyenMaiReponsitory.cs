@@ -215,5 +215,33 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while deleting the purchase order and its details", ex);
             }
         }
+        public async Task<decimal> GetTiLeKhuyenMai(Guid maHangHoa)
+        {
+            try
+            {
+                string sqlQuery = @"
+            SELECT TOP 1 
+                TiLeKhuyenMai
+            FROM tbl_ChiTietCT_KhuyenMai
+            WHERE MaHangHoa = @MaHangHoa 
+              AND NgayBD <= GETDATE()
+            ORDER BY NgayBD DESC;";
+
+                var param = new DynamicParameters();
+                param.Add("@MaHangHoa", maHangHoa);
+
+                using (var connection = this.chiTietCT_KhuyenMaiContext.CreateConnection())
+                {
+                    decimal tiLeKhuyenMai = await connection.QueryFirstOrDefaultAsync<decimal>(sqlQuery, param);
+                    return tiLeKhuyenMai;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log hoặc xử lý ngoại lệ
+                throw new Exception("Có lỗi xảy ra khi lấy tỷ lệ khuyến mãi.", ex);
+            }
+        }
+
     }
 }
