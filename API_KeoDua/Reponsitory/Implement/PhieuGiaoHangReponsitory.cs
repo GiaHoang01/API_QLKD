@@ -344,7 +344,7 @@ namespace API_KeoDua.Reponsitory.Implement
                         }
                         break;
 
-                    case 1: // Đang giao - Hoàng tất
+                    case 1: // Đang giao - Hoàn tất
                         phieuGiaoHang.TrangThai = "Hoàn tất";
                         break;
 
