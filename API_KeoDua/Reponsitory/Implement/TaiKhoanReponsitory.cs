@@ -194,7 +194,7 @@ namespace API_KeoDua.Reponsitory.Implement
         {
             using (MD5 md5 = MD5.Create())
             {
-                byte[] bytes = md5.ComputeHash(Encoding.Unicode.GetBytes(rawData));
+                byte[] bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(rawData));
                 StringBuilder builder = new StringBuilder();
                 foreach (byte b in bytes)
                 {
