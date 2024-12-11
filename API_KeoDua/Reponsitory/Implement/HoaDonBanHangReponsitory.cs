@@ -594,7 +594,7 @@ namespace API_KeoDua.Reponsitory.Implement
             {
                 string sqlUpdate = @"
                 UPDATE tbl_HoaDonBanHang
-                SET TrangThai = N'Hoàn tất',
+                SET TrangThai = N'Hoàn tất'
                 WHERE MaHoaDon = @MaHoaDon"; // Điều kiện mặc định
                 var param = new DynamicParameters();
                 param.Add("@MaHoaDon", maHoaDon);
