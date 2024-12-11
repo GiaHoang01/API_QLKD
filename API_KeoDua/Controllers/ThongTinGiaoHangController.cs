@@ -68,20 +68,7 @@ namespace API_KeoDua.Controllers
             try
             {
                 Guid maKhachHang = Guid.Parse(dicData["MaKH"].ToString());
-                // Kiểm tra và parse MaKH
-                //if (!dicData.ContainsKey("MaKH") || string.IsNullOrWhiteSpace(dicData["MaKH"].ToString()))
-                //{
-                //    logger.Debug("MaKH is null or empty");
-                //    repData.message = "MaKH is required.";
-                //    return Ok(repData);
-                //}
-
-                //if (!Guid.TryParse(dicData["MaKH"].ToString(), out Guid maKhachHang))
-                //{
-                //    logger.Debug($"Invalid MaKH format: {dicData["MaKH"]}");
-                //    repData.message = "Invalid MaKH format.";
-                //    return Ok(repData);
-                //}
+               
                 // Deserialize ThongTinGiaoHang
                 ThongTinGiaoHang ttGiaoHang = JsonConvert.DeserializeObject<ThongTinGiaoHang>(dicData["ThongTinGiaoHang"].ToString());
                 // Gán giá trị cho MaThongTin
@@ -149,6 +136,7 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------End DeleteInfoDelivery-------");
             }
         }
+
         [HttpPost]
         public async Task<ActionResult> UpdateInfoDelivery([FromBody] Dictionary<string, object> dicData)
         {

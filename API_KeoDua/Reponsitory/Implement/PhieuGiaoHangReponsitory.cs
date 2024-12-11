@@ -358,8 +358,9 @@ namespace API_KeoDua.Reponsitory.Implement
 
                 // Cập nhật trạng thái trong cơ sở dữ liệu
                 this.phieuGiaoHangContext.Entry(phieuGiaoHang).State = EntityState.Modified;
+                this.hoaDonBanHangContext.Entry(hoaDonBanHang).State = EntityState.Modified;
                 await this.phieuGiaoHangContext.SaveChangesAsync();
-
+                await this.hoaDonBanHangContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)

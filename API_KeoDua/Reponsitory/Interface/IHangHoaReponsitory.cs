@@ -15,5 +15,6 @@ namespace API_KeoDua.Reponsitory.Interface
         public Task<List<HangHoaLichSuGia>> QuickSearchHangHoa(string searchString);
         public Task<string> getTenHangHoa_withByMaHangHoa(Guid maHangHoa);
         public Task<decimal> getGiaBan_withByMaHangHoa(Guid maHangHoa);
+        public Task<int> GetSoLuongTon(Guid maHangHoa);
     }
 }

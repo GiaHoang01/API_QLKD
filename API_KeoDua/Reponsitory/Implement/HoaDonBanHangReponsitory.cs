@@ -594,8 +594,8 @@ namespace API_KeoDua.Reponsitory.Implement
             {
                 string sqlUpdate = @"
                 UPDATE tbl_HoaDonBanHang
-                SET TrangThai = N'Hoàn thành',
-                WHERE MaHoaDon = @MaHoaDon AND TrangThai = N'Đang giao';"; // Điều kiện mặc định
+                SET TrangThai = N'Hoàn tất'
+                WHERE MaHoaDon = @MaHoaDon"; // Điều kiện mặc định
                 var param = new DynamicParameters();
                 param.Add("@MaHoaDon", maHoaDon);
                 using (var connection = this.hoaDonBanHangContext.CreateConnection())
@@ -610,6 +610,27 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception("An error occurred while fetching saleinvoice", ex);
             }
         }
-
+        public async Task<bool> ConfirmCancelSaleInvoice(Guid maHoaDon)
+        {
+            try
+            {
+                string sqlUpdate = @"
+                UPDATE tbl_HoaDonBanHang
+                SET TrangThai = N'Đã hủy'
+                WHERE MaHoaDon = @MaHoaDon";
+                var param = new DynamicParameters();
+                param.Add("@MaHoaDon", maHoaDon);
+                using (var connection = this.hoaDonBanHangContext.CreateConnection())
+                {
+                    int rowsAffected = await connection.ExecuteAsync(sqlUpdate, param);
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ghi log hoặc xử lý ngoại lệ
+                throw new Exception("An error occurred while fetching saleinvoice", ex);
+            }
+        }
     }
 }

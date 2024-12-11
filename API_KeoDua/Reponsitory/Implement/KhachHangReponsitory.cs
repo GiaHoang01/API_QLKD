@@ -188,20 +188,32 @@ namespace API_KeoDua.Reponsitory.Implement
                 bool canDelete = await CheckCustomerCode(MaKH);
                 if (!canDelete)
                 {
-                    // Nếu không thể xóa (tức là có liên kết với hóa đơn), trả về false
                     return false;
                 }
 
-                // Sử dụng Dapper để thực hiện câu lệnh DELETE
-                var query = "DELETE FROM tbl_KhachHang WHERE MaKhachHang = @MaKH";
-
-                // Thực thi câu lệnh DELETE với Dapper
-                using (var connection = this.khachHangContext.CreateConnection())
+                // Bắt đầu một giao dịch mới
+                using var transaction = await khachHangContext.Database.BeginTransactionAsync();
+                try
                 {
-                    var affectedRows = await connection.ExecuteAsync(query, new { MaKH });
+                    // Câu lệnh xóa thông tin giao hàng
+                    var deleteShippingInfoQuery = "DELETE FROM tbl_ThongTinGiaoHang WHERE MaKhachHang = @MaKH";
+                    var deleteShippingParam = new SqlParameter("@MaKH", MaKH);
+                    await khachHangContext.Database.ExecuteSqlRawAsync(deleteShippingInfoQuery, deleteShippingParam);
 
-                    // Kiểm tra nếu có bản ghi bị xóa (affectedRows > 0)
-                    return affectedRows > 0;
+                    // Câu lệnh xóa khách hàng
+                    var deleteCustomerQuery = "DELETE FROM tbl_KhachHang WHERE MaKhachHang = @MaKH";
+                    var deleteCustomerParam = new SqlParameter("@MaKH", MaKH);
+                    await khachHangContext.Database.ExecuteSqlRawAsync(deleteCustomerQuery, deleteCustomerParam);
+
+                    // Commit transaction sau khi thực hiện thành công
+                    await transaction.CommitAsync();
+                    return true; // Nếu xóa thành công, trả về true
+                }
+                catch (Exception ex)
+                {
+                    // Nếu có lỗi, rollback transaction
+                    await transaction.RollbackAsync();
+                    throw new Exception("An error occurred while deleting the customer and its related data", ex);
                 }
             }
             catch (Exception ex)
@@ -209,6 +221,10 @@ namespace API_KeoDua.Reponsitory.Implement
                 throw new Exception($"Lỗi khi xóa khách hàng: {ex.Message}", ex);
             }
         }
+
+
+
+
 
         public async Task<bool> UpdateCustomer(KhachHang kh)
         {

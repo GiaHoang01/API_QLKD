@@ -207,5 +207,29 @@ namespace API_KeoDua.Controllers
                 logger.Debug("-------End DeletePurchaseOrder_Request-------");
             }
         }
+        [HttpPost]
+        public async Task<ActionResult> getTiLeKhuyenMai([FromBody] Dictionary<string, object> dicData)
+        {
+            try
+            {
+                logger.Debug("-------Begin getTiLeKhuyenMai-------");
+
+                ResponseModel repData = await ResponseFail();
+                Guid maHangHoa = Guid.Parse(dicData["MaHangHoa"].ToString());
+                decimal tiLeKhuyenMai = await this.chuongTrinhKhuyenMaiReponsitory.GetTiLeKhuyenMai(maHangHoa);
+                repData = await ResponseSucceeded();
+                repData.data = new { TiLeKhuyenMai = tiLeKhuyenMai };
+                return Ok(repData);
+            }
+            catch (Exception ex)
+            {
+                ResponseModel repData = await ResponseException();
+                return Ok(repData);
+            }
+            finally
+            {
+                logger.Debug("-------Begin getTiLeKhuyenMai-------");
+            }
+        }
     }
 }
